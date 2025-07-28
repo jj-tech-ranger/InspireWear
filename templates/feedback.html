@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InspireWear | Customer Feedback</title>
+    <link rel="stylesheet" href="../css/feedback.css">
+    <link rel="stylesheet" href="../css/finance.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <link rel="icon" href="../img/favicon.png" type="image/x-icon">
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="morph-overlay" id="morphOverlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p class="loading-text">Loading Feedback Module...</p>
+        </div>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="logo-container">
+            <img src="../img/logo.png" alt="InspireWear Logo" class="logo">
+            <h1 class="logo-text">InspireWear</h1>
+        </div>
+
+        <a href="../templates/index.html" class="home-button">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+
+        <div class="module-heading">
+            <span class="star">✧</span>
+            <h1>CUSTOMER CRM</h1>
+            <span class="star">✧</span>
+        </div>
+
+        <nav class="finance-nav">
+           <ul>
+                <li><a href="../templates/customer_dasboard.html"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                <li><a href="../templates/customers.html"><i class="fas fa-users"></i> Customers</a></li>
+                <li><a href="../templates/loyalty.html"><i class="fas fa-star"></i> Loyalty Program</a></li>
+                <li><a href="../templates/campaigns.html"><i class="fas fa-envelope"></i> Email Campaigns</a></li>
+                <li class="active"><a href="../templates/feedback.html"><i class="fas fa-comment-alt"></i> Feedback</a></li>
+                <li><a href="../templates/customer_reports.html"><i class="fas fa-chart-pie"></i> Reports</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <header class="finance-header">
+            <h2>Customer Feedback</h2>
+            <div class="header-actions">
+                <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon theme-icon"></i>
+                </button>
+                <div class="profile-container">
+                    <button class="profile-btn" id="profileBtn" aria-label="User profile" aria-expanded="false">
+                        <img src="../img/user.png" alt="Profile" class="profile-img">
+                        <span>Customer Service</span>
+                    </button>
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <a href="../templates/index.html" class="dropdown-item">
+                            <i class="fas fa-home"></i> Back to Home
+                        </a>
+                        <a href="../templates/login.html" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Feedback Overview -->
+        <div class="feedback-overview">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-smile"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>Positive Feedback</h3>
+                    <p class="amount"><span id="positiveFeedback">78</span>%</p>
+                    <p class="change positive"><i class="fas fa-arrow-up"></i> 5% from last month</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-frown"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>Negative Feedback</h3>
+                    <p class="amount"><span id="negativeFeedback">12</span>%</p>
+                    <p class="change negative"><i class="fas fa-arrow-down"></i> 3% from last month</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>Total Feedback</h3>
+                    <p class="amount"><span id="totalFeedback">245</span></p>
+                    <p class="change positive"><i class="fas fa-arrow-up"></i> 18% from last month</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>Avg. Response Time</h3>
+                    <p class="amount"><span id="responseTime">4.2</span> hrs</p>
+                    <p class="change negative"><i class="fas fa-arrow-down"></i> 0.8 hrs from last month</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feedback Filters -->
+        <div class="feedback-filters">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="feedbackSearch" placeholder="Search feedback...">
+            </div>
+            <div class="filter-group">
+                <label for="feedbackType">Type:</label>
+                <select id="feedbackType">
+                    <option value="all">All</option>
+                    <option value="positive">Positive</option>
+                    <option value="negative">Negative</option>
+                    <option value="neutral">Neutral</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="feedbackSource">Source:</label>
+                <select id="feedbackSource">
+                    <option value="all">All Sources</option>
+                    <option value="website">Website</option>
+                    <option value="email">Email</option>
+                    <option value="social">Social Media</option>
+                    <option value="in-store">In-Store</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="feedbackStatus">Status:</label>
+                <select id="feedbackStatus">
+                    <option value="all">All</option>
+                    <option value="new">New</option>
+                    <option value="in-progress">In Progress</option>
+                    <option value="resolved">Resolved</option>
+                </select>
+            </div>
+            <button id="exportFeedbackBtn" class="btn-secondary"><i class="fas fa-download"></i> Export</button>
+        </div>
+
+        <!-- Feedback Table -->
+        <div class="feedback-table-container">
+            <table class="feedback-table">
+                <thead>
+                    <tr>
+                        <th>Customer</th>
+                        <th>Feedback</th>
+                        <th>Type</th>
+                        <th>Date</th>
+                        <th>Source</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="feedbackTable">
+                    <!-- Feedback will be loaded by JavaScript -->
+                </tbody>
+            </table>
+            <div class="pagination">
+                <button id="prevPage" class="pagination-btn" disabled><i class="fas fa-chevron-left"></i></button>
+                <span id="pageInfo">Page 1 of 5</span>
+                <button id="nextPage" class="pagination-btn"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Feedback Charts -->
+        <div class="feedback-charts">
+            <div class="chart-container">
+                <h3>Feedback Sentiment Trend</h3>
+                <div class="chart">
+                    <canvas id="sentimentChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-container">
+                <h3>Feedback Sources</h3>
+                <div class="chart">
+                    <canvas id="sourceChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="finance-footer">
+            <div class="footer-content">
+                <p class="footer-text">© 2025 InspireWear. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#" class="footer-link">Terms</a>
+                    <a href="#" class="footer-link">Privacy</a>
+                    <a href="#" class="footer-link">Contact</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Feedback Detail Modal -->
+    <div class="modal-overlay" id="feedbackDetailModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Feedback Details</h3>
+                <button class="modal-close" id="detailModalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="feedback-detail">
+                    <div class="detail-row">
+                        <span class="detail-label">Customer:</span>
+                        <span class="detail-value" id="detailCustomer">Wanjiku Mwangi</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Date:</span>
+                        <span class="detail-value" id="detailDate">June 15, 2025</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Source:</span>
+                        <span class="detail-value" id="detailSource">Website</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Type:</span>
+                        <span class="detail-value" id="detailType"><span class="sentiment-badge positive">Positive</span></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Status:</span>
+                        <span class="detail-value" id="detailStatus"><span class="status-badge resolved">Resolved</span></span>
+                    </div>
+                    <div class="detail-row full-width">
+                        <span class="detail-label">Feedback:</span>
+                        <p class="detail-value" id="detailFeedback">I absolutely love the new summer collection! The quality is excellent and the designs are very stylish. Will definitely shop again.</p>
+                    </div>
+                    <div class="detail-row full-width">
+                        <span class="detail-label">Customer Email:</span>
+                        <span class="detail-value" id="detailEmail">wanjiku@example.com</span>
+                    </div>
+                    <div class="detail-row full-width">
+                        <span class="detail-label">Customer Phone:</span>
+                        <span class="detail-value" id="detailPhone">+254 712345678</span>
+                    </div>
+                </div>
+
+                <div class="response-section">
+                    <h4>Response</h4>
+                    <textarea id="responseText" rows="4" placeholder="Type your response here..."></textarea>
+                    <div class="response-actions">
+                        <button class="btn-secondary" id="saveDraftBtn">Save Draft</button>
+                        <button class="btn-primary" id="sendResponseBtn">Send Response</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Feedback Modal -->
+    <div class="modal-overlay" id="newFeedbackModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Add New Feedback</h3>
+                <button class="modal-close" id="newFeedbackModalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="newFeedbackForm">
+                    <div class="form-group">
+                        <label for="feedbackCustomer">Customer</label>
+                        <select id="feedbackCustomer" required>
+                            <option value="">Select Customer</option>
+                            <!-- Options will be populated by JavaScript -->
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="feedbackTypeSelect">Type</label>
+                            <select id="feedbackTypeSelect" required>
+                                <option value="positive">Positive</option>
+                                <option value="negative">Negative</option>
+                                <option value="neutral">Neutral</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="feedbackSourceSelect">Source</label>
+                            <select id="feedbackSourceSelect" required>
+                                <option value="website">Website</option>
+                                <option value="email">Email</option>
+                                <option value="social">Social Media</option>
+                                <option value="in-store">In-Store</option>
+                                <option value="phone">Phone</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="feedbackDate">Date</label>
+                        <input type="date" id="feedbackDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="feedbackContent">Feedback Content</label>
+                        <textarea id="feedbackContent" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="feedbackStatusSelect">Status</label>
+                        <select id="feedbackStatusSelect" required>
+                            <option value="new">New</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="resolved">Resolved</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="cancelNewFeedback">Cancel</button>
+                        <button type="submit" class="btn-primary">Save Feedback</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/feedback.js"></script>
+</body>
+</html>

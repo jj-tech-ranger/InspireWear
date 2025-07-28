@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InspireWear | Staff Scheduling</title>
+    <link rel="stylesheet" href="../css/operations.css">
+    <link rel="stylesheet" href="../css/staff_scheduling.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <link rel="icon" href="../img/favicon.png" type="image/x-icon">
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="morph-overlay" id="morphOverlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p class="loading-text">Loading Staff Scheduling...</p>
+        </div>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="logo-container">
+            <img src="../img/logo.png" alt="InspireWear Logo" class="logo">
+            <h1 class="logo-text">InspireWear</h1>
+        </div>
+
+        <a href="../templates/index.html" class="home-button">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+
+        <div class="module-heading">
+            <span class="star">✧</span>
+            <h1>OPERATIONS</h1>
+            <span class="star">✧</span>
+        </div>
+
+        <nav class="operations-nav">
+            <ul>
+                <li><a href="../templates/operations_dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li class="active"><a href="../templates/staff_scheduling.html"><i class="fas fa-calendar-alt"></i> Staff Scheduling</a></li>
+                <li><a href="../templates/returns_exchanges.html"><i class="fas fa-exchange-alt"></i> Returns & Exchanges</a></li>
+                <li><a href="../templates/task_management.html"><i class="fas fa-tasks"></i> Tasks</a></li>
+                <li><a href="../templates/operations_notifications.html"><i class="fas fa-bell"></i> Notifications</a></li>
+                <li><a href="../templates/operations_reports.html"><i class="fas fa-chart-pie"></i> Reports</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <header class="operations-header">
+            <h2>Staff Scheduling</h2>
+            <div class="header-actions">
+                <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon theme-icon"></i>
+                </button>
+                <div class="profile-container">
+                    <button class="profile-btn" id="profileBtn" aria-label="User profile" aria-expanded="false">
+                        <img src="../img/user.png" alt="Profile" class="profile-img">
+                        <span>Operations Manager</span>
+                    </button>
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <a href="../templates/index.html" class="dropdown-item">
+                            <i class="fas fa-home"></i> Back to Home
+                        </a>
+                        <a href="../templates/login.html" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Overview Cards -->
+        <div class="overview-cards">
+            <div class="card total-staff">
+                <div class="card-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Total Staff</h3>
+                    <p class="amount"><span id="totalStaff">32</span></p>
+                    <p class="change positive"><i class="fas fa-arrow-up"></i> 2 new hires this month</p>
+                </div>
+            </div>
+
+            <div class="card scheduled-today">
+                <div class="card-icon">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Scheduled Today</h3>
+                    <p class="amount"><span id="scheduledToday">24</span></p>
+                    <p class="change positive"><i class="fas fa-arrow-up"></i> 100% coverage</p>
+                </div>
+            </div>
+
+            <div class="card monthly-payroll">
+                <div class="card-icon">
+                    <i class="fas fa-money-bill-wave"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Monthly Payroll</h3>
+                    <p class="amount">KSh <span id="monthlyPayroll">2,450,000</span></p>
+                    <p class="change neutral"><i class="fas fa-minus"></i> Same as last month</p>
+                </div>
+            </div>
+
+            <div class="card overtime-hours">
+                <div class="card-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Overtime Hours</h3>
+                    <p class="amount"><span id="overtimeHours">156</span>h</p>
+                    <p class="change negative"><i class="fas fa-arrow-down"></i> 12% less than last week</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Schedule Controls -->
+        <div class="schedule-controls">
+            <div class="date-navigation">
+                <button id="prevWeek" class="nav-btn"><i class="fas fa-chevron-left"></i></button>
+                <h3 id="currentWeek">Week of January 20 - 26, 2025</h3>
+                <button id="nextWeek" class="nav-btn"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            <div class="schedule-actions">
+                <button id="addScheduleBtn" class="btn-primary"><i class="fas fa-plus"></i> Add Schedule</button>
+                <button id="exportScheduleBtn" class="btn-secondary"><i class="fas fa-download"></i> Export</button>
+                <button id="printScheduleBtn" class="btn-secondary"><i class="fas fa-print"></i> Print</button>
+            </div>
+        </div>
+
+        <!-- Weekly Schedule Table -->
+        <div class="schedule-table-container">
+            <table class="schedule-table">
+                <thead>
+                    <tr>
+                        <th class="staff-column">Staff Member</th>
+                        <th>Monday</th>
+                        <th>Tuesday</th>
+                        <th>Wednesday</th>
+                        <th>Thursday</th>
+                        <th>Friday</th>
+                        <th>Saturday</th>
+                        <th>Sunday</th>
+                        <th class="actions-column">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="scheduleTableBody">
+                    <!-- Schedule data will be loaded by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Staff Summary -->
+        <div class="staff-summary">
+            <div class="summary-section">
+                <h3>Staff by Location</h3>
+                <div class="location-stats" id="locationStats">
+                    <!-- Location statistics will be loaded by JavaScript -->
+                </div>
+            </div>
+            <div class="summary-section">
+                <h3>Shift Distribution</h3>
+                <div class="shift-stats" id="shiftStats">
+                    <!-- Shift statistics will be loaded by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="operations-footer">
+            <div class="footer-content">
+                <p class="footer-text">© 2025 InspireWear. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#" class="footer-link">Terms</a>
+                    <a href="#" class="footer-link">Privacy</a>
+                    <a href="#" class="footer-link">Contact</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Add/Edit Schedule Modal -->
+    <div class="modal-overlay" id="scheduleModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modalTitle">Add New Schedule</h3>
+                <button class="modal-close" id="modalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="scheduleForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="staffMember">Staff Member</label>
+                            <select id="staffMember" required>
+                                <option value="">Select Staff Member</option>
+                                <!-- Options will be populated by JavaScript -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="location">Location</label>
+                            <select id="location" required>
+                                <option value="">Select Location</option>
+                                <option value="Nairobi Central">Nairobi Central</option>
+                                <option value="Nairobi Westlands">Nairobi Westlands</option>
+                                <option value="Mombasa">Mombasa</option>
+                                <option value="Kisumu">Kisumu</option>
+                                <option value="Nakuru">Nakuru</option>
+                                <option value="Eldoret">Eldoret</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="startDate">Start Date</label>
+                            <input type="date" id="startDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="endDate">End Date</label>
+                            <input type="date" id="endDate" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="shiftType">Shift Type</label>
+                            <select id="shiftType" required>
+                                <option value="">Select Shift</option>
+                                <option value="morning">Morning (6:00 AM - 2:00 PM)</option>
+                                <option value="afternoon">Afternoon (2:00 PM - 10:00 PM)</option>
+                                <option value="night">Night (10:00 PM - 6:00 AM)</option>
+                                <option value="full">Full Day (8:00 AM - 6:00 PM)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="hourlyRate">Hourly Rate (KSh)</label>
+                            <input type="number" id="hourlyRate" min="0" step="0.01" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="notes">Notes</label>
+                        <textarea id="notes" rows="3" placeholder="Additional notes or special instructions..."></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="cancelSchedule">Cancel</button>
+                        <button type="submit" class="btn-primary">Save Schedule</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Staff Details Modal -->
+    <div class="modal-overlay" id="staffDetailsModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="staffDetailsTitle">Staff Details</h3>
+                <button class="modal-close" id="staffDetailsClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="staff-info" id="staffInfo">
+                    <!-- Staff information will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/staff_scheduling.js"></script>
+</body>
+</html>

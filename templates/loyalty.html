@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InspireWear | Loyalty Program</title>
+    <link rel="stylesheet" href="../css/loyalty.css">
+    <link rel="stylesheet" href="../css/finance.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <link rel="icon" href="../img/favicon.png" type="image/x-icon">
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="morph-overlay" id="morphOverlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p class="loading-text">Loading Loyalty Program...</p>
+        </div>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="logo-container">
+            <img src="../img/logo.png" alt="InspireWear Logo" class="logo">
+            <h1 class="logo-text">InspireWear</h1>
+        </div>
+
+        <a href="../templates/index.html" class="home-button">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+
+        <div class="module-heading">
+            <span class="star">✧</span>
+            <h1>CUSTOMER CRM</h1>
+            <span class="star">✧</span>
+        </div>
+
+        <nav class="finance-nav">
+           <ul>
+                <li><a href="../templates/customer_dasboard.html"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                <li><a href="../templates/customers.html"><i class="fas fa-users"></i> Customers</a></li>
+                <li class="active"><a href="../templates/loyalty.html"><i class="fas fa-star"></i> Loyalty Program</a></li>
+                <li><a href="../templates/campaigns.html"><i class="fas fa-envelope"></i> Email Campaigns</a></li>
+                <li><a href="../templates/feedback.html"><i class="fas fa-comment-alt"></i> Feedback</a></li>
+                <li><a href="../templates/customer_reports.html"><i class="fas fa-chart-pie"></i> Reports</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <header class="finance-header">
+            <h2>Loyalty Program</h2>
+            <div class="header-actions">
+                <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon theme-icon"></i>
+                </button>
+                <div class="profile-container">
+                    <button class="profile-btn" id="profileBtn" aria-label="User profile" aria-expanded="false">
+                        <img src="../img/user.png" alt="Profile" class="profile-img">
+                        <span>CRM Manager</span>
+                    </button>
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <a href="../templates/index.html" class="dropdown-item">
+                            <i class="fas fa-home"></i> Back to Home
+                        </a>
+                        <a href="../templates/login.html" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Program Overview -->
+        <div class="loyalty-overview">
+            <div class="program-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Total Members</h3>
+                        <p class="amount"><span id="totalMembers">1,240</span></p>
+                        <p class="change positive"><i class="fas fa-arrow-up"></i> 22% from last quarter</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Points Redeemed</h3>
+                        <p class="amount"><span id="pointsRedeemed">245,800</span></p>
+                        <p class="change positive"><i class="fas fa-arrow-up"></i> 18% from last quarter</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Redemption Rate</h3>
+                        <p class="amount"><span id="redemptionRate">68</span>%</p>
+                        <p class="change positive"><i class="fas fa-arrow-up"></i> 8% from last quarter</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="program-benefits">
+                <h3>Current Benefits</h3>
+                <ul class="benefits-list">
+                    <li><i class="fas fa-check-circle"></i> 1 point for every KES 100 spent</li>
+                    <li><i class="fas fa-check-circle"></i> 500 bonus points on signup</li>
+                    <li><i class="fas fa-check-circle"></i> Birthday month double points</li>
+                    <li><i class="fas fa-check-circle"></i> 1000 points = KES 100 discount</li>
+                    <li><i class="fas fa-check-circle"></i> Exclusive member-only sales</li>
+                </ul>
+                <button id="editProgramBtn" class="btn-secondary"><i class="fas fa-edit"></i> Edit Program</button>
+            </div>
+        </div>
+
+        <!-- Top Members -->
+        <div class="top-members">
+            <div class="section-header">
+                <h3>Top Loyalty Members</h3>
+                <button id="addPointsBtn" class="btn-primary"><i class="fas fa-plus-circle"></i> Add Points</button>
+            </div>
+            <div class="members-table-container">
+                <table class="members-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Member</th>
+                            <th>Points</th>
+                            <th>Last Activity</th>
+                            <th>Tier</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="membersTable">
+                        <!-- Members will be loaded by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Rewards Inventory -->
+        <div class="rewards-inventory">
+            <div class="section-header">
+                <h3>Rewards Inventory</h3>
+                <div>
+                    <button id="addRewardBtn" class="btn-primary"><i class="fas fa-gift"></i> Add Reward</button>
+                    <button id="manageCategoriesBtn" class="btn-secondary"><i class="fas fa-tags"></i> Manage Categories</button>
+                </div>
+            </div>
+            <div class="rewards-grid" id="rewardsGrid">
+                <!-- Rewards will be loaded by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="finance-footer">
+            <div class="footer-content">
+                <p class="footer-text">© 2025 InspireWear. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#" class="footer-link">Terms</a>
+                    <a href="#" class="footer-link">Privacy</a>
+                    <a href="#" class="footer-link">Contact</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Add Points Modal -->
+    <div class="modal-overlay" id="addPointsModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Add Points to Member</h3>
+                <button class="modal-close" id="pointsModalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="addPointsForm">
+                    <div class="form-group">
+                        <label for="memberSelect">Select Member</label>
+                        <select id="memberSelect" required>
+                            <option value="">Select Member</option>
+                            <!-- Options will be populated by JavaScript -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="pointsAmount">Points Amount</label>
+                        <input type="number" id="pointsAmount" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pointsReason">Reason</label>
+                        <select id="pointsReason" required>
+                            <option value="purchase">Purchase</option>
+                            <option value="birthday">Birthday Bonus</option>
+                            <option value="referral">Referral Bonus</option>
+                            <option value="promotion">Promotion</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="otherReasonContainer" style="display: none;">
+                        <label for="otherReason">Specify Reason</label>
+                        <input type="text" id="otherReason">
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="cancelAddPoints">Cancel</button>
+                        <button type="submit" class="btn-primary">Add Points</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Reward Modal -->
+    <div class="modal-overlay" id="addRewardModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Add New Reward</h3>
+                <button class="modal-close" id="rewardModalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="addRewardForm" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="rewardName">Reward Name</label>
+                        <input type="text" id="rewardName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="rewardDescription">Description</label>
+                        <textarea id="rewardDescription" rows="3" required></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="rewardPoints">Points Cost</label>
+                            <input type="number" id="rewardPoints" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="rewardCategory">Category</label>
+                            <select id="rewardCategory" required>
+                                <option value="discount">Discount</option>
+                                <option value="product">Product</option>
+                                <option value="service">Service</option>
+                                <option value="experience">Experience</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="rewardImage">Image</label>
+                        <input type="file" id="rewardImage" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label for="rewardStock">Stock Quantity</label>
+                        <input type="number" id="rewardStock" min="0" value="1">
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="cancelAddReward">Cancel</button>
+                        <button type="submit" class="btn-primary">Add Reward</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Program Modal -->
+    <div class="modal-overlay" id="editProgramModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Edit Loyalty Program</h3>
+                <button class="modal-close" id="programModalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editProgramForm">
+                    <div class="form-group">
+                        <label for="programName">Program Name</label>
+                        <input type="text" id="programName" value="InspireWear Rewards" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pointsRate">Points Rate (KES per point)</label>
+                        <input type="number" id="pointsRate" min="1" value="100" required>
+                        <p class="form-hint">Customers earn 1 point for every X KES spent</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupBonus">Signup Bonus Points</label>
+                        <input type="number" id="signupBonus" min="0" value="500" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="birthdayBonus">Birthday Bonus Points</label>
+                        <input type="number" id="birthdayBonus" min="0" value="200" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pointValue">Point Value (KES per point)</label>
+                        <input type="number" id="pointValue" step="0.01" min="0.01" value="0.10" required>
+                        <p class="form-hint">Value when redeeming points (1000 points = X KES)</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="tierSettings">Tier Settings</label>
+                        <div class="tier-settings">
+                            <div class="tier-row">
+                                <label>Silver</label>
+                                <input type="number" class="tier-points" placeholder="Points required" value="5000">
+                                <input type="text" class="tier-benefits" placeholder="Benefits" value="5% discount on all purchases">
+                            </div>
+                            <div class="tier-row">
+                                <label>Gold</label>
+                                <input type="number" class="tier-points" placeholder="Points required" value="15000">
+                                <input type="text" class="tier-benefits" placeholder="Benefits" value="10% discount, free shipping">
+                            </div>
+                            <div class="tier-row">
+                                <label>Platinum</label>
+                                <input type="number" class="tier-points" placeholder="Points required" value="30000">
+                                <input type="text" class="tier-benefits" placeholder="Benefits" value="15% discount, VIP events">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="cancelEditProgram">Cancel</button>
+                        <button type="submit" class="btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/loyalty.js"></script>
+</body>
+</html>

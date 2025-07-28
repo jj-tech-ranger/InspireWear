@@ -1,0 +1,74 @@
+/* Base Styles & Variables - Inherited from finance.css with some adjustments */
+:root {
+    /* Light Theme */
+    --sidebar-bg: #2c3e50;
+    --sidebar-text: #E6F0FF;
+    --sidebar-hover: rgba(230, 240, 255, 0.2);
+    --sidebar-active: #2980b9;
+    --bg-primary: #F8FAFF;
+    --bg-secondary: #FFFFFF;
+    --text-primary: #2D3748;
+    --text-secondary: #4A5568;
+    --accent-primary: #3498db;
+    --accent-secondary: #2980b9;
+    --card-bg: #FFFFFF;
+    --card-border: #E2E8F0;
+    --card-shadow: 0 4px 12px rgba(149, 157, 165, 0.15);
+    --positive: #2ecc71;
+    --negative: #e74c3c;
+    --warning: #f39c12;
+    --chart-bg: #FFFFFF;
+    --footer-bg: #2c3e50;
+    --footer-text: #E6F0FF;
+    --modal-overlay: rgba(52, 73, 94, 0.8);
+}
+
+[data-theme="dark"] {
+    --sidebar-bg: #1A202C;
+    --sidebar-text: #E6F0FF;
+    --sidebar-hover: rgba(52, 152, 219, 0.2);
+    --sidebar-active: #3498db;
+    --bg-primary: #1A202C;
+    --bg-secondary: #2D3748;
+    --text-primary: #F7FAFC;
+    --text-secondary: #CBD5E0;
+    --accent-primary: #3498db;
+    --accent-secondary: #2980b9;
+    --card-bg: #2D3748;
+    --card-border: #4A5568;
+    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    --modal-overlay: rgba(26, 32, 44, 0.9);
+    --chart-bg: #1A202C;
+    --footer-bg: #2D3748;
+    --footer-text: #CBD5E0;
+}
+
+/* CRM Specific Styles */
+.card.total-customers .card-icon {
+    color: #3498db;
+}
+
+.card.active-members .card-icon {
+    color: #f39c12;
+}
+
+.card.repeat-rate .card-icon {
+    color: #2ecc71;
+}
+
+.status.active {
+    background-color: rgba(46, 204, 113, 0.1);
+    color: var(--positive);
+}
+
+.status.inactive {
+    background-color: rgba(231, 76, 60, 0.1);
+    color: var(--negative);
+}
+
+.status.pending {
+    background-color: rgba(243, 156, 18, 0.1);
+    color: var(--warning);
+}
+
+/* Inherit all other styles from finance.css */

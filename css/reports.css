@@ -1,0 +1,600 @@
+/* Financial Reports Page Specific Styles */
+
+/* Report Controls */
+.report-controls {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--card-shadow);
+    border: 1px solid var(--card-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 2rem;
+}
+
+#customDateRange {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+#customDateRange input[type="date"] {
+    padding: 0.5rem;
+    border: 1px solid rgba(154, 165, 177, 0.3);
+    border-radius: 6px;
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+
+/* Report Summary Cards */
+.report-summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.summary-card.revenue {
+    border-left: 4px solid var(--positive);
+}
+
+.summary-card.expenses {
+    border-left: 4px solid var(--negative);
+}
+
+.summary-card.profit {
+    border-left: 4px solid var(--accent-primary);
+}
+
+.summary-card.margin {
+    border-left: 4px solid var(--warning);
+}
+
+.summary-card.revenue .card-icon {
+    background-color: rgba(46, 204, 113, 0.1);
+    color: var(--positive);
+}
+
+.summary-card.expenses .card-icon {
+    background-color: rgba(231, 76, 60, 0.1);
+    color: var(--negative);
+}
+
+.summary-card.profit .card-icon {
+    background-color: rgba(52, 152, 219, 0.1);
+    color: var(--accent-primary);
+}
+
+.summary-card.margin .card-icon {
+    background-color: rgba(243, 156, 18, 0.1);
+    color: var(--warning);
+}
+
+.summary-card .change {
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
+}
+
+.summary-card .change.positive {
+    color: var(--positive);
+}
+
+.summary-card .change.negative {
+    color: var(--negative);
+}
+
+.summary-card .change::before {
+    content: '';
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin-right: 0.25rem;
+    vertical-align: middle;
+}
+
+.summary-card .change.positive::before {
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 6px solid var(--positive);
+}
+
+.summary-card .change.negative::before {
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 6px solid var(--negative);
+}
+
+/* Charts Section */
+.charts-section {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.chart-container {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: var(--card-shadow);
+    border: 1px solid var(--card-border);
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(154, 165, 177, 0.1);
+}
+
+.chart-header h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.chart-controls {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.chart-period-btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid rgba(154, 165, 177, 0.3);
+    background-color: transparent;
+    color: var(--text-secondary);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.chart-period-btn.active,
+.chart-period-btn:hover {
+    background-color: var(--accent-primary);
+    color: white;
+    border-color: var(--accent-primary);
+}
+
+.chart-controls select {
+    padding: 0.5rem;
+    border: 1px solid rgba(154, 165, 177, 0.3);
+    border-radius: 6px;
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+
+/* Chart Canvas Styling */
+canvas {
+    max-height: 400px;
+    width: 100% !important;
+    height: auto !important;
+}
+
+/* Report Content */
+.report-content {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: var(--card-shadow);
+    border: 1px solid var(--card-border);
+    margin-bottom: 2rem;
+}
+
+.report-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--accent-primary);
+}
+
+.report-header h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.report-header .company-name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--accent-primary);
+    margin-bottom: 0.25rem;
+}
+
+.report-header .report-period {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+/* Financial Statement Tables */
+.financial-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+}
+
+.financial-table th {
+    background-color: rgba(52, 152, 219, 0.1);
+    color: var(--text-primary);
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid var(--accent-primary);
+}
+
+.financial-table th:last-child,
+.financial-table td:last-child {
+    text-align: right;
+}
+
+.financial-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid rgba(154, 165, 177, 0.1);
+    color: var(--text-secondary);
+}
+
+.financial-table tr:hover {
+    background-color: rgba(52, 152, 219, 0.02);
+}
+
+.financial-table .section-header {
+    background-color: rgba(52, 152, 219, 0.05);
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.financial-table .section-total {
+    background-color: rgba(52, 152, 219, 0.1);
+    font-weight: 700;
+    color: var(--text-primary);
+    border-top: 2px solid var(--accent-primary);
+}
+
+.financial-table .grand-total {
+    background-color: var(--accent-primary);
+    color: white;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.financial-table .indent-1 {
+    padding-left: 2rem;
+}
+
+.financial-table .indent-2 {
+    padding-left: 3rem;
+}
+
+/* Amount Formatting */
+.amount-positive {
+    color: var(--positive);
+    font-weight: 600;
+}
+
+.amount-negative {
+    color: var(--negative);
+    font-weight: 600;
+}
+
+.amount-neutral {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+/* Report Sections */
+.report-section {
+    margin-bottom: 2rem;
+}
+
+.report-section h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(154, 165, 177, 0.2);
+}
+
+.report-section h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+/* Key Metrics Grid */
+.key-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.metric-card {
+    background-color: rgba(52, 152, 219, 0.05);
+    border-left: 4px solid var(--accent-primary);
+    padding: 1rem;
+    border-radius: 6px;
+}
+
+.metric-card h5 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.metric-card .metric-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.metric-card .metric-change {
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+}
+
+/* Balance Sheet Specific Styles */
+.balance-sheet-section {
+    margin-bottom: 2rem;
+}
+
+.balance-sheet-section h4 {
+    background-color: rgba(52, 152, 219, 0.1);
+    padding: 0.75rem 1rem;
+    margin: 0 0 1rem 0;
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.balance-equation {
+    background-color: rgba(46, 204, 113, 0.1);
+    border: 2px solid var(--positive);
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+    margin: 2rem 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* Cash Flow Specific Styles */
+.cash-flow-section {
+    margin-bottom: 1.5rem;
+}
+
+.cash-flow-summary {
+    background-color: rgba(243, 156, 18, 0.1);
+    border-left: 4px solid var(--warning);
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+}
+
+.cash-flow-summary h5 {
+    color: var(--warning);
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+/* Schedule Report Modal Styles */
+#weeklyDayGroup,
+#monthlyDateGroup {
+    transition: all 0.3s ease;
+}
+
+/* Print Styles */
+@media print {
+    .sidebar,
+    .finance-header,
+    .report-controls,
+    .charts-section,
+    .finance-footer {
+        display: none !important;
+    }
+    
+    .main-content {
+        margin-left: 0 !important;
+        padding: 0 !important;
+    }
+    
+    .report-content {
+        box-shadow: none !important;
+        border: none !important;
+        padding: 1rem !important;
+    }
+    
+    .financial-table {
+        font-size: 0.85rem;
+    }
+    
+    .financial-table th,
+    .financial-table td {
+        padding: 0.5rem;
+    }
+    
+    .report-header h2 {
+        font-size: 1.5rem;
+    }
+    
+    .summary-card {
+        break-inside: avoid;
+    }
+}
+
+/* Responsive Design for Reports */
+@media (max-width: 1200px) {
+    .report-summary {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .charts-section {
+        grid-template-columns: 1fr;
+    }
+    
+    .report-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .actions-section {
+        justify-content: flex-end;
+    }
+}
+
+@media (max-width: 768px) {
+    .report-summary {
+        grid-template-columns: 1fr;
+    }
+    
+    .filter-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .filter-group select {
+        min-width: auto;
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    
+    #customDateRange {
+        flex-direction: column;
+    }
+    
+    .actions-section {
+        flex-direction: column;
+    }
+    
+    .chart-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+    
+    .chart-controls {
+        justify-content: center;
+    }
+    
+    .financial-table {
+        font-size: 0.85rem;
+    }
+    
+    .financial-table th,
+    .financial-table td {
+        padding: 0.5rem;
+    }
+    
+    .key-metrics {
+        grid-template-columns: 1fr;
+    }
+    
+    .report-header h2 {
+        font-size: 1.5rem;
+    }
+    
+    .report-header .company-name {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .summary-card {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .summary-card .card-icon {
+        margin-right: 0;
+        margin-bottom: 1rem;
+    }
+    
+    .search-box {
+        max-width: none;
+    }
+    
+    .form-row {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .chart-period-btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+    }
+    
+    .financial-table {
+        font-size: 0.8rem;
+        overflow-x: auto;
+        display: block;
+        white-space: nowrap;
+    }
+    
+    .financial-table thead,
+    .financial-table tbody,
+    .financial-table th,
+    .financial-table td,
+    .financial-table tr {
+        display: block;
+    }
+    
+    .financial-table thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+    
+    .financial-table tr {
+        border: 1px solid rgba(154, 165, 177, 0.2);
+        margin-bottom: 0.5rem;
+        padding: 0.5rem;
+        border-radius: 6px;
+    }
+    
+    .financial-table td {
+        border: none;
+        position: relative;
+        padding-left: 50%;
+        white-space: normal;
+        text-align: left !important;
+    }
+    
+    .financial-table td:before {
+        content: attr(data-label) ": ";
+        position: absolute;
+        left: 6px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+    
+    .report-content {
+        padding: 1rem;
+    }
+    
+    .metric-card .metric-value {
+        font-size: 1.2rem;
+    }
+}
+

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InspireWear | Invoices</title>
+    <link rel="stylesheet" href="../css/finance.css">
+    <link rel="stylesheet" href="../css/invoices.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <link rel="icon" href="../img/favicon.png" type="image/x-icon">
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="morph-overlay" id="morphOverlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p class="loading-text">Loading Invoices...</p>
+        </div>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="logo-container">
+            <img src="../img/logo.png" alt="InspireWear Logo" class="logo">
+            <h1 class="logo-text">InspireWear</h1>
+        </div>
+
+        <a href="../templates/index.html" class="home-button">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+
+        <div class="module-heading">
+            <span class="star">✧</span>
+            <h1>FINANCE</h1>
+            <span class="star">✧</span>
+        </div>
+
+        <nav class="finance-nav">
+            <ul>
+                <li><a href="../templates/finance_dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                <li><a href="../templates/transactions.html"><i class="fas fa-exchange-alt"></i> Transactions</a></li>
+                <li class="active"><a href="../templates/invoices.html"><i class="fas fa-file-invoice"></i> Invoices</a></li>
+                <li><a href="../templates/expenses.html"><i class="fas fa-receipt"></i> Expenses</a></li>
+                <li><a href="../templates/payroll.html"><i class="fas fa-money-bill-wave"></i> Payroll</a></li>
+                <li><a href="../templates/finance_notifications.html"><i class="fas fa-bell"></i> Notifications</a></li>
+                <li><a href="../templates/financial_reports.html"><i class="fas fa-chart-pie"></i> Reports</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <header class="finance-header">
+            <h2>Invoices</h2>
+            <div class="header-actions">
+                <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon theme-icon"></i>
+                </button>
+                <div class="profile-container">
+                    <button class="profile-btn" id="profileBtn" aria-label="User profile" aria-expanded="false">
+                        <img src="../img/user.png" alt="Profile" class="profile-img">
+                        <span>Finance Manager</span>
+                    </button>
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <a href="../templates/index.html" class="dropdown-item">
+                            <i class="fas fa-home"></i> Back to Home
+                        </a>
+                        <a href="../templates/login.html" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Invoice Summary Cards -->
+        <div class="invoice-summary">
+            <div class="summary-card total">
+                <div class="card-icon">
+                    <i class="fas fa-file-invoice"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Total Invoices</h3>
+                    <p class="count"><span id="totalInvoices">156</span></p>
+                    <p class="period">This Month</p>
+                </div>
+            </div>
+
+            <div class="summary-card paid">
+                <div class="card-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Paid Invoices</h3>
+                    <p class="amount">KSh <span id="paidAmount">2,847,500</span></p>
+                    <p class="period">This Month</p>
+                </div>
+            </div>
+
+            <div class="summary-card pending">
+                <div class="card-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Pending Payment</h3>
+                    <p class="amount">KSh <span id="pendingAmount">485,200</span></p>
+                    <p class="period">Outstanding</p>
+                </div>
+            </div>
+
+            <div class="summary-card overdue">
+                <div class="card-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Overdue</h3>
+                    <p class="amount">KSh <span id="overdueAmount">125,800</span></p>
+                    <p class="period">Past Due Date</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Invoice Controls -->
+        <div class="invoice-controls">
+            <div class="filters-section">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInvoices" placeholder="Search invoices...">
+                </div>
+                
+                <div class="filter-group">
+                    <select id="filterStatus">
+                        <option value="">All Status</option>
+                        <option value="draft">Draft</option>
+                        <option value="sent">Sent</option>
+                        <option value="paid">Paid</option>
+                        <option value="overdue">Overdue</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                    
+                    <select id="filterCustomer">
+                        <option value="">All Customers</option>
+                        <option value="Westgate Boutique">Westgate Boutique</option>
+                        <option value="Sarit Centre Store">Sarit Centre Store</option>
+                        <option value="Nakumatt Holdings">Nakumatt Holdings</option>
+                        <option value="Tuskys Supermarket">Tuskys Supermarket</option>
+                        <option value="Online Customer">Online Customer</option>
+                    </select>
+                    
+                    <input type="date" id="filterDateFrom" placeholder="From Date">
+                    <input type="date" id="filterDateTo" placeholder="To Date">
+                </div>
+                
+                <button id="clearFilters" class="btn-secondary">
+                    <i class="fas fa-times"></i> Clear Filters
+                </button>
+            </div>
+            
+            <div class="actions-section">
+                <button id="exportInvoices" class="btn-secondary">
+                    <i class="fas fa-download"></i> Export
+                </button>
+                <button id="createInvoiceBtn" class="btn-primary">
+                    <i class="fas fa-plus"></i> Create Invoice
+                </button>
+            </div>
+        </div>
+
+        <!-- Invoices Table -->
+        <div class="invoices-table-container">
+            <table class="invoices-table">
+                <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" id="selectAll">
+                        </th>
+                        <th>Invoice # <i class="fas fa-sort sort-icon" data-column="number"></i></th>
+                        <th>Customer</th>
+                        <th>Date <i class="fas fa-sort sort-icon" data-column="date"></i></th>
+                        <th>Due Date</th>
+                        <th>Amount (KSh) <i class="fas fa-sort sort-icon" data-column="amount"></i></th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="invoicesTableBody">
+                    <!-- Invoices will be loaded by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination-container">
+            <div class="pagination-info">
+                Showing <span id="showingStart">1</span> to <span id="showingEnd">10</span> of <span id="totalInvoicesCount">50</span> invoices
+            </div>
+            <div class="pagination-controls">
+                <button id="prevPage" class="pagination-btn" disabled>
+                    <i class="fas fa-chevron-left"></i> Previous
+                </button>
+                <div class="page-numbers" id="pageNumbers">
+                    <!-- Page numbers will be generated by JavaScript -->
+                </div>
+                <button id="nextPage" class="pagination-btn">
+                    Next <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="finance-footer">
+            <div class="footer-content">
+                <p class="footer-text">© 2025 InspireWear. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#" class="footer-link">Terms</a>
+                    <a href="#" class="footer-link">Privacy</a>
+                    <a href="#" class="footer-link">Contact</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Create Invoice Modal -->
+    <div class="modal-overlay" id="createInvoiceModal">
+        <div class="modal large">
+            <div class="modal-header">
+                <h3>Create New Invoice</h3>
+                <button class="modal-close" id="modalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="createInvoiceForm">
+                    <div class="invoice-form-section">
+                        <h4>Customer Information</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="customerName">Customer Name</label>
+                                <input type="text" id="customerName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="customerEmail">Email</label>
+                                <input type="email" id="customerEmail" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="customerPhone">Phone</label>
+                                <input type="tel" id="customerPhone">
+                            </div>
+                            <div class="form-group">
+                                <label for="customerLocation">Location</label>
+                                <select id="customerLocation" required>
+                                    <option value="">Select Location</option>
+                                    <option value="Nairobi">Nairobi</option>
+                                    <option value="Mombasa">Mombasa</option>
+                                    <option value="Kisumu">Kisumu</option>
+                                    <option value="Nakuru">Nakuru</option>
+                                    <option value="Eldoret">Eldoret</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="customerAddress">Address</label>
+                            <textarea id="customerAddress" rows="2"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="invoice-form-section">
+                        <h4>Invoice Details</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="invoiceDate">Invoice Date</label>
+                                <input type="date" id="invoiceDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="dueDate">Due Date</label>
+                                <input type="date" id="dueDate" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="invoiceNotes">Notes</label>
+                            <textarea id="invoiceNotes" rows="2" placeholder="Additional notes or terms"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="invoice-form-section">
+                        <h4>Items</h4>
+                        <div class="invoice-items">
+                            <div class="items-header">
+                                <span>Description</span>
+                                <span>Quantity</span>
+                                <span>Unit Price (KSh)</span>
+                                <span>Total (KSh)</span>
+                                <span>Action</span>
+                            </div>
+                            <div id="invoiceItemsList">
+                                <!-- Items will be added dynamically -->
+                            </div>
+                            <button type="button" id="addItemBtn" class="btn-secondary">
+                                <i class="fas fa-plus"></i> Add Item
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="invoice-totals">
+                        <div class="totals-row">
+                            <span>Subtotal:</span>
+                            <span>KSh <span id="subtotalAmount">0.00</span></span>
+                        </div>
+                        <div class="totals-row">
+                            <span>VAT (16%):</span>
+                            <span>KSh <span id="vatAmount">0.00</span></span>
+                        </div>
+                        <div class="totals-row total">
+                            <span>Total:</span>
+                            <span>KSh <span id="totalAmount">0.00</span></span>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="cancelCreateInvoice">Cancel</button>
+                        <button type="button" class="btn-secondary" id="saveDraftBtn">Save as Draft</button>
+                        <button type="submit" class="btn-primary">Create & Send Invoice</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Invoice Preview Modal -->
+    <div class="modal-overlay" id="invoicePreviewModal">
+        <div class="modal large">
+            <div class="modal-header">
+                <h3>Invoice Preview</h3>
+                <button class="modal-close" id="previewModalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="invoice-preview" id="invoicePreviewContent">
+                    <!-- Invoice preview will be generated here -->
+                </div>
+                <div class="preview-actions">
+                    <button class="btn-secondary" id="downloadPdfBtn">
+                        <i class="fas fa-download"></i> Download PDF
+                    </button>
+                    <button class="btn-secondary" id="sendEmailBtn">
+                        <i class="fas fa-envelope"></i> Send Email
+                    </button>
+                    <button class="btn-primary" id="markAsPaidBtn">
+                        <i class="fas fa-check"></i> Mark as Paid
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/finance.js"></script>
+    <script src="../js/invoices.js"></script>
+</body>
+</html>
+

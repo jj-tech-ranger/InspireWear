@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InspireWear | Reports</title>
+    <link rel="stylesheet" href="../css/inventory.css">
+    <link rel="stylesheet" href="../css/inventory_reports.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <link rel="icon" href="../img/favicon.png" type="image/x-icon">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="morph-overlay" id="morphOverlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p class="loading-text">Loading Reports...</p>
+        </div>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="logo-container">
+            <img src="../img/logo.png" alt="InspireWear Logo" class="logo">
+            <h1 class="logo-text">InspireWear</h1>
+        </div>
+
+        <a href="../templates/index.html" class="home-button">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+
+        <div class="module-heading">
+            <span class="star">✧</span>
+            <h1>INVENTORY</h1>
+            <span class="star">✧</span>
+        </div>
+
+        <nav class="inventory-nav">
+            <ul>
+                <li><a href="../templates/inventory_dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                <li><a href="../templates/products.html"><i class="fas fa-tshirt"></i> Products</a></li>
+                <li><a href="../templates/variants.html"><i class="fas fa-palette"></i> Variants</a></li>
+                <li><a href="../templates/suppliers.html"><i class="fas fa-truck"></i> Suppliers</a></li>
+                <li><a href="../templates/orders.html"><i class="fas fa-boxes"></i> Orders</a></li>
+                <li><a href="../templates/inventory_notifications.html"><i class="fas fa-bell"></i> Notifications</a></li>
+                <li class="active"><a href="../templates/inventory_reports.html"><i class="fas fa-chart-bar"></i> Reports</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <header class="inventory-header">
+            <h2>Inventory Reports & Analytics</h2>
+            <div class="header-actions">
+                <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon theme-icon"></i>
+                </button>
+                <div class="profile-container">
+                    <button class="profile-btn" id="profileBtn" aria-label="User profile" aria-expanded="false">
+                        <img src="../img/user.png" alt="Profile" class="profile-img">
+                        <span>Inventory Manager</span>
+                    </button>
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <a href="../templates/index.html" class="dropdown-item">
+                            <i class="fas fa-home"></i> Back to Home
+                        </a>
+                        <a href="../templates/login.html" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Reports Controls -->
+        <div class="reports-controls">
+            <div class="control-tabs">
+                <button class="tab-btn active" data-tab="overview">
+                    <i class="fas fa-chart-pie"></i> Overview
+                </button>
+                <button class="tab-btn" data-tab="inventory">
+                    <i class="fas fa-boxes"></i> Inventory Analysis
+                </button>
+                <button class="tab-btn" data-tab="suppliers">
+                    <i class="fas fa-truck"></i> Supplier Reports
+                </button>
+                <button class="tab-btn" data-tab="orders">
+                    <i class="fas fa-shopping-cart"></i> Order Analytics
+                </button>
+                <button class="tab-btn" data-tab="financial">
+                    <i class="fas fa-coins"></i> Financial Reports
+                </button>
+            </div>
+            
+            <div class="filter-section">
+                <div class="filter-container">
+                    <select id="periodFilter" class="filter-select">
+                        <option value="7">Last 7 Days</option>
+                        <option value="30" selected>Last 30 Days</option>
+                        <option value="90">Last 3 Months</option>
+                        <option value="365">Last Year</option>
+                        <option value="custom">Custom Range</option>
+                    </select>
+                    <input type="date" id="startDate" class="filter-select" style="display: none;">
+                    <input type="date" id="endDate" class="filter-select" style="display: none;">
+                    <select id="locationFilter" class="filter-select">
+                        <option value="">All Locations</option>
+                        <option value="Nairobi">Nairobi</option>
+                        <option value="Mombasa">Mombasa</option>
+                        <option value="Kisumu">Kisumu</option>
+                        <option value="Nakuru">Nakuru</option>
+                        <option value="Eldoret">Eldoret</option>
+                    </select>
+                </div>
+                <div class="action-buttons">
+                    <button id="generateReportBtn" class="btn-primary">
+                        <i class="fas fa-chart-bar"></i> Generate Report
+                    </button>
+                    <button id="exportReportBtn" class="btn-secondary">
+                        <i class="fas fa-download"></i> Export PDF
+                    </button>
+                    <button id="scheduleReportBtn" class="btn-secondary">
+                        <i class="fas fa-clock"></i> Schedule
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reports Content -->
+        <div class="reports-content">
+            <!-- Overview Tab -->
+            <div class="tab-content active" id="overviewTab">
+                <!-- Key Metrics Cards -->
+                <div class="metrics-cards">
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-tshirt"></i>
+                        </div>
+                        <div class="metric-content">
+                            <h3>Total Products</h3>
+                            <p class="metric-value" id="totalProducts">247</p>
+                            <p class="metric-change positive"><i class="fas fa-arrow-up"></i> 12% vs last month</p>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-warehouse"></i>
+                        </div>
+                        <div class="metric-content">
+                            <h3>Total Stock Value</h3>
+                            <p class="metric-value">KSh <span id="totalStockValue">4,567,890</span></p>
+                            <p class="metric-change positive"><i class="fas fa-arrow-up"></i> 8% vs last month</p>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="metric-content">
+                            <h3>Low Stock Items</h3>
+                            <p class="metric-value" id="lowStockItems">23</p>
+                            <p class="metric-change negative"><i class="fas fa-arrow-up"></i> 5 new alerts</p>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="metric-content">
+                            <h3>Turnover Rate</h3>
+                            <p class="metric-value" id="turnoverRate">2.4x</p>
+                            <p class="metric-change positive"><i class="fas fa-arrow-up"></i> 0.3x improvement</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="charts-row">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Inventory Value Trend</h3>
+                            <div class="chart-actions">
+                                <button class="chart-action-btn" title="Fullscreen">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+                                <button class="chart-action-btn" title="Download">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <canvas id="inventoryTrendChart"></canvas>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Stock Distribution by Category</h3>
+                            <div class="chart-actions">
+                                <button class="chart-action-btn" title="Fullscreen">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+                                <button class="chart-action-btn" title="Download">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <canvas id="categoryDistributionChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Top Products Table -->
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3>Top Performing Products</h3>
+                        <button class="btn-secondary">View All</button>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Category</th>
+                                <th>Stock Level</th>
+                                <th>Value (KSh)</th>
+                                <th>Turnover</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="topProductsTable">
+                            <!-- Data will be loaded by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Inventory Analysis Tab -->
+            <div class="tab-content" id="inventoryTab">
+                <div class="analysis-grid">
+                    <div class="chart-container large">
+                        <div class="chart-header">
+                            <h3>Stock Levels by Location</h3>
+                            <div class="chart-actions">
+                                <button class="chart-action-btn" title="Fullscreen">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+                                <button class="chart-action-btn" title="Download">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <canvas id="stockLocationChart"></canvas>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>ABC Analysis</h3>
+                            <div class="chart-actions">
+                                <button class="chart-action-btn" title="Fullscreen">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+                                <button class="chart-action-btn" title="Download">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <canvas id="abcAnalysisChart"></canvas>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Aging Analysis</h3>
+                            <div class="chart-actions">
+                                <button class="chart-action-btn" title="Fullscreen">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+                                <button class="chart-action-btn" title="Download">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <canvas id="agingAnalysisChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Low Stock Alert Table -->
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3>Low Stock Alerts</h3>
+                        <button class="btn-primary">Reorder All</button>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Current Stock</th>
+                                <th>Minimum Level</th>
+                                <th>Recommended Order</th>
+                                <th>Supplier</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lowStockTable">
+                            <!-- Data will be loaded by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Supplier Reports Tab -->
+            <div class="tab-content" id="suppliersTab">
+                <div class="analysis-grid">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Supplier Performance</h3>
+                            <div class="chart-actions">
+                                <button class="chart-action-btn" title="Fullscreen">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+                                <button class="chart-action-btn" title="Download">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <canvas id="supplierPerformanceChart"></canvas>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Order Value by Supplier</h3>
+                            <div class="chart-actions">
+                                <button class="chart-action-btn" title="Fullscreen">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+                                <button class="chart-action-btn" title="Download">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <canvas id="supplierValueChart"></canvas>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Delivery Performance</h3>
+                            <div class="chart-actions">
+                                <button class="chart-action-btn" title="Fullscreen">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+                                <button class="chart-action-btn" title="Download">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <canvas id="deliveryPerformanceChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Supplier Performance Table -->
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3>Supplier Performance Summary</h3>
+                        <button class="btn-secondary">Export Report</button>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Supplier</th>
+                                <th>Total Orders</th>
+                                <th>Order Value (KSh)</th>
+                                <th>On-Time Delivery</th>
+                                <th>Quality Rating</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="supplierPerformanceTable">
+                            <!-- Data will be loaded by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Order Analytics Tab -->
+            <div class="tab-content" id="ordersTab">
+                <div class="analysis-grid">
+                    <div class="chart-container large">
+                        <div class="chart-header">
+                            <h3>Order Trends</h3>
+                            <div class="chart-actions">
+                                <button class="chart-action-btn" title="Fullscreen">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+                                <button class="chart-action-btn" title="Download">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <canvas id="orderTrendsChart"></canvas>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Order Status Distribution</h3>
+                            <div class="chart-actions">
+                                <button class="chart-action-btn" title="Fullscreen">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+                                <button class="chart-action-btn" title="Download">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <canvas id="orderStatusChart"></canvas>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Average Order Value</h3>
+                            <div class="chart-actions">
+                                <button class="chart-action-btn" title="Fullscreen">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+                                <button class="chart-action-btn" title="Download">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <canvas id="avgOrderValueChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Financial Reports Tab -->
+            <div class="tab-content" id="financialTab">
+                <div class="analysis-grid">
+                    <div class="chart-container large">
+                        <div class="chart-header">
+                            <h3>Inventory Investment Trend</h3>
+                            <div class="chart-actions">
+                                <button class="chart-action-btn" title="Fullscreen">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+                                <button class="chart-action-btn" title="Download">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <canvas id="investmentTrendChart"></canvas>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Cost Breakdown</h3>
+                            <div class="chart-actions">
+                                <button class="chart-action-btn" title="Fullscreen">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+                                <button class="chart-action-btn" title="Download">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <canvas id="costBreakdownChart"></canvas>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>ROI by Category</h3>
+                            <div class="chart-actions">
+                                <button class="chart-action-btn" title="Fullscreen">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+                                <button class="chart-action-btn" title="Download">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <canvas id="roiCategoryChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Financial Summary Table -->
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3>Financial Summary</h3>
+                        <button class="btn-secondary">Export to Finance</button>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Investment (KSh)</th>
+                                <th>Current Value (KSh)</th>
+                                <th>Turnover</th>
+                                <th>ROI (%)</th>
+                                <th>Trend</th>
+                            </tr>
+                        </thead>
+                        <tbody id="financialSummaryTable">
+                            <!-- Data will be loaded by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="inventory-footer">
+            <div class="footer-content">
+                <p class="footer-text">© 2025 InspireWear. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#" class="footer-link">Terms</a>
+                    <a href="#" class="footer-link">Privacy</a>
+                    <a href="#" class="footer-link">Contact</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Schedule Report Modal -->
+    <div class="modal-overlay" id="scheduleModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Schedule Report</h3>
+                <button class="modal-close" id="modalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="scheduleForm">
+                    <div class="form-group">
+                        <label for="reportType">Report Type</label>
+                        <select id="reportType" required>
+                            <option value="">Select Report Type</option>
+                            <option value="overview">Overview Report</option>
+                            <option value="inventory">Inventory Analysis</option>
+                            <option value="suppliers">Supplier Performance</option>
+                            <option value="orders">Order Analytics</option>
+                            <option value="financial">Financial Report</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="frequency">Frequency</label>
+                        <select id="frequency" required>
+                            <option value="">Select Frequency</option>
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option>
+                            <option value="quarterly">Quarterly</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="recipients">Recipients (Email)</label>
+                        <input type="email" id="recipients" required placeholder="manager@inspirewear.co.ke">
+                    </div>
+                    <div class="form-group">
+                        <label for="startSchedule">Start Date</label>
+                        <input type="date" id="startSchedule" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="cancelSchedule">Cancel</button>
+                        <button type="submit" class="btn-primary">Schedule Report</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/inventory_reports.js"></script>
+</body>
+</html>
+
