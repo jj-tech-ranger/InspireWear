@@ -23,66 +23,39 @@ document.addEventListener('DOMContentLoaded', function() {
     const nextPage = document.getElementById('nextPage');
     const pageNumbers = document.getElementById('pageNumbers');
 
-    // Sample transactions data for Kenyan clothing store
-    const transactionsData = {
-        summary: {
-            totalIncome: 2847500,
-            totalExpenses: 1892300,
-            netFlow: 955200,
-            pendingAmount: 124800
-        },
-        transactions: [
-            { id: 1, date: '2025-01-20', description: 'Sales - Westgate Mall Store', location: 'Nairobi', category: 'sales', amount: 285000, type: 'income', status: 'completed', notes: 'Weekend sales peak' },
-            { id: 2, date: '2025-01-19', description: 'Fabric Purchase - Cotton Suppliers', location: 'Mombasa', category: 'supplies', amount: 125000, type: 'expense', status: 'completed', notes: 'Bulk cotton purchase for Q1' },
-            { id: 3, date: '2025-01-18', description: 'Online Store Sales', location: 'Online', category: 'sales', amount: 156000, type: 'income', status: 'pending', notes: 'Payment processing' },
-            { id: 4, date: '2025-01-17', description: 'Staff Salaries - January', location: 'Nairobi', category: 'salaries', amount: 420000, type: 'expense', status: 'completed', notes: 'Monthly payroll' },
-            { id: 5, date: '2025-01-16', description: 'Rent Payment - Sarit Centre', location: 'Nairobi', category: 'rent', amount: 180000, type: 'expense', status: 'completed', notes: 'Monthly rent' },
-            { id: 6, date: '2025-01-15', description: 'Sales - Kisumu Branch', location: 'Kisumu', category: 'sales', amount: 98000, type: 'income', status: 'completed', notes: 'New branch performance' },
-            { id: 7, date: '2025-01-14', description: 'Marketing Campaign - Facebook Ads', location: 'Online', category: 'marketing', amount: 45000, type: 'expense', status: 'completed', notes: 'Q1 digital marketing' },
-            { id: 8, date: '2025-01-13', description: 'Utility Bills - Electricity', location: 'Nairobi', category: 'utilities', amount: 28000, type: 'expense', status: 'completed', notes: 'Monthly electricity' },
-            { id: 9, date: '2025-01-12', description: 'Sales - Nakuru Outlet', location: 'Nakuru', category: 'sales', amount: 142000, type: 'income', status: 'completed', notes: 'Strong weekend sales' },
-            { id: 10, date: '2025-01-11', description: 'Transport - Delivery Costs', location: 'Nairobi', category: 'transport', amount: 15000, type: 'expense', status: 'completed', notes: 'Customer deliveries' },
-            { id: 11, date: '2025-01-10', description: 'Sales - Mombasa Store', location: 'Mombasa', category: 'sales', amount: 198000, type: 'income', status: 'completed', notes: 'Tourist season boost' },
-            { id: 12, date: '2025-01-09', description: 'Equipment Maintenance', location: 'Nairobi', category: 'maintenance', amount: 32000, type: 'expense', status: 'pending', notes: 'Sewing machine service' },
-            { id: 13, date: '2025-01-08', description: 'Wholesale Order - Boutiques', location: 'Eldoret', category: 'sales', amount: 275000, type: 'income', status: 'completed', notes: 'Bulk order from local boutiques' },
-            { id: 14, date: '2025-01-07', description: 'Insurance Premium', location: 'Nairobi', category: 'utilities', amount: 85000, type: 'expense', status: 'completed', notes: 'Annual business insurance' },
-            { id: 15, date: '2025-01-06', description: 'Sales Return Processing', location: 'Online', category: 'sales', amount: -12000, type: 'expense', status: 'completed', notes: 'Customer returns refund' },
-            { id: 16, date: '2025-01-05', description: 'New Stock Purchase - Accessories', location: 'Nairobi', category: 'supplies', amount: 95000, type: 'expense', status: 'completed', notes: 'Belts, bags, and jewelry' },
-            { id: 17, date: '2025-01-04', description: 'Sales - Weekend Market', location: 'Kisumu', category: 'sales', amount: 67000, type: 'income', status: 'completed', notes: 'Local market stall' },
-            { id: 18, date: '2025-01-03', description: 'Office Supplies', location: 'Nairobi', category: 'supplies', amount: 8500, type: 'expense', status: 'completed', notes: 'Stationery and printing' },
-            { id: 19, date: '2025-01-02', description: 'Sales - New Year Promotion', location: 'Nairobi', category: 'sales', amount: 320000, type: 'income', status: 'completed', notes: 'New Year sale event' },
-            { id: 20, date: '2025-01-01', description: 'Bank Charges', location: 'Nairobi', category: 'utilities', amount: 2500, type: 'expense', status: 'completed', notes: 'Monthly bank fees' }
-        ]
-    };
-
     // Pagination variables
     let currentPage = 1;
     const itemsPerPage = 10;
-    let filteredTransactions = [...transactionsData.transactions];
+    let filteredTransactions = [];
     let sortColumn = '';
     let sortDirection = 'asc';
 
     // Initialize the page
-    function initPage() {
-        // Set summary numbers
-        document.getElementById('totalIncome').textContent = formatCurrency(transactionsData.summary.totalIncome);
-        document.getElementById('totalExpenses').textContent = formatCurrency(transactionsData.summary.totalExpenses);
-        document.getElementById('netFlow').textContent = formatCurrency(transactionsData.summary.netFlow);
-        document.getElementById('pendingAmount').textContent = formatCurrency(transactionsData.summary.pendingAmount);
+    async function initPage() {
+        try {
+            const summary = await fetch('/api/transactions/summary/').then(res => res.json());
+            // Set summary numbers
+            document.getElementById('totalIncome').textContent = formatCurrency(summary.total_income);
+            document.getElementById('totalExpenses').textContent = formatCurrency(summary.total_expenses);
+            document.getElementById('netFlow').textContent = formatCurrency(summary.net_flow);
+            document.getElementById('pendingAmount').textContent = formatCurrency(summary.pending_amount);
 
-        // Load transactions
-        applyFilters();
+            // Load transactions
+            await applyFilters();
 
-        // Set default date range (last 30 days)
-        const today = new Date();
-        const thirtyDaysAgo = new Date(today.getTime() - (30 * 24 * 60 * 60 * 1000));
-        filterDateTo.value = today.toISOString().split('T')[0];
-        filterDateFrom.value = thirtyDaysAgo.toISOString().split('T')[0];
-
-        // Hide loading overlay
-        setTimeout(() => {
-            morphOverlay.classList.remove('active');
-        }, 1000);
+            // Set default date range (last 30 days)
+            const today = new Date();
+            const thirtyDaysAgo = new Date(today.getTime() - (30 * 24 * 60 * 60 * 1000));
+            filterDateTo.value = today.toISOString().split('T')[0];
+            filterDateFrom.value = thirtyDaysAgo.toISOString().split('T')[0];
+        } catch (error) {
+            console.error('Error initializing page:', error);
+        } finally {
+            // Hide loading overlay
+            setTimeout(() => {
+                morphOverlay.classList.remove('active');
+            }, 1000);
+        }
     }
 
     // Format currency for KES
@@ -100,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Apply filters and search
-    function applyFilters() {
+    async function applyFilters() {
         const searchTerm = searchTransactions.value.toLowerCase();
         const typeFilter = filterType.value;
         const statusFilter = filterStatus.value;
@@ -108,49 +81,26 @@ document.addEventListener('DOMContentLoaded', function() {
         const dateFromFilter = filterDateFrom.value;
         const dateToFilter = filterDateTo.value;
 
-        filteredTransactions = transactionsData.transactions.filter(transaction => {
-            const matchesSearch = transaction.description.toLowerCase().includes(searchTerm) ||
-                                transaction.location.toLowerCase().includes(searchTerm) ||
-                                transaction.category.toLowerCase().includes(searchTerm);
-            
-            const matchesType = !typeFilter || transaction.type === typeFilter;
-            const matchesStatus = !statusFilter || transaction.status === statusFilter;
-            const matchesLocation = !locationFilter || transaction.location === locationFilter;
-            
-            let matchesDateRange = true;
-            if (dateFromFilter && dateToFilter) {
-                const transactionDate = new Date(transaction.date);
-                const fromDate = new Date(dateFromFilter);
-                const toDate = new Date(dateToFilter);
-                matchesDateRange = transactionDate >= fromDate && transactionDate <= toDate;
-            }
-
-            return matchesSearch && matchesType && matchesStatus && matchesLocation && matchesDateRange;
+        const params = new URLSearchParams({
+            search: searchTerm,
+            type: typeFilter,
+            status: statusFilter,
+            location: locationFilter,
+            date_from: dateFromFilter,
+            date_to: dateToFilter,
+            sort_by: sortColumn,
+            sort_dir: sortDirection,
         });
 
-        // Apply sorting
-        if (sortColumn) {
-            filteredTransactions.sort((a, b) => {
-                let aValue = a[sortColumn];
-                let bValue = b[sortColumn];
-
-                if (sortColumn === 'date') {
-                    aValue = new Date(aValue);
-                    bValue = new Date(bValue);
-                } else if (sortColumn === 'amount') {
-                    aValue = Math.abs(aValue);
-                    bValue = Math.abs(bValue);
-                }
-
-                if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
-                if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
-                return 0;
-            });
+        try {
+            const transactions = await fetch(`/api/transactions/?${params.toString()}`).then(res => res.json());
+            filteredTransactions = transactions;
+            currentPage = 1;
+            renderTransactions();
+            renderPagination();
+        } catch (error) {
+            console.error('Error applying filters:', error);
         }
-
-        currentPage = 1;
-        renderTransactions();
-        renderPagination();
     }
 
     // Render transactions table
@@ -273,15 +223,15 @@ document.addEventListener('DOMContentLoaded', function() {
         renderPagination();
     };
 
-    window.viewTransaction = function(id) {
-        const transaction = transactionsData.transactions.find(t => t.id === id);
+    window.viewTransaction = async function(id) {
+        const transaction = await fetch(`/api/transactions/${id}/`).then(res => res.json());
         if (transaction) {
             alert(`Transaction Details:\n\nDate: ${formatDate(transaction.date)}\nDescription: ${transaction.description}\nLocation: ${transaction.location}\nAmount: KSh ${formatCurrency(transaction.amount)}\nType: ${transaction.type}\nStatus: ${transaction.status}\nNotes: ${transaction.notes || 'None'}`);
         }
     };
 
-    window.editTransaction = function(id) {
-        const transaction = transactionsData.transactions.find(t => t.id === id);
+    window.editTransaction = async function(id) {
+        const transaction = await fetch(`/api/transactions/${id}/`).then(res => res.json());
         if (transaction) {
             // Populate form with transaction data
             document.getElementById('transactionDate').value = transaction.date;
@@ -296,13 +246,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
-    window.deleteTransaction = function(id) {
+    window.deleteTransaction = async function(id) {
         if (confirm('Are you sure you want to delete this transaction?')) {
-            const index = transactionsData.transactions.findIndex(t => t.id === id);
-            if (index !== -1) {
-                transactionsData.transactions.splice(index, 1);
-                applyFilters();
-                alert('Transaction deleted successfully!');
+            try {
+                const response = await fetch(`/api/transactions/${id}/`, { method: 'DELETE' });
+                if (response.ok) {
+                    await applyFilters();
+                    alert('Transaction deleted successfully!');
+                } else {
+                    alert('Failed to delete transaction.');
+                }
+            } catch (error) {
+                console.error('Error deleting transaction:', error);
+                alert('An error occurred while deleting the transaction.');
             }
         }
     };
@@ -458,25 +414,29 @@ document.addEventListener('DOMContentLoaded', function() {
         addTransactionModal.classList.remove('active');
     });
 
-    addTransactionForm.addEventListener('submit', function(e) {
+    addTransactionForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
-        const newTransaction = {
-            id: Math.max(...transactionsData.transactions.map(t => t.id)) + 1,
-            date: document.getElementById('transactionDate').value,
-            description: document.getElementById('transactionDescription').value,
-            location: document.getElementById('transactionLocation').value,
-            category: document.getElementById('transactionCategory').value,
-            amount: parseFloat(document.getElementById('transactionAmount').value),
-            type: document.getElementById('transactionType').value,
-            status: 'pending',
-            notes: document.getElementById('transactionNotes').value
-        };
+        const formData = new FormData(addTransactionForm);
+        const newTransaction = Object.fromEntries(formData.entries());
 
-        transactionsData.transactions.unshift(newTransaction);
-        applyFilters();
-        addTransactionModal.classList.remove('active');
-        alert('Transaction added successfully!');
+        try {
+            const response = await fetch('/api/transactions/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newTransaction),
+            });
+            if (response.ok) {
+                await applyFilters();
+                addTransactionModal.classList.remove('active');
+                alert('Transaction added successfully!');
+            } else {
+                alert('Failed to add transaction.');
+            }
+        } catch (error) {
+            console.error('Error adding transaction:', error);
+            alert('An error occurred while adding the transaction.');
+        }
     });
 
     // Close modal when clicking outside
@@ -506,4 +466,3 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize the page
     initPage();
 });
-

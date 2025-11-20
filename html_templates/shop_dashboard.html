@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InspireWear | Shop Dashboard</title>
+    <link rel="stylesheet" href="../css/shop.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <link rel="icon" href="../img/favicon.png" type="image/x-icon">
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="morph-overlay" id="morphOverlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p class="loading-text">Loading Shop...</p>
+        </div>
+    </div>
+
+    <!-- Top Navigation -->
+    <nav class="shop-navbar">
+        <div class="navbar-brand">
+            <img src="../img/logo.png" alt="InspireWear Logo" class="logo">
+            <h1 class="logo-text">InspireWear</h1>
+        </div>
+
+        <div class="navbar-search">
+            <input type="text" placeholder="Search for products...">
+            <button><i class="fas fa-search"></i></button>
+        </div>
+
+        <div class="navbar-actions">
+            <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+                <i class="fas fa-moon theme-icon"></i>
+            </button>
+            <button class="nav-action" id="accountBtn">
+                <i class="fas fa-user"></i>
+                <span>Account</span>
+            </button>
+            <button class="nav-action" id="wishlistBtn">
+                <i class="fas fa-heart"></i>
+                <span>Wishlist</span>
+                <span class="badge" id="wishlistCount">0</span>
+            </button>
+            <button class="nav-action" id="cartBtn">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Cart</span>
+                <span class="badge" id="cartCount">0</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Category Navigation -->
+    <div class="category-nav">
+        <div class="category-list">
+            <button class="category-btn active" data-category="all">All Products</button>
+            <button class="category-btn" data-category="men">Men's Wear</button>
+            <button class="category-btn" data-category="women">Women's Wear</button>
+            <button class="category-btn" data-category="kids">Kids</button>
+            <button class="category-btn" data-category="shirts">Shirts</button>
+            <button class="category-btn" data-category="trousers">Trousers</button>
+            <button class="category-btn" data-category="dresses">Dresses</button>
+            <button class="category-btn" data-category="accessories">Accessories</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="shop-main">
+        <!-- Filters Section -->
+        <aside class="filters-section">
+            <div class="filter-group">
+                <h3>Price Range (KSh)</h3>
+                <div class="price-range">
+                    <input type="range" min="100" max="10000" value="5000" class="slider" id="priceRange">
+                    <div class="price-values">
+                        <span id="minPrice">100</span>
+                        <span id="maxPrice">10000</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <h3>Size</h3>
+                <div class="size-filters">
+                    <label class="size-option">
+                        <input type="checkbox" name="size" value="XS">
+                        <span>XS</span>
+                    </label>
+                    <label class="size-option">
+                        <input type="checkbox" name="size" value="S">
+                        <span>S</span>
+                    </label>
+                    <label class="size-option">
+                        <input type="checkbox" name="size" value="M">
+                        <span>M</span>
+                    </label>
+                    <label class="size-option">
+                        <input type="checkbox" name="size" value="L">
+                        <span>L</span>
+                    </label>
+                    <label class="size-option">
+                        <input type="checkbox" name="size" value="XL">
+                        <span>XL</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <h3>Color</h3>
+                <div class="color-filters">
+                    <label class="color-option" style="background-color: #000000;">
+                        <input type="checkbox" name="color" value="black">
+                        <span>Black</span>
+                    </label>
+                    <label class="color-option" style="background-color: #FFFFFF; border: 1px solid #ccc;">
+                        <input type="checkbox" name="color" value="white">
+                        <span>White</span>
+                    </label>
+                    <label class="color-option" style="background-color: #FF0000;">
+                        <input type="checkbox" name="color" value="red">
+                        <span>Red</span>
+                    </label>
+                    <label class="color-option" style="background-color: #0000FF;">
+                        <input type="checkbox" name="color" value="blue">
+                        <span>Blue</span>
+                    </label>
+                    <label class="color-option" style="background-color: #008000;">
+                        <input type="checkbox" name="color" value="green">
+                        <span>Green</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <h3>Location</h3>
+                <select class="location-filter">
+                    <option value="">All Locations</option>
+                    <option value="Nairobi">Nairobi</option>
+                    <option value="Mombasa">Mombasa</option>
+                    <option value="Kisumu">Kisumu</option>
+                    <option value="Nakuru">Nakuru</option>
+                    <option value="Eldoret">Eldoret</option>
+                </select>
+            </div>
+
+            <button class="btn-primary" id="applyFilters">Apply Filters</button>
+            <button class="btn-secondary" id="resetFilters">Reset</button>
+        </aside>
+
+        <!-- Products Grid -->
+        <section class="products-grid">
+            <div class="products-header">
+                <h2>Featured Products</h2>
+                <div class="sort-options">
+                    <label>Sort by:</label>
+                    <select id="sortBy">
+                        <option value="popular">Most Popular</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="newest">Newest Arrivals</option>
+                        <option value="rating">Customer Rating</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="products-container" id="productsContainer">
+                <!-- Products will be loaded by JavaScript -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="shop-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Shop</h4>
+                <ul>
+                    <li><a href="#">Men's Wear</a></li>
+                    <li><a href="#">Women's Wear</a></li>
+                    <li><a href="#">Kids</a></li>
+                    <li><a href="#">New Arrivals</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Help</h4>
+                <ul>
+                    <li><a href="#">Customer Service</a></li>
+                    <li><a href="#">Track Order</a></li>
+                    <li><a href="#">Returns & Exchanges</a></li>
+                    <li><a href="#">FAQs</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>About</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Sustainability</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Blog</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Connect</h4>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-pinterest"></i></a>
+                </div>
+                <p>Subscribe to our newsletter</p>
+                <div class="newsletter">
+                    <input type="email" placeholder="Your email">
+                    <button><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 InspireWear. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="#">Terms</a>
+                <a href="#">Privacy</a>
+                <a href="#">Accessibility</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Account Modal -->
+    <div class="modal-overlay" id="accountModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>My Account</h3>
+                <button class="modal-close" id="accountClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="account-info">
+                    <div class="account-avatar">
+                        <img src="../img/user.png" alt="User Avatar">
+                        <button class="btn-secondary">Change Photo</button>
+                    </div>
+                    <div class="account-details">
+                        <h4>John Doe</h4>
+                        <p>Nairobi, Kenya</p>
+                        <p>Member since January 2024</p>
+                    </div>
+                </div>
+                <div class="account-menu">
+                    <a href="#" class="account-menu-item">
+                        <i class="fas fa-user"></i> Personal Information
+                    </a>
+                    <a href="#" class="account-menu-item">
+                        <i class="fas fa-map-marker-alt"></i> Address Book
+                    </a>
+                    <a href="#" class="account-menu-item">
+                        <i class="fas fa-lock"></i> Change Password
+                    </a>
+                    <a href="#" class="account-menu-item">
+                        <i class="fas fa-heart"></i> Wishlist
+                    </a>
+                    <a href="#" class="account-menu-item">
+                        <i class="fas fa-history"></i> Order History
+                    </a>
+                </div>
+                <div class="account-actions">
+                    <button class="btn-secondary">
+                        <i class="fas fa-sign-out-alt"></i> Sign Out
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Wishlist Modal -->
+    <div class="modal-overlay" id="wishlistModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>My Wishlist</h3>
+                <button class="modal-close" id="wishlistClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="wishlist-container" id="wishlistContainer">
+                    <!-- Wishlist items will be loaded by JavaScript -->
+                </div>
+                <div class="wishlist-empty" id="wishlistEmpty">
+                    <i class="fas fa-heart"></i>
+                    <p>Your wishlist is empty</p>
+                    <button class="btn-primary">Continue Shopping</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div class="modal-overlay" id="cartModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>My Shopping Cart</h3>
+                <button class="modal-close" id="cartClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="cart-container" id="cartContainer">
+                    <!-- Cart items will be loaded by JavaScript -->
+                </div>
+                <div class="cart-empty" id="cartEmpty">
+                    <i class="fas fa-shopping-cart"></i>
+                    <p>Your cart is empty</p>
+                    <button class="btn-primary">Continue Shopping</button>
+                </div>
+                <div class="cart-summary" id="cartSummary">
+                    <div class="summary-row">
+                        <span>Subtotal</span>
+                        <span id="cartSubtotal">KSh 0</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Delivery</span>
+                        <span id="cartDelivery">KSh 0</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Total</span>
+                        <span id="cartTotal">KSh 0</span>
+                    </div>
+                    <button class="btn-primary" id="checkoutBtn">Proceed to Checkout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/shop.js"></script>
+</body>
+</html>

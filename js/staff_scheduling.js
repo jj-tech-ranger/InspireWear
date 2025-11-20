@@ -38,78 +38,36 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentWeekStart = new Date();
     currentWeekStart.setDate(currentWeekStart.getDate() - currentWeekStart.getDay() + 1); // Start from Monday
 
-    // Sample staff scheduling data for Kenyan clothing store
-    const staffData = {
-        overview: {
-            totalStaff: 32,
-            scheduledToday: 24,
-            monthlyPayroll: 2450000, // KSh
-            overtimeHours: 156
-        },
-        staff: [
-            { id: 1, name: 'John Mwangi', position: 'Store Manager', location: 'Nairobi Central', hourlyRate: 800, status: 'active', phone: '+254 712 345 678', email: 'john.mwangi@inspirewear.co.ke' },
-            { id: 2, name: 'Susan Akinyi', position: 'Sales Associate', location: 'Nairobi Central', hourlyRate: 450, status: 'active', phone: '+254 723 456 789', email: 'susan.akinyi@inspirewear.co.ke' },
-            { id: 3, name: 'David Omondi', position: 'Inventory Clerk', location: 'Nairobi Central', hourlyRate: 400, status: 'active', phone: '+254 734 567 890', email: 'david.omondi@inspirewear.co.ke' },
-            { id: 4, name: 'Grace Wambui', position: 'Cashier', location: 'Nairobi Westlands', hourlyRate: 420, status: 'active', phone: '+254 745 678 901', email: 'grace.wambui@inspirewear.co.ke' },
-            { id: 5, name: 'Peter Kamau', position: 'Security Guard', location: 'Nairobi Central', hourlyRate: 350, status: 'active', phone: '+254 756 789 012', email: 'peter.kamau@inspirewear.co.ke' },
-            { id: 6, name: 'Mary Njeri', position: 'Sales Associate', location: 'Mombasa', hourlyRate: 450, status: 'active', phone: '+254 767 890 123', email: 'mary.njeri@inspirewear.co.ke' },
-            { id: 7, name: 'James Otieno', position: 'Store Manager', location: 'Mombasa', hourlyRate: 750, status: 'active', phone: '+254 778 901 234', email: 'james.otieno@inspirewear.co.ke' },
-            { id: 8, name: 'Catherine Wanjiku', position: 'Visual Merchandiser', location: 'Kisumu', hourlyRate: 500, status: 'active', phone: '+254 789 012 345', email: 'catherine.wanjiku@inspirewear.co.ke' },
-            { id: 9, name: 'Michael Kiprop', position: 'Sales Associate', location: 'Nakuru', hourlyRate: 420, status: 'on-leave', phone: '+254 790 123 456', email: 'michael.kiprop@inspirewear.co.ke' },
-            { id: 10, name: 'Agnes Moraa', position: 'Cashier', location: 'Eldoret', hourlyRate: 400, status: 'active', phone: '+254 701 234 567', email: 'agnes.moraa@inspirewear.co.ke' }
-        ],
-        schedules: [
-            { id: 1, staffId: 1, date: '2025-01-20', shiftType: 'full', startTime: '08:00', endTime: '18:00', location: 'Nairobi Central', notes: 'Opening shift' },
-            { id: 2, staffId: 2, date: '2025-01-20', shiftType: 'morning', startTime: '06:00', endTime: '14:00', location: 'Nairobi Central', notes: '' },
-            { id: 3, staffId: 3, date: '2025-01-20', shiftType: 'afternoon', startTime: '14:00', endTime: '22:00', location: 'Nairobi Central', notes: 'Inventory check' },
-            { id: 4, staffId: 4, date: '2025-01-20', shiftType: 'full', startTime: '08:00', endTime: '18:00', location: 'Nairobi Westlands', notes: '' },
-            { id: 5, staffId: 5, date: '2025-01-20', shiftType: 'night', startTime: '22:00', endTime: '06:00', location: 'Nairobi Central', notes: 'Night security' },
-            { id: 6, staffId: 6, date: '2025-01-21', shiftType: 'morning', startTime: '06:00', endTime: '14:00', location: 'Mombasa', notes: '' },
-            { id: 7, staffId: 7, date: '2025-01-21', shiftType: 'full', startTime: '08:00', endTime: '18:00', location: 'Mombasa', notes: 'Store opening' },
-            { id: 8, staffId: 8, date: '2025-01-22', shiftType: 'afternoon', startTime: '14:00', endTime: '22:00', location: 'Kisumu', notes: 'Window display update' },
-            { id: 9, staffId: 10, date: '2025-01-23', shiftType: 'morning', startTime: '06:00', endTime: '14:00', location: 'Eldoret', notes: '' }
-        ],
-        locations: [
-            { name: 'Nairobi Central', staff: 12, color: '#3498db' },
-            { name: 'Nairobi Westlands', staff: 8, color: '#2ecc71' },
-            { name: 'Mombasa', staff: 6, color: '#f1c40f' },
-            { name: 'Kisumu', staff: 4, color: '#e74c3c' },
-            { name: 'Nakuru', staff: 2, color: '#9b59b6' },
-            { name: 'Eldoret', staff: 3, color: '#e67e22' }
-        ],
-        shiftTypes: [
-            { name: 'Morning', count: 45, percentage: 35 },
-            { name: 'Afternoon', count: 38, percentage: 30 },
-            { name: 'Night', count: 25, percentage: 20 },
-            { name: 'Full Day', count: 20, percentage: 15 }
-        ]
-    };
-
     // Initialize the page
-    function initPage() {
-        // Set overview numbers
-        document.getElementById('totalStaff').textContent = staffData.overview.totalStaff;
-        document.getElementById('scheduledToday').textContent = staffData.overview.scheduledToday;
-        document.getElementById('monthlyPayroll').textContent = formatCurrency(staffData.overview.monthlyPayroll);
-        document.getElementById('overtimeHours').textContent = staffData.overview.overtimeHours;
+    async function initPage() {
+        try {
+            const overview = await fetch('/api/staff/overview/').then(res => res.json());
+            // Set overview numbers
+            document.getElementById('totalStaff').textContent = overview.total_staff;
+            document.getElementById('scheduledToday').textContent = overview.scheduled_today;
+            document.getElementById('monthlyPayroll').textContent = formatCurrency(overview.monthly_payroll);
+            document.getElementById('overtimeHours').textContent = overview.overtime_hours;
 
-        // Populate staff dropdown
-        populateStaffDropdown();
+            // Populate staff dropdown
+            await populateStaffDropdown();
 
-        // Load schedule table
-        loadScheduleTable();
+            // Load schedule table
+            await loadScheduleTable();
 
-        // Load statistics
-        loadLocationStats();
-        loadShiftStats();
+            // Load statistics
+            await loadLocationStats();
+            await loadShiftStats();
 
-        // Update week display
-        updateWeekDisplay();
-
-        // Hide loading overlay after a short delay
-        setTimeout(() => {
-            morphOverlay.classList.remove('active');
-        }, 1000);
+            // Update week display
+            updateWeekDisplay();
+        } catch (error) {
+            console.error('Error initializing page:', error);
+        } finally {
+            // Hide loading overlay after a short delay
+            setTimeout(() => {
+                morphOverlay.classList.remove('active');
+            }, 1000);
+        }
     }
 
     // Format currency in Kenyan Shillings
@@ -143,9 +101,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Populate staff dropdown
-    function populateStaffDropdown() {
+    async function populateStaffDropdown() {
+        const staffList = await fetch('/api/staff/').then(res => res.json());
         staffMemberSelect.innerHTML = '<option value="">Select Staff Member</option>';
-        staffData.staff.forEach(staff => {
+        staffList.forEach(staff => {
             const option = document.createElement('option');
             option.value = staff.id;
             option.textContent = `${staff.name} - ${staff.position}`;
@@ -154,10 +113,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Load schedule table
-    function loadScheduleTable() {
+    async function loadScheduleTable() {
+        const staffList = await fetch('/api/staff/').then(res => res.json());
+        const schedules = await fetch(`/api/schedules/?week_start=${currentWeekStart.toISOString().split('T')[0]}`).then(res => res.json());
         let html = '';
 
-        staffData.staff.forEach(staff => {
+        staffList.forEach(staff => {
             html += `
                 <tr>
                     <td>
@@ -177,17 +138,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 currentDate.setDate(currentWeekStart.getDate() + day);
                 const dateString = currentDate.toISOString().split('T')[0];
 
-                const schedule = staffData.schedules.find(s =>
-                    s.staffId === staff.id && s.date === dateString
+                const schedule = schedules.find(s =>
+                    s.staff_id === staff.id && s.date === dateString
                 );
 
                 html += '<td class="shift-cell">';
                 if (schedule) {
-                    const staffMember = staffData.staff.find(s => s.id === schedule.staffId);
                     html += `
-                        <div class="shift-block ${schedule.shiftType}" onclick="editSchedule(${schedule.id})">
-                            <span class="shift-time">${getShiftTimeDisplay(schedule.shiftType)}</span>
-                            <span class="shift-rate">KSh ${staffMember.hourlyRate}/hr</span>
+                        <div class="shift-block ${schedule.shift_type}" onclick="editSchedule(${schedule.id})">
+                            <span class="shift-time">${getShiftTimeDisplay(schedule.shift_type)}</span>
+                            <span class="shift-rate">KSh ${staff.hourly_rate}/hr</span>
                         </div>
                     `;
                 }
@@ -214,9 +174,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Load location statistics
-    function loadLocationStats() {
+    async function loadLocationStats() {
+        const locations = await fetch('/api/locations/stats/').then(res => res.json());
         let html = '';
-        staffData.locations.forEach(location => {
+        locations.forEach(location => {
             html += `
                 <div class="location-stat">
                     <span class="stat-label">${location.name}</span>
@@ -228,9 +189,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Load shift statistics
-    function loadShiftStats() {
+    async function loadShiftStats() {
+        const shiftTypes = await fetch('/api/shifts/stats/').then(res => res.json());
         let html = '';
-        staffData.shiftTypes.forEach(shift => {
+        shiftTypes.forEach(shift => {
             html += `
                 <div class="shift-stat">
                     <span class="stat-label">${shift.name} Shift</span>
@@ -268,18 +230,18 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Global functions for onclick handlers
-    window.editSchedule = function(scheduleId) {
-        const schedule = staffData.schedules.find(s => s.id === scheduleId);
+    window.editSchedule = async function(scheduleId) {
+        const schedule = await fetch(`/api/schedules/${scheduleId}/`).then(res => res.json());
         if (schedule) {
             modalTitle.textContent = 'Edit Schedule';
-            staffMemberSelect.value = schedule.staffId;
+            staffMemberSelect.value = schedule.staff_id;
             locationSelect.value = schedule.location;
             startDateInput.value = schedule.date;
             endDateInput.value = schedule.date;
-            shiftTypeSelect.value = schedule.shiftType;
+            shiftTypeSelect.value = schedule.shift_type;
 
-            const staff = staffData.staff.find(s => s.id === schedule.staffId);
-            hourlyRateInput.value = staff.hourlyRate;
+            const staff = await fetch(`/api/staff/${schedule.staff_id}/`).then(res => res.json());
+            hourlyRateInput.value = staff.hourly_rate;
             notesInput.value = schedule.notes;
 
             scheduleForm.dataset.editId = scheduleId;
@@ -287,8 +249,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
-    window.viewStaffDetails = function(staffId) {
-        const staff = staffData.staff.find(s => s.id === staffId);
+    window.viewStaffDetails = async function(staffId) {
+        const staff = await fetch(`/api/staff/${staffId}/`).then(res => res.json());
         if (staff) {
             document.getElementById('staffDetailsTitle').textContent = `${staff.name} - Details`;
 
@@ -300,7 +262,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <h3>${staff.name}</h3>
                         <p><strong>Position:</strong> ${staff.position}</p>
                         <p><strong>Location:</strong> ${staff.location}</p>
-                        <p><strong>Hourly Rate:</strong> KSh ${staff.hourlyRate}</p>
+                        <p><strong>Hourly Rate:</strong> KSh ${staff.hourly_rate}</p>
                         <p><strong>Status:</strong> <span class="status ${staff.status}">${staff.status.replace('-', ' ')}</span></p>
                         <p><strong>Phone:</strong> ${staff.phone}</p>
                         <p><strong>Email:</strong> ${staff.email}</p>
@@ -312,37 +274,35 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
-    window.addScheduleForStaff = function(staffId) {
+    window.addScheduleForStaff = async function(staffId) {
         modalTitle.textContent = 'Add Schedule';
         scheduleForm.reset();
         staffMemberSelect.value = staffId;
 
-        const staff = staffData.staff.find(s => s.id === staffId);
+        const staff = await fetch(`/api/staff/${staffId}/`).then(res => res.json());
         if (staff) {
             locationSelect.value = staff.location;
-            hourlyRateInput.value = staff.hourlyRate;
+            hourlyRateInput.value = staff.hourly_rate;
         }
 
         delete scheduleForm.dataset.editId;
         scheduleModal.classList.add('active');
     };
 
-    window.deleteStaffSchedules = function(staffId) {
+    window.deleteStaffSchedules = async function(staffId) {
         if (confirm('Are you sure you want to clear all schedules for this staff member this week?')) {
-            // Remove schedules for this staff member in the current week
-            const weekStart = new Date(currentWeekStart);
-            const weekEnd = new Date(currentWeekStart);
-            weekEnd.setDate(weekStart.getDate() + 6);
-
-            staffData.schedules = staffData.schedules.filter(schedule => {
-                const scheduleDate = new Date(schedule.date);
-                return !(schedule.staffId === staffId &&
-                        scheduleDate >= weekStart &&
-                        scheduleDate <= weekEnd);
-            });
-
-            loadScheduleTable();
-            showNotification('Schedules cleared successfully!', 'success');
+            try {
+                const response = await fetch(`/api/schedules/clear-week/?staff_id=${staffId}&week_start=${currentWeekStart.toISOString().split('T')[0]}`, { method: 'DELETE' });
+                if (response.ok) {
+                    await loadScheduleTable();
+                    showNotification('Schedules cleared successfully!', 'success');
+                } else {
+                    showNotification('Failed to clear schedules.', 'error');
+                }
+            } catch (error) {
+                console.error('Error clearing schedules:', error);
+                showNotification('An error occurred while clearing schedules.', 'error');
+            }
         }
     };
 
@@ -445,103 +405,68 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Schedule form submission
-    scheduleForm.addEventListener('submit', function(e) {
+    scheduleForm.addEventListener('submit', async function(e) {
         e.preventDefault();
 
         const formData = {
-            staffId: parseInt(staffMemberSelect.value),
+            staff_id: parseInt(staffMemberSelect.value),
             location: locationSelect.value,
-            startDate: startDateInput.value,
-            endDate: endDateInput.value,
-            shiftType: shiftTypeSelect.value,
-            hourlyRate: parseFloat(hourlyRateInput.value),
+            start_date: startDateInput.value,
+            end_date: endDateInput.value,
+            shift_type: shiftTypeSelect.value,
+            hourly_rate: parseFloat(hourlyRateInput.value),
             notes: notesInput.value
         };
 
-        if (scheduleForm.dataset.editId) {
-            // Edit existing schedule
-            const scheduleId = parseInt(scheduleForm.dataset.editId);
-            const scheduleIndex = staffData.schedules.findIndex(s => s.id === scheduleId);
-            if (scheduleIndex !== -1) {
-                staffData.schedules[scheduleIndex] = {
-                    ...staffData.schedules[scheduleIndex],
-                    ...formData,
-                    date: formData.startDate
-                };
-                showNotification('Schedule updated successfully!', 'success');
+        try {
+            let response;
+            if (scheduleForm.dataset.editId) {
+                // Edit existing schedule
+                const scheduleId = parseInt(scheduleForm.dataset.editId);
+                response = await fetch(`/api/schedules/${scheduleId}/`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData),
+                });
+            } else {
+                // Add new schedule(s)
+                response = await fetch('/api/schedules/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData),
+                });
             }
-        } else {
-            // Add new schedule(s)
-            const startDate = new Date(formData.startDate);
-            const endDate = new Date(formData.endDate);
 
-            for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
-                const dateString = date.toISOString().split('T')[0];
-
-                // Check if schedule already exists for this staff and date
-                const existingSchedule = staffData.schedules.find(s =>
-                    s.staffId === formData.staffId && s.date === dateString
-                );
-
-                if (!existingSchedule) {
-                    const newSchedule = {
-                        id: Date.now() + Math.random(), // Simple ID generation
-                        staffId: formData.staffId,
-                        date: dateString,
-                        shiftType: formData.shiftType,
-                        startTime: getShiftStartTime(formData.shiftType),
-                        endTime: getShiftEndTime(formData.shiftType),
-                        location: formData.location,
-                        notes: formData.notes
-                    };
-
-                    staffData.schedules.push(newSchedule);
-                }
+            if (response.ok) {
+                showNotification(scheduleForm.dataset.editId ? 'Schedule updated successfully!' : 'Schedule(s) added successfully!', 'success');
+                scheduleModal.classList.remove('active');
+                await loadScheduleTable();
+            } else {
+                showNotification('Failed to save schedule.', 'error');
             }
-            showNotification('Schedule(s) added successfully!', 'success');
+        } catch (error) {
+            console.error('Error saving schedule:', error);
+            showNotification('An error occurred while saving the schedule.', 'error');
         }
-
-        scheduleModal.classList.remove('active');
-        loadScheduleTable();
     });
 
-    // Get shift start time
-    function getShiftStartTime(shiftType) {
-        const times = {
-            'morning': '06:00',
-            'afternoon': '14:00',
-            'night': '22:00',
-            'full': '08:00'
-        };
-        return times[shiftType] || '08:00';
-    }
-
-    // Get shift end time
-    function getShiftEndTime(shiftType) {
-        const times = {
-            'morning': '14:00',
-            'afternoon': '22:00',
-            'night': '06:00',
-            'full': '18:00'
-        };
-        return times[shiftType] || '18:00';
-    }
-
     // Export functionality
-    exportScheduleBtn.addEventListener('click', function() {
-        const csvContent = generateScheduleCSV();
+    exportScheduleBtn.addEventListener('click', async function() {
+        const schedules = await fetch(`/api/schedules/?week_start=${currentWeekStart.toISOString().split('T')[0]}`).then(res => res.json());
+        const staffList = await fetch('/api/staff/').then(res => res.json());
+        const csvContent = generateScheduleCSV(schedules, staffList);
         downloadCSV(csvContent, 'staff_schedule.csv');
         showNotification('Schedule exported successfully!', 'success');
     });
 
     // Generate CSV content
-    function generateScheduleCSV() {
+    function generateScheduleCSV(schedules, staffList) {
         let csv = 'Staff Name,Position,Location,Date,Shift Type,Start Time,End Time,Hourly Rate (KSh),Notes\n';
 
-        staffData.schedules.forEach(schedule => {
-            const staff = staffData.staff.find(s => s.id === schedule.staffId);
+        schedules.forEach(schedule => {
+            const staff = staffList.find(s => s.id === schedule.staff_id);
             if (staff) {
-                csv += `"${staff.name}","${staff.position}","${schedule.location}","${schedule.date}","${schedule.shiftType}","${schedule.startTime}","${schedule.endTime}","${staff.hourlyRate}","${schedule.notes}"\n`;
+                csv += `"${staff.name}","${staff.position}","${schedule.location}","${schedule.date}","${schedule.shift_type}","${schedule.start_time}","${schedule.end_time}","${staff.hourly_rate}","${schedule.notes}"\n`;
             }
         });
 
@@ -583,11 +508,11 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Auto-populate hourly rate when staff is selected
-    staffMemberSelect.addEventListener('change', function() {
+    staffMemberSelect.addEventListener('change', async function() {
         const staffId = parseInt(this.value);
-        const staff = staffData.staff.find(s => s.id === staffId);
+        const staff = await fetch(`/api/staff/${staffId}/`).then(res => res.json());
         if (staff) {
-            hourlyRateInput.value = staff.hourlyRate;
+            hourlyRateInput.value = staff.hourly_rate;
             locationSelect.value = staff.location;
         }
     });

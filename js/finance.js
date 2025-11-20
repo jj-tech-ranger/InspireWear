@@ -11,52 +11,29 @@ document.addEventListener('DOMContentLoaded', function() {
     const cancelAddTransaction = document.getElementById('cancelAddTransaction');
     const addTransactionForm = document.getElementById('addTransactionForm');
 
-    // Sample financial data for Kenyan clothing store
-    const financeData = {
-        totalRevenue: 4842300,
-        netProfit: 1245780,
-        operatingExpenses: 2156420,
-        financialMovement: [
-            { month: 'July', revenue: 780000, expenses: 520000 },
-            { month: 'August', revenue: 820000, expenses: 540000 },
-            { month: 'September', revenue: 950000, expenses: 580000 },
-            { month: 'October', revenue: 1050000, expenses: 620000 },
-            { month: 'November', revenue: 880000, expenses: 560000 },
-            { month: 'December', revenue: 1360000, expenses: 720000 }
-        ],
-        expenseCategories: [
-            { category: 'Supplies', amount: 650000, color: '#3498db' },
-            { category: 'Salaries', amount: 850000, color: '#2ecc71' },
-            { category: 'Rent', amount: 300000, color: '#f1c40f' },
-            { category: 'Utilities', amount: 180000, color: '#e74c3c' },
-            { category: 'Marketing', amount: 176420, color: '#9b59b6' }
-        ],
-        recentTransactions: [
-            { date: '2025-01-15', description: 'Sales - Nairobi Store', location: 'Nairobi', amount: 185000, type: 'income', status: 'completed' },
-            { date: '2025-01-14', description: 'Supplier Payment - Fabric', location: 'Mombasa', amount: 75000, type: 'expense', status: 'completed' },
-            { date: '2025-01-13', description: 'Online Sales', location: 'Online', amount: 92000, type: 'income', status: 'pending' },
-            { date: '2025-01-12', description: 'January Salaries', location: 'Nairobi', amount: 420000, type: 'expense', status: 'completed' },
-            { date: '2025-01-10', description: 'Shop Rent Payment', location: 'Nairobi', amount: 150000, type: 'expense', status: 'completed' }
-        ]
-    };
-
     // Initialize the page
-    function initPage() {
-        // Set overview numbers
-        document.getElementById('totalRevenue').textContent = formatCurrency(financeData.totalRevenue);
-        document.getElementById('netProfit').textContent = formatCurrency(financeData.netProfit);
-        document.getElementById('operatingExpenses').textContent = formatCurrency(financeData.operatingExpenses);
+    async function initPage() {
+        try {
+            const financeData = await fetch('/api/finance/summary/').then(res => res.json());
 
-        // Load transactions table
-        loadTransactions();
+            // Set overview numbers
+            document.getElementById('totalRevenue').textContent = formatCurrency(financeData.total_revenue);
+            document.getElementById('netProfit').textContent = formatCurrency(financeData.net_profit);
+            document.getElementById('operatingExpenses').textContent = formatCurrency(financeData.operating_expenses);
 
-        // Initialize charts
-        initCharts();
+            // Load transactions table
+            loadTransactions();
 
-        // Hide loading overlay after a short delay
-        setTimeout(() => {
-            morphOverlay.classList.remove('active');
-        }, 1000);
+            // Initialize charts
+            initCharts(financeData);
+        } catch (error) {
+            console.error('Error initializing page:', error);
+        } finally {
+            // Hide loading overlay after a short delay
+            setTimeout(() => {
+                morphOverlay.classList.remove('active');
+            }, 1000);
+        }
     }
 
     // Format numbers
@@ -73,28 +50,34 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Load transactions into the table
-    function loadTransactions() {
-        let html = '';
+    async function loadTransactions() {
+        try {
+            const transactions = await fetch('/api/finance/transactions/').then(res => res.json());
+            let html = '';
 
-        financeData.recentTransactions.forEach(transaction => {
-            html += `
-                <tr>
-                    <td>${formatDate(transaction.date)}</td>
-                    <td>${transaction.description}</td>
-                    <td>${transaction.location}</td>
-                    <td>${formatCurrency(transaction.amount)}</td>
-                    <td>${transaction.type === 'income' ? '<span class="positive">Income</span>' : '<span class="negative">Expense</span>'}</td>
-                    <td><span class="status ${transaction.status}">${transaction.status}</span></td>
-                    <td>
-                        <button class="action-btn" title="View Receipt"><i class="fas fa-receipt"></i></button>
-                        <button class="action-btn" title="Edit"><i class="fas fa-edit"></i></button>
-                        <button class="action-btn" title="Delete"><i class="fas fa-trash"></i></button>
-                    </td>
-                </tr>
-            `;
-        });
+            transactions.forEach(transaction => {
+                html += `
+                    <tr>
+                        <td>${formatDate(transaction.date)}</td>
+                        <td>${transaction.description}</td>
+                        <td>${transaction.location}</td>
+                        <td>${formatCurrency(transaction.amount)}</td>
+                        <td>${transaction.type === 'income' ? '<span class="positive">Income</span>' : '<span class="negative">Expense</span>'}</td>
+                        <td><span class="status ${transaction.status}">${transaction.status}</span></td>
+                        <td>
+                            <button class="action-btn" title="View Receipt"><i class="fas fa-receipt"></i></button>
+                            <button class="action-btn" title="Edit"><i class="fas fa-edit"></i></button>
+                            <button class="action-btn" title="Delete"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
 
-        transactionsTable.innerHTML = html;
+            transactionsTable.innerHTML = html;
+        } catch (error) {
+            console.error('Error loading transactions:', error);
+            transactionsTable.innerHTML = '<tr><td colspan="7">Error loading transactions.</td></tr>';
+        }
     }
 
     // Format date to DD/MM/YYYY
@@ -104,24 +87,24 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Initialize charts
-    function initCharts() {
+    function initCharts(financeData) {
         // Revenue vs Expenses Chart
         const movementCtx = document.getElementById('revenueExpensesCanvas').getContext('2d');
         new Chart(movementCtx, {
             type: 'bar',
             data: {
-                labels: financeData.financialMovement.map(item => item.month),
+                labels: financeData.financial_movement.map(item => item.month),
                 datasets: [
                     {
                         label: 'Revenue (KSh)',
-                        data: financeData.financialMovement.map(item => item.revenue),
+                        data: financeData.financial_movement.map(item => item.revenue),
                         backgroundColor: 'rgba(52, 152, 219, 0.7)',
                         borderColor: 'rgba(52, 152, 219, 1)',
                         borderWidth: 1
                     },
                     {
                         label: 'Expenses (KSh)',
-                        data: financeData.financialMovement.map(item => item.expenses),
+                        data: financeData.financial_movement.map(item => item.expenses),
                         backgroundColor: 'rgba(231, 76, 60, 0.7)',
                         borderColor: 'rgba(231, 76, 60, 1)',
                         borderWidth: 1
@@ -158,10 +141,10 @@ document.addEventListener('DOMContentLoaded', function() {
         new Chart(categoryCtx, {
             type: 'doughnut',
             data: {
-                labels: financeData.expenseCategories.map(item => item.category),
+                labels: financeData.expense_categories.map(item => item.category),
                 datasets: [{
-                    data: financeData.expenseCategories.map(item => item.amount),
-                    backgroundColor: financeData.expenseCategories.map(item => item.color),
+                    data: financeData.expense_categories.map(item => item.amount),
+                    backgroundColor: financeData.expense_categories.map(item => item.color),
                     borderWidth: 1
                 }]
             },
@@ -235,12 +218,32 @@ document.addEventListener('DOMContentLoaded', function() {
         addTransactionModal.classList.remove('active');
     });
 
-    addTransactionForm.addEventListener('submit', function(e) {
+    addTransactionForm.addEventListener('submit', async function(e) {
         e.preventDefault();
-        // Here you would typically send the form data to your backend
-        alert('Transaction added successfully!');
-        addTransactionModal.classList.remove('active');
-        this.reset();
+        const formData = new FormData(addTransactionForm);
+        const transactionData = Object.fromEntries(formData.entries());
+
+        try {
+            const response = await fetch('/api/finance/transactions/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(transactionData),
+            });
+
+            if (response.ok) {
+                alert('Transaction added successfully!');
+                addTransactionModal.classList.remove('active');
+                this.reset();
+                initPage(); // Refresh data
+            } else {
+                alert('Failed to add transaction.');
+            }
+        } catch (error) {
+            console.error('Error adding transaction:', error);
+            alert('An error occurred while adding the transaction.');
+        }
     });
 
     // Close modal when clicking outside

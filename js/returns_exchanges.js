@@ -44,175 +44,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const returnReason = document.getElementById('returnReason');
     const returnNotes = document.getElementById('returnNotes');
 
-    // Sample returns and exchanges data for Kenyan clothing store
-    const returnsData = {
-        overview: {
-            pendingReturns: 12,
-            pendingExchanges: 8,
-            refundAmount: 145600, // KSh
-            processingTime: 2.5 // days
-        },
-        returns: [
-            {
-                id: 1,
-                orderId: 'ORD-2025-001',
-                customer: {
-                    name: 'Grace Wanjiku',
-                    email: 'grace.wanjiku@gmail.com',
-                    phone: '+254 712 345 678'
-                },
-                product: {
-                    name: 'Cotton Dress',
-                    sku: 'DRS-001-L',
-                    image: 'dress-001.jpg'
-                },
-                type: 'return',
-                reason: 'wrong-size',
-                amount: 3500,
-                date: '2025-01-20',
-                status: 'pending',
-                notes: 'Customer ordered Large but needs Medium size'
-            },
-            {
-                id: 2,
-                orderId: 'ORD-2025-002',
-                customer: {
-                    name: 'John Mwangi',
-                    email: 'john.mwangi@yahoo.com',
-                    phone: '+254 723 456 789'
-                },
-                product: {
-                    name: 'Polo Shirt',
-                    sku: 'PLO-002-M',
-                    image: 'polo-002.jpg'
-                },
-                type: 'exchange',
-                reason: 'wrong-color',
-                amount: 2800,
-                date: '2025-01-19',
-                status: 'approved',
-                notes: 'Customer wants to exchange blue for red'
-            },
-            {
-                id: 3,
-                orderId: 'ORD-2025-003',
-                customer: {
-                    name: 'Susan Akinyi',
-                    email: 'susan.akinyi@hotmail.com',
-                    phone: '+254 734 567 890'
-                },
-                product: {
-                    name: 'Jeans',
-                    sku: 'JNS-003-32',
-                    image: 'jeans-003.jpg'
-                },
-                type: 'return',
-                reason: 'defective',
-                amount: 4200,
-                date: '2025-01-18',
-                status: 'processing',
-                notes: 'Zipper is broken'
-            },
-            {
-                id: 4,
-                orderId: 'ORD-2025-004',
-                customer: {
-                    name: 'David Omondi',
-                    email: 'david.omondi@gmail.com',
-                    phone: '+254 745 678 901'
-                },
-                product: {
-                    name: 'Blazer',
-                    sku: 'BLZ-004-L',
-                    image: 'blazer-004.jpg'
-                },
-                type: 'return',
-                reason: 'not-as-described',
-                amount: 8500,
-                date: '2025-01-17',
-                status: 'completed',
-                notes: 'Material quality not as expected'
-            },
-            {
-                id: 5,
-                orderId: 'ORD-2025-005',
-                customer: {
-                    name: 'Mary Njeri',
-                    email: 'mary.njeri@gmail.com',
-                    phone: '+254 756 789 012'
-                },
-                product: {
-                    name: 'Skirt',
-                    sku: 'SKT-005-M',
-                    image: 'skirt-005.jpg'
-                },
-                type: 'exchange',
-                reason: 'wrong-size',
-                amount: 2200,
-                date: '2025-01-16',
-                status: 'rejected',
-                notes: 'Item was worn and cannot be exchanged'
-            },
-            {
-                id: 6,
-                orderId: 'ORD-2025-006',
-                customer: {
-                    name: 'Peter Kamau',
-                    email: 'peter.kamau@outlook.com',
-                    phone: '+254 767 890 123'
-                },
-                product: {
-                    name: 'T-Shirt',
-                    sku: 'TSH-006-XL',
-                    image: 'tshirt-006.jpg'
-                },
-                type: 'return',
-                reason: 'damaged-shipping',
-                amount: 1800,
-                date: '2025-01-15',
-                status: 'approved',
-                notes: 'Package was damaged during delivery'
-            },
-            {
-                id: 7,
-                orderId: 'ORD-2025-007',
-                customer: {
-                    name: 'Catherine Wanjiku',
-                    email: 'catherine.w@gmail.com',
-                    phone: '+254 778 901 234'
-                },
-                product: {
-                    name: 'Cardigan',
-                    sku: 'CDG-007-S',
-                    image: 'cardigan-007.jpg'
-                },
-                type: 'return',
-                reason: 'changed-mind',
-                amount: 3200,
-                date: '2025-01-14',
-                status: 'pending',
-                notes: 'Customer no longer needs the item'
-            }
-        ],
-        reasonStats: [
-            { reason: 'Wrong Size', count: 15, percentage: 35 },
-            { reason: 'Defective Product', count: 10, percentage: 23 },
-            { reason: 'Wrong Color', count: 8, percentage: 19 },
-            { reason: 'Not as Described', count: 6, percentage: 14 },
-            { reason: 'Damaged in Shipping', count: 3, percentage: 7 },
-            { reason: 'Changed Mind', count: 1, percentage: 2 }
-        ],
-        monthlyTrends: [
-            { month: 'Jul', returns: 45, exchanges: 32 },
-            { month: 'Aug', returns: 52, exchanges: 28 },
-            { month: 'Sep', returns: 38, exchanges: 35 },
-            { month: 'Oct', returns: 41, exchanges: 30 },
-            { month: 'Nov', returns: 48, exchanges: 33 },
-            { month: 'Dec', returns: 55, exchanges: 40 },
-            { month: 'Jan', returns: 43, exchanges: 25 }
-        ]
-    };
-
     // Current filters
     let currentFilters = {
         status: '',
@@ -225,24 +56,29 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentDetailsId = null;
 
     // Initialize the page
-    function initPage() {
-        // Set overview numbers
-        document.getElementById('pendingReturns').textContent = returnsData.overview.pendingReturns;
-        document.getElementById('pendingExchanges').textContent = returnsData.overview.pendingExchanges;
-        document.getElementById('refundAmount').textContent = formatCurrency(returnsData.overview.refundAmount);
-        document.getElementById('processingTime').textContent = returnsData.overview.processingTime;
+    async function initPage() {
+        try {
+            const overview = await fetch('/api/returns/overview/').then(res => res.json());
+            // Set overview numbers
+            document.getElementById('pendingReturns').textContent = overview.pending_returns;
+            document.getElementById('pendingExchanges').textContent = overview.pending_exchanges;
+            document.getElementById('refundAmount').textContent = formatCurrency(overview.refund_amount);
+            document.getElementById('processingTime').textContent = overview.processing_time;
 
-        // Load returns table
-        loadReturnsTable();
+            // Load returns table
+            await loadReturnsTable();
 
-        // Load statistics
-        loadReasonStats();
-        initTrendsChart();
-
-        // Hide loading overlay after a short delay
-        setTimeout(() => {
-            morphOverlay.classList.remove('active');
-        }, 1000);
+            // Load statistics
+            await loadReasonStats();
+            await initTrendsChart();
+        } catch (error) {
+            console.error('Error initializing page:', error);
+        } finally {
+            // Hide loading overlay after a short delay
+            setTimeout(() => {
+                morphOverlay.classList.remove('active');
+            }, 1000);
+        }
     }
 
     // Format currency in Kenyan Shillings
@@ -279,18 +115,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Filter returns data
-    function filterReturns() {
-        return returnsData.returns.filter(item => {
-            if (currentFilters.status && item.status !== currentFilters.status) return false;
-            if (currentFilters.type && item.type !== currentFilters.type) return false;
-            if (currentFilters.date && item.date !== currentFilters.date) return false;
-            return true;
-        });
+    async function filterReturns() {
+        const params = new URLSearchParams(currentFilters);
+        return await fetch(`/api/returns/?${params.toString()}`).then(res => res.json());
     }
 
     // Load returns table
-    function loadReturnsTable() {
-        const filteredReturns = filterReturns();
+    async function loadReturnsTable() {
+        const filteredReturns = await filterReturns();
         let html = '';
 
         if (filteredReturns.length === 0) {
@@ -305,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function() {
             filteredReturns.forEach(item => {
                 html += `
                     <tr>
-                        <td><strong>${item.orderId}</strong></td>
+                        <td><strong>${item.order_id}</strong></td>
                         <td>
                             <div class="customer-info">
                                 <div class="customer-name">${item.customer.name}</div>
@@ -344,9 +176,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Load reason statistics
-    function loadReasonStats() {
+    async function loadReasonStats() {
+        const stats = await fetch('/api/returns/reason-stats/').then(res => res.json());
         let html = '';
-        returnsData.reasonStats.forEach(stat => {
+        stats.forEach(stat => {
             html += `
                 <div class="reason-stat">
                     <span class="reason-label">${stat.reason}</span>
@@ -358,16 +191,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Initialize trends chart
-    function initTrendsChart() {
+    async function initTrendsChart() {
+        const trends = await fetch('/api/returns/monthly-trends/').then(res => res.json());
         const ctx = document.getElementById('trendsCanvas').getContext('2d');
         new Chart(ctx, {
             type: 'line',
             data: {
-                labels: returnsData.monthlyTrends.map(item => item.month),
+                labels: trends.map(item => item.month),
                 datasets: [
                     {
                         label: 'Returns',
-                        data: returnsData.monthlyTrends.map(item => item.returns),
+                        data: trends.map(item => item.returns),
                         backgroundColor: 'rgba(231, 76, 60, 0.2)',
                         borderColor: 'rgba(231, 76, 60, 1)',
                         borderWidth: 2,
@@ -376,7 +210,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     },
                     {
                         label: 'Exchanges',
-                        data: returnsData.monthlyTrends.map(item => item.exchanges),
+                        data: trends.map(item => item.exchanges),
                         backgroundColor: 'rgba(214, 158, 46, 0.2)',
                         borderColor: 'rgba(214, 158, 46, 1)',
                         borderWidth: 2,
@@ -403,16 +237,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Global functions for onclick handlers
-    window.viewDetails = function(id) {
-        const item = returnsData.returns.find(r => r.id === id);
+    window.viewDetails = async function(id) {
+        const item = await fetch(`/api/returns/${id}/`).then(res => res.json());
         if (item) {
             currentDetailsId = id;
-            detailsModalTitle.textContent = `${item.type.charAt(0).toUpperCase() + item.type.slice(1)} Details - ${item.orderId}`;
+            detailsModalTitle.textContent = `${item.type.charAt(0).toUpperCase() + item.type.slice(1)} Details - ${item.order_id}`;
             
             detailsContent.innerHTML = `
                 <div class="detail-row">
                     <span class="detail-label">Order ID:</span>
-                    <span class="detail-value">${item.orderId}</span>
+                    <span class="detail-value">${item.order_id}</span>
                 </div>
                 <div class="detail-row">
                     <span class="detail-label">Customer:</span>
@@ -465,14 +299,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
-    window.editReturn = function(id) {
-        const item = returnsData.returns.find(r => r.id === id);
+    window.editReturn = async function(id) {
+        const item = await fetch(`/api/returns/${id}/`).then(res => res.json());
         if (item) {
             currentEditId = id;
             returnModalTitle.textContent = `Edit ${item.type.charAt(0).toUpperCase() + item.type.slice(1)}`;
             
             // Populate form
-            orderId.value = item.orderId;
+            orderId.value = item.order_id;
             customerName.value = item.customer.name;
             customerEmail.value = item.customer.email;
             customerPhone.value = item.customer.phone;
@@ -487,30 +321,30 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
-    window.deleteReturn = function(id) {
-        const item = returnsData.returns.find(r => r.id === id);
-        if (item && confirm(`Are you sure you want to delete this ${item.type}? This action cannot be undone.`)) {
-            const index = returnsData.returns.findIndex(r => r.id === id);
-            if (index !== -1) {
-                returnsData.returns.splice(index, 1);
-                loadReturnsTable();
-                showNotification(`${item.type.charAt(0).toUpperCase() + item.type.slice(1)} deleted successfully!`, 'success');
-                updateOverviewStats();
+    window.deleteReturn = async function(id) {
+        if (confirm(`Are you sure you want to delete this item? This action cannot be undone.`)) {
+            try {
+                const response = await fetch(`/api/returns/${id}/`, { method: 'DELETE' });
+                if (response.ok) {
+                    await loadReturnsTable();
+                    showNotification(`Item deleted successfully!`, 'success');
+                    await updateOverviewStats();
+                } else {
+                    showNotification('Failed to delete item.', 'error');
+                }
+            } catch (error) {
+                console.error('Error deleting item:', error);
+                showNotification('An error occurred while deleting the item.', 'error');
             }
         }
     };
 
     // Update overview statistics
-    function updateOverviewStats() {
-        const pendingReturns = returnsData.returns.filter(r => r.type === 'return' && r.status === 'pending').length;
-        const pendingExchanges = returnsData.returns.filter(r => r.type === 'exchange' && r.status === 'pending').length;
-        const totalRefund = returnsData.returns
-            .filter(r => r.type === 'return' && (r.status === 'approved' || r.status === 'completed'))
-            .reduce((sum, r) => sum + r.amount, 0);
-
-        document.getElementById('pendingReturns').textContent = pendingReturns;
-        document.getElementById('pendingExchanges').textContent = pendingExchanges;
-        document.getElementById('refundAmount').textContent = formatCurrency(totalRefund);
+    async function updateOverviewStats() {
+        const overview = await fetch('/api/returns/overview/').then(res => res.json());
+        document.getElementById('pendingReturns').textContent = overview.pending_returns;
+        document.getElementById('pendingExchanges').textContent = overview.pending_exchanges;
+        document.getElementById('refundAmount').textContent = formatCurrency(overview.refund_amount);
     }
 
     // Show notification
@@ -596,19 +430,19 @@ document.addEventListener('DOMContentLoaded', function() {
         returnModal.classList.add('active');
     });
 
-    exportBtn.addEventListener('click', function() {
-        const csvContent = generateCSV();
+    exportBtn.addEventListener('click', async function() {
+        const filteredReturns = await filterReturns();
+        const csvContent = generateCSV(filteredReturns);
         downloadCSV(csvContent, 'returns_exchanges.csv');
         showNotification('Data exported successfully!', 'success');
     });
 
     // Generate CSV content
-    function generateCSV() {
+    function generateCSV(data) {
         let csv = 'Order ID,Customer Name,Customer Email,Customer Phone,Product Name,Product SKU,Type,Reason,Amount (KSh),Date,Status,Notes\n';
         
-        const filteredReturns = filterReturns();
-        filteredReturns.forEach(item => {
-            csv += `"${item.orderId}","${item.customer.name}","${item.customer.email}","${item.customer.phone}","${item.product.name}","${item.product.sku}","${item.type}","${getReasonDisplayName(item.reason)}","${item.amount}","${item.date}","${item.status}","${item.notes || ''}"\n`;
+        data.forEach(item => {
+            csv += `"${item.order_id}","${item.customer.name}","${item.customer.email}","${item.customer.phone}","${item.product.name}","${item.product.sku}","${item.type}","${getReasonDisplayName(item.reason)}","${item.amount}","${item.date}","${item.status}","${item.notes || ''}"\n`;
         });
         
         return csv;
@@ -674,11 +508,11 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Form submission
-    returnForm.addEventListener('submit', function(e) {
+    returnForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
         const formData = {
-            orderId: orderId.value,
+            order_id: orderId.value,
             customer: {
                 name: customerName.value,
                 email: customerEmail.value,
@@ -691,45 +525,61 @@ document.addEventListener('DOMContentLoaded', function() {
             type: returnType.value,
             reason: returnReason.value,
             amount: parseFloat(returnAmount.value),
-            date: new Date().toISOString().split('T')[0],
-            status: 'pending',
             notes: returnNotes.value
         };
 
-        if (currentEditId) {
-            // Edit existing return/exchange
-            const index = returnsData.returns.findIndex(r => r.id === currentEditId);
-            if (index !== -1) {
-                returnsData.returns[index] = { ...returnsData.returns[index], ...formData };
-                showNotification(`${formData.type.charAt(0).toUpperCase() + formData.type.slice(1)} updated successfully!`, 'success');
+        try {
+            let response;
+            if (currentEditId) {
+                // Edit existing return/exchange
+                response = await fetch(`/api/returns/${currentEditId}/`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData),
+                });
+            } else {
+                // Add new return/exchange
+                response = await fetch('/api/returns/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData),
+                });
             }
-        } else {
-            // Add new return/exchange
-            const newItem = {
-                id: Date.now(),
-                ...formData
-            };
-            returnsData.returns.unshift(newItem);
-            showNotification(`${formData.type.charAt(0).toUpperCase() + formData.type.slice(1)} added successfully!`, 'success');
-        }
 
-        returnModal.classList.remove('active');
-        loadReturnsTable();
-        updateOverviewStats();
+            if (response.ok) {
+                showNotification(`${formData.type.charAt(0).toUpperCase() + formData.type.slice(1)} ${currentEditId ? 'updated' : 'added'} successfully!`, 'success');
+                returnModal.classList.remove('active');
+                await loadReturnsTable();
+                await updateOverviewStats();
+            } else {
+                showNotification('Failed to save item.', 'error');
+            }
+        } catch (error) {
+            console.error('Error saving item:', error);
+            showNotification('An error occurred while saving the item.', 'error');
+        }
     });
 
     // Update status
-    updateStatusBtn.addEventListener('click', function() {
+    updateStatusBtn.addEventListener('click', async function() {
         if (currentDetailsId) {
-            const index = returnsData.returns.findIndex(r => r.id === currentDetailsId);
-            if (index !== -1) {
-                const oldStatus = returnsData.returns[index].status;
-                returnsData.returns[index].status = newStatus.value;
-                
-                detailsModal.classList.remove('active');
-                loadReturnsTable();
-                updateOverviewStats();
-                showNotification(`Status updated from ${oldStatus} to ${newStatus.value}`, 'success');
+            try {
+                const response = await fetch(`/api/returns/${currentDetailsId}/status/`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: newStatus.value }),
+                });
+                if (response.ok) {
+                    detailsModal.classList.remove('active');
+                    await loadReturnsTable();
+                    await updateOverviewStats();
+                    showNotification(`Status updated to ${newStatus.value}`, 'success');
+                } else {
+                    showNotification('Failed to update status.', 'error');
+                }
+            } catch (error) {
+                console.error('Error updating status:', error);
+                showNotification('An error occurred while updating the status.', 'error');
             }
         }
     });
@@ -768,4 +618,3 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize the page
     initPage();
 });
-

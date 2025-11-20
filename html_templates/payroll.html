@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InspireWear | Payroll</title>
+    <link rel="stylesheet" href="../css/finance.css">
+    <link rel="stylesheet" href="../css/payroll.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <link rel="icon" href="../img/favicon.png" type="image/x-icon">
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="morph-overlay" id="morphOverlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p class="loading-text">Loading Payroll...</p>
+        </div>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="logo-container">
+            <img src="../img/logo.png" alt="InspireWear Logo" class="logo">
+            <h1 class="logo-text">InspireWear</h1>
+        </div>
+
+        <a href="../templates/index.html" class="home-button">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+
+        <div class="module-heading">
+            <span class="star">✧</span>
+            <h1>FINANCE</h1>
+            <span class="star">✧</span>
+        </div>
+
+        <nav class="finance-nav">
+            <ul>
+                <li><a href="../templates/finance_dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                <li><a href="../templates/transactions.html"><i class="fas fa-exchange-alt"></i> Transactions</a></li>
+                <li><a href="../templates/invoices.html"><i class="fas fa-file-invoice"></i> Invoices</a></li>
+                <li><a href="../templates/expenses.html"><i class="fas fa-receipt"></i> Expenses</a></li>
+                <li class="active"><a href="../templates/payroll.html"><i class="fas fa-money-bill-wave"></i> Payroll</a></li>
+                <li><a href="../templates/finance_notifications.html"><i class="fas fa-bell"></i> Notifications</a></li>
+                <li><a href="../templates/financial_reports.html"><i class="fas fa-chart-pie"></i> Reports</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <header class="finance-header">
+            <h2>Payroll Management</h2>
+            <div class="header-actions">
+                <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon theme-icon"></i>
+                </button>
+                <div class="profile-container">
+                    <button class="profile-btn" id="profileBtn" aria-label="User profile" aria-expanded="false">
+                        <img src="../img/user.png" alt="Profile" class="profile-img">
+                        <span>Finance Manager</span>
+                    </button>
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <a href="../templates/index.html" class="dropdown-item">
+                            <i class="fas fa-home"></i> Back to Home
+                        </a>
+                        <a href="../templates/login.html" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Payroll Summary Cards -->
+        <div class="payroll-summary">
+            <div class="summary-card total">
+                <div class="card-icon">
+                    <i class="fas fa-money-bill-wave"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Total Payroll</h3>
+                    <p class="amount">KSh <span id="totalPayroll">850,000</span></p>
+                    <p class="period">This Month</p>
+                </div>
+            </div>
+
+            <div class="summary-card employees">
+                <div class="card-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Active Employees</h3>
+                    <p class="count"><span id="activeEmployees">25</span></p>
+                    <p class="period">Current Staff</p>
+                </div>
+            </div>
+
+            <div class="summary-card processed">
+                <div class="card-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Processed</h3>
+                    <p class="amount">KSh <span id="processedPayroll">680,000</span></p>
+                    <p class="period">This Month</p>
+                </div>
+            </div>
+
+            <div class="summary-card pending">
+                <div class="card-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Pending</h3>
+                    <p class="amount">KSh <span id="pendingPayroll">170,000</span></p>
+                    <p class="period">Awaiting Processing</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payroll Controls -->
+        <div class="payroll-controls">
+            <div class="filters-section">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchEmployees" placeholder="Search employees...">
+                </div>
+                
+                <div class="filter-group">
+                    <select id="filterDepartment">
+                        <option value="">All Departments</option>
+                        <option value="Operations">Operations</option>
+                        <option value="Sales">Sales</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="Admin">Admin</option>
+                        <option value="Finance">Finance</option>
+                    </select>
+                    
+                    <select id="filterStatus">
+                        <option value="">All Status</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                        <option value="on_leave">On Leave</option>
+                    </select>
+                    
+                    <select id="filterPayrollPeriod">
+                        <option value="2025-01">January 2025</option>
+                        <option value="2024-12">December 2024</option>
+                        <option value="2024-11">November 2024</option>
+                        <option value="2024-10">October 2024</option>
+                    </select>
+                </div>
+                
+                <button id="clearFilters" class="btn-secondary">
+                    <i class="fas fa-times"></i> Clear Filters
+                </button>
+            </div>
+            
+            <div class="actions-section">
+                <button id="exportPayroll" class="btn-secondary">
+                    <i class="fas fa-download"></i> Export
+                </button>
+                <button id="processPayroll" class="btn-secondary">
+                    <i class="fas fa-play"></i> Process Payroll
+                </button>
+                <button id="addEmployeeBtn" class="btn-primary">
+                    <i class="fas fa-plus"></i> Add Employee
+                </button>
+            </div>
+        </div>
+
+        <!-- Payroll Table -->
+        <div class="payroll-table-container">
+            <table class="payroll-table">
+                <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" id="selectAll">
+                        </th>
+                        <th>Employee <i class="fas fa-sort sort-icon" data-column="name"></i></th>
+                        <th>Department</th>
+                        <th>Position</th>
+                        <th>Basic Salary (KSh) <i class="fas fa-sort sort-icon" data-column="basicSalary"></i></th>
+                        <th>Allowances (KSh)</th>
+                        <th>Deductions (KSh)</th>
+                        <th>Net Pay (KSh) <i class="fas fa-sort sort-icon" data-column="netPay"></i></th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="payrollTableBody">
+                    <!-- Payroll data will be loaded by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination-container">
+            <div class="pagination-info">
+                Showing <span id="showingStart">1</span> to <span id="showingEnd">10</span> of <span id="totalEmployeesCount">25</span> employees
+            </div>
+            <div class="pagination-controls">
+                <button id="prevPage" class="pagination-btn" disabled>
+                    <i class="fas fa-chevron-left"></i> Previous
+                </button>
+                <div class="page-numbers" id="pageNumbers">
+                    <!-- Page numbers will be generated by JavaScript -->
+                </div>
+                <button id="nextPage" class="pagination-btn">
+                    Next <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="finance-footer">
+            <div class="footer-content">
+                <p class="footer-text">© 2025 InspireWear. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#" class="footer-link">Terms</a>
+                    <a href="#" class="footer-link">Privacy</a>
+                    <a href="#" class="footer-link">Contact</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Add Employee Modal -->
+    <div class="modal-overlay" id="addEmployeeModal">
+        <div class="modal large">
+            <div class="modal-header">
+                <h3>Add New Employee</h3>
+                <button class="modal-close" id="modalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="addEmployeeForm">
+                    <div class="employee-form-section">
+                        <h4>Personal Information</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="employeeName">Full Name</label>
+                                <input type="text" id="employeeName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="employeeId">Employee ID</label>
+                                <input type="text" id="employeeId" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="employeeEmail">Email</label>
+                                <input type="email" id="employeeEmail" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="employeePhone">Phone</label>
+                                <input type="tel" id="employeePhone" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="employeeNationalId">National ID</label>
+                                <input type="text" id="employeeNationalId" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="employeeKraPin">KRA PIN</label>
+                                <input type="text" id="employeeKraPin" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="employee-form-section">
+                        <h4>Employment Details</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="employeeDepartment">Department</label>
+                                <select id="employeeDepartment" required>
+                                    <option value="">Select Department</option>
+                                    <option value="Operations">Operations</option>
+                                    <option value="Sales">Sales</option>
+                                    <option value="Marketing">Marketing</option>
+                                    <option value="Admin">Admin</option>
+                                    <option value="Finance">Finance</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="employeePosition">Position</label>
+                                <input type="text" id="employeePosition" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="employeeStartDate">Start Date</label>
+                                <input type="date" id="employeeStartDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="employeeStatus">Status</label>
+                                <select id="employeeStatus" required>
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                    <option value="on_leave">On Leave</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="employee-form-section">
+                        <h4>Salary Information</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="basicSalary">Basic Salary (KSh)</label>
+                                <input type="number" id="basicSalary" min="0" step="100" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="housingAllowance">Housing Allowance (KSh)</label>
+                                <input type="number" id="housingAllowance" min="0" step="100" value="0">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="transportAllowance">Transport Allowance (KSh)</label>
+                                <input type="number" id="transportAllowance" min="0" step="100" value="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="medicalAllowance">Medical Allowance (KSh)</label>
+                                <input type="number" id="medicalAllowance" min="0" step="100" value="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="employee-form-section">
+                        <h4>Bank Details</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="bankName">Bank Name</label>
+                                <select id="bankName" required>
+                                    <option value="">Select Bank</option>
+                                    <option value="KCB Bank">KCB Bank</option>
+                                    <option value="Equity Bank">Equity Bank</option>
+                                    <option value="Cooperative Bank">Cooperative Bank</option>
+                                    <option value="Standard Chartered">Standard Chartered</option>
+                                    <option value="Barclays Bank">Barclays Bank</option>
+                                    <option value="NCBA Bank">NCBA Bank</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="accountNumber">Account Number</label>
+                                <input type="text" id="accountNumber" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="cancelAddEmployee">Cancel</button>
+                        <button type="submit" class="btn-primary">Add Employee</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payroll Details Modal -->
+    <div class="modal-overlay" id="payrollDetailsModal">
+        <div class="modal large">
+            <div class="modal-header">
+                <h3>Payroll Details</h3>
+                <button class="modal-close" id="detailsModalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="payroll-details" id="payrollDetailsContent">
+                    <!-- Payroll details will be populated here -->
+                </div>
+                <div class="payroll-actions" id="payrollActions">
+                    <!-- Action buttons will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Process Payroll Modal -->
+    <div class="modal-overlay" id="processPayrollModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Process Payroll</h3>
+                <button class="modal-close" id="processModalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="processPayrollForm">
+                    <div class="form-group">
+                        <label for="payrollPeriod">Payroll Period</label>
+                        <select id="payrollPeriod" required>
+                            <option value="2025-01">January 2025</option>
+                            <option value="2024-12">December 2024</option>
+                            <option value="2024-11">November 2024</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="payrollDate">Payment Date</label>
+                        <input type="date" id="payrollDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="payrollNotes">Notes</label>
+                        <textarea id="payrollNotes" rows="3" placeholder="Additional notes for this payroll run"></textarea>
+                    </div>
+                    
+                    <div class="payroll-summary-preview">
+                        <h4>Payroll Summary</h4>
+                        <div class="summary-item">
+                            <span>Total Employees:</span>
+                            <span id="previewEmployeeCount">25</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Total Basic Salary:</span>
+                            <span>KSh <span id="previewBasicTotal">650,000</span></span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Total Allowances:</span>
+                            <span>KSh <span id="previewAllowancesTotal">120,000</span></span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Total Deductions:</span>
+                            <span>KSh <span id="previewDeductionsTotal">95,000</span></span>
+                        </div>
+                        <div class="summary-item total">
+                            <span>Net Payroll:</span>
+                            <span>KSh <span id="previewNetTotal">675,000</span></span>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="cancelProcessPayroll">Cancel</button>
+                        <button type="submit" class="btn-primary">Process Payroll</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/finance.js"></script>
+    <script src="../js/payroll.js"></script>
+</body>
+</html>
+

@@ -22,205 +22,38 @@ document.addEventListener('DOMContentLoaded', function() {
     const nextPage = document.getElementById('nextPage');
     const pageNumbers = document.getElementById('pageNumbers');
 
-    // Sample payroll data for Kenyan clothing store
-    const payrollData = {
-        summary: {
-            totalPayroll: 850000,
-            activeEmployees: 25,
-            processedPayroll: 680000,
-            pendingPayroll: 170000
-        },
-        employees: [
-            {
-                id: 1,
-                name: 'John Kamau',
-                employeeId: 'EMP001',
-                email: 'john.kamau@inspirewear.co.ke',
-                phone: '+254 712 345 678',
-                nationalId: '12345678',
-                kraPin: 'A001234567B',
-                department: 'Operations',
-                position: 'Production Manager',
-                startDate: '2023-01-15',
-                status: 'active',
-                basicSalary: 65000,
-                housingAllowance: 15000,
-                transportAllowance: 8000,
-                medicalAllowance: 5000,
-                bankName: 'KCB Bank',
-                accountNumber: '1234567890',
-                payrollStatus: 'processed'
-            },
-            {
-                id: 2,
-                name: 'Mary Wanjiku',
-                employeeId: 'EMP002',
-                email: 'mary.wanjiku@inspirewear.co.ke',
-                phone: '+254 722 456 789',
-                nationalId: '23456789',
-                kraPin: 'A002345678C',
-                department: 'Marketing',
-                position: 'Marketing Manager',
-                startDate: '2023-02-01',
-                status: 'active',
-                basicSalary: 60000,
-                housingAllowance: 12000,
-                transportAllowance: 7000,
-                medicalAllowance: 4000,
-                bankName: 'Equity Bank',
-                accountNumber: '2345678901',
-                payrollStatus: 'processed'
-            },
-            {
-                id: 3,
-                name: 'Peter Ochieng',
-                employeeId: 'EMP003',
-                email: 'peter.ochieng@inspirewear.co.ke',
-                phone: '+254 733 567 890',
-                nationalId: '34567890',
-                kraPin: 'A003456789D',
-                department: 'Sales',
-                position: 'Sales Manager',
-                startDate: '2023-03-10',
-                status: 'active',
-                basicSalary: 55000,
-                housingAllowance: 10000,
-                transportAllowance: 8000,
-                medicalAllowance: 3000,
-                bankName: 'Cooperative Bank',
-                accountNumber: '3456789012',
-                payrollStatus: 'pending'
-            },
-            {
-                id: 4,
-                name: 'Grace Akinyi',
-                employeeId: 'EMP004',
-                email: 'grace.akinyi@inspirewear.co.ke',
-                phone: '+254 744 678 901',
-                nationalId: '45678901',
-                kraPin: 'A004567890E',
-                department: 'Operations',
-                position: 'Quality Control Supervisor',
-                startDate: '2023-04-05',
-                status: 'active',
-                basicSalary: 45000,
-                housingAllowance: 8000,
-                transportAllowance: 6000,
-                medicalAllowance: 3000,
-                bankName: 'Standard Chartered',
-                accountNumber: '4567890123',
-                payrollStatus: 'processed'
-            },
-            {
-                id: 5,
-                name: 'David Mwangi',
-                employeeId: 'EMP005',
-                email: 'david.mwangi@inspirewear.co.ke',
-                phone: '+254 755 789 012',
-                nationalId: '56789012',
-                kraPin: 'A005678901F',
-                department: 'Admin',
-                position: 'HR Officer',
-                startDate: '2023-05-20',
-                status: 'active',
-                basicSalary: 50000,
-                housingAllowance: 9000,
-                transportAllowance: 5000,
-                medicalAllowance: 3000,
-                bankName: 'NCBA Bank',
-                accountNumber: '5678901234',
-                payrollStatus: 'pending'
-            },
-            {
-                id: 6,
-                name: 'Sarah Njeri',
-                employeeId: 'EMP006',
-                email: 'sarah.njeri@inspirewear.co.ke',
-                phone: '+254 766 890 123',
-                nationalId: '67890123',
-                kraPin: 'A006789012G',
-                department: 'Finance',
-                position: 'Accountant',
-                startDate: '2023-06-01',
-                status: 'active',
-                basicSalary: 55000,
-                housingAllowance: 10000,
-                transportAllowance: 6000,
-                medicalAllowance: 4000,
-                bankName: 'KCB Bank',
-                accountNumber: '6789012345',
-                payrollStatus: 'processed'
-            },
-            {
-                id: 7,
-                name: 'James Kiprotich',
-                employeeId: 'EMP007',
-                email: 'james.kiprotich@inspirewear.co.ke',
-                phone: '+254 777 901 234',
-                nationalId: '78901234',
-                kraPin: 'A007890123H',
-                department: 'Operations',
-                position: 'Machine Operator',
-                startDate: '2023-07-15',
-                status: 'on_leave',
-                basicSalary: 35000,
-                housingAllowance: 6000,
-                transportAllowance: 4000,
-                medicalAllowance: 2000,
-                bankName: 'Equity Bank',
-                accountNumber: '7890123456',
-                payrollStatus: 'pending'
-            },
-            {
-                id: 8,
-                name: 'Lucy Wambui',
-                employeeId: 'EMP008',
-                email: 'lucy.wambui@inspirewear.co.ke',
-                phone: '+254 788 012 345',
-                nationalId: '89012345',
-                kraPin: 'A008901234I',
-                department: 'Sales',
-                position: 'Sales Representative',
-                startDate: '2023-08-01',
-                status: 'active',
-                basicSalary: 40000,
-                housingAllowance: 7000,
-                transportAllowance: 5000,
-                medicalAllowance: 2500,
-                bankName: 'Cooperative Bank',
-                accountNumber: '8901234567',
-                payrollStatus: 'processed'
-            }
-        ]
-    };
-
     // Pagination variables
     let currentPage = 1;
     const itemsPerPage = 10;
-    let filteredEmployees = [...payrollData.employees];
+    let filteredEmployees = [];
     let sortColumn = '';
     let sortDirection = 'asc';
 
     // Initialize the page
-    function initPage() {
-        // Set summary numbers
-        document.getElementById('totalPayroll').textContent = formatCurrency(payrollData.summary.totalPayroll);
-        document.getElementById('activeEmployees').textContent = payrollData.summary.activeEmployees;
-        document.getElementById('processedPayroll').textContent = formatCurrency(payrollData.summary.processedPayroll);
-        document.getElementById('pendingPayroll').textContent = formatCurrency(payrollData.summary.pendingPayroll);
+    async function initPage() {
+        try {
+            const summary = await fetch('/api/payroll/summary/').then(res => res.json());
+            // Set summary numbers
+            document.getElementById('totalPayroll').textContent = formatCurrency(summary.total_payroll);
+            document.getElementById('activeEmployees').textContent = summary.active_employees;
+            document.getElementById('processedPayroll').textContent = formatCurrency(summary.processed_payroll);
+            document.getElementById('pendingPayroll').textContent = formatCurrency(summary.pending_payroll);
 
-        // Set default payroll date
-        const today = new Date();
-        const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-        document.getElementById('payrollDate').value = lastDayOfMonth.toISOString().split('T')[0];
+            // Set default payroll date
+            const today = new Date();
+            const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+            document.getElementById('payrollDate').value = lastDayOfMonth.toISOString().split('T')[0];
 
-        // Load employees
-        applyFilters();
-
-        // Hide loading overlay
-        setTimeout(() => {
-            morphOverlay.classList.remove('active');
-        }, 1000);
+            // Load employees
+            await applyFilters();
+        } catch (error) {
+            console.error('Error initializing page:', error);
+        } finally {
+            // Hide loading overlay
+            setTimeout(() => {
+                morphOverlay.classList.remove('active');
+            }, 1000);
+        }
     }
 
     // Format currency for KES
@@ -244,15 +77,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Calculate total allowances
     function calculateAllowances(employee) {
-        return employee.housingAllowance + employee.transportAllowance + employee.medicalAllowance;
+        return employee.housing_allowance + employee.transport_allowance + employee.medical_allowance;
     }
 
     // Calculate deductions (PAYE, NSSF, NHIF)
     function calculateDeductions(employee) {
-        const grossSalary = employee.basicSalary + calculateAllowances(employee);
+        const grossSalary = employee.basic_salary + calculateAllowances(employee);
         
         // NSSF calculation (6% of basic salary, max KSh 1,080)
-        const nssf = Math.min(employee.basicSalary * 0.06, 1080);
+        const nssf = Math.min(employee.basic_salary * 0.06, 1080);
         
         // NHIF calculation (based on gross salary bands)
         let nhif = 0;
@@ -298,53 +131,34 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Calculate net pay
     function calculateNetPay(employee) {
-        const grossSalary = employee.basicSalary + calculateAllowances(employee);
+        const grossSalary = employee.basic_salary + calculateAllowances(employee);
         const deductions = calculateDeductions(employee);
         return grossSalary - deductions.total;
     }
 
     // Apply filters and search
-    function applyFilters() {
+    async function applyFilters() {
         const searchTerm = searchEmployees.value.toLowerCase();
         const departmentFilter = filterDepartment.value;
         const statusFilter = filterStatus.value;
 
-        filteredEmployees = payrollData.employees.filter(employee => {
-            const matchesSearch = employee.name.toLowerCase().includes(searchTerm) ||
-                                employee.employeeId.toLowerCase().includes(searchTerm) ||
-                                employee.position.toLowerCase().includes(searchTerm);
-            
-            const matchesDepartment = !departmentFilter || employee.department === departmentFilter;
-            const matchesStatus = !statusFilter || employee.status === statusFilter;
-
-            return matchesSearch && matchesDepartment && matchesStatus;
+        const params = new URLSearchParams({
+            search: searchTerm,
+            department: departmentFilter,
+            status: statusFilter,
+            sort_by: sortColumn,
+            sort_dir: sortDirection,
         });
 
-        // Apply sorting
-        if (sortColumn) {
-            filteredEmployees.sort((a, b) => {
-                let aValue, bValue;
-                
-                if (sortColumn === 'name') {
-                    aValue = a.name.toLowerCase();
-                    bValue = b.name.toLowerCase();
-                } else if (sortColumn === 'basicSalary') {
-                    aValue = a.basicSalary;
-                    bValue = b.basicSalary;
-                } else if (sortColumn === 'netPay') {
-                    aValue = calculateNetPay(a);
-                    bValue = calculateNetPay(b);
-                }
-
-                if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
-                if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
-                return 0;
-            });
+        try {
+            const employees = await fetch(`/api/payroll/employees/?${params.toString()}`).then(res => res.json());
+            filteredEmployees = employees;
+            currentPage = 1;
+            renderEmployees();
+            renderPagination();
+        } catch (error) {
+            console.error('Error applying filters:', error);
         }
-
-        currentPage = 1;
-        renderEmployees();
-        renderPagination();
     }
 
     // Render employees table
@@ -369,7 +183,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <div class="employee-avatar">${getInitials(employee.name)}</div>
                             <div class="employee-details">
                                 <div class="employee-name">${employee.name}</div>
-                                <div class="employee-id">${employee.employeeId}</div>
+                                <div class="employee-id">${employee.employee_id}</div>
                             </div>
                         </div>
                     </td>
@@ -377,7 +191,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <span class="department-badge ${employee.department.toLowerCase()}">${employee.department}</span>
                     </td>
                     <td>${employee.position}</td>
-                    <td class="salary-amount">KSh ${formatCurrency(employee.basicSalary)}</td>
+                    <td class="salary-amount">KSh ${formatCurrency(employee.basic_salary)}</td>
                     <td class="allowances">KSh ${formatCurrency(allowances)}</td>
                     <td class="deductions">KSh ${formatCurrency(deductions.total)}</td>
                     <td class="net-pay">KSh ${formatCurrency(netPay)}</td>
@@ -463,35 +277,41 @@ document.addEventListener('DOMContentLoaded', function() {
         renderPagination();
     };
 
-    window.viewPayrollDetails = function(id) {
-        const employee = payrollData.employees.find(emp => emp.id === id);
+    window.viewPayrollDetails = async function(id) {
+        const employee = await fetch(`/api/payroll/employees/${id}/`).then(res => res.json());
         if (employee) {
             showPayrollDetails(employee);
         }
     };
 
-    window.editEmployee = function(id) {
-        const employee = payrollData.employees.find(emp => emp.id === id);
+    window.editEmployee = async function(id) {
+        const employee = await fetch(`/api/payroll/employees/${id}/`).then(res => res.json());
         if (employee) {
             populateEmployeeForm(employee);
             addEmployeeModal.classList.add('active');
         }
     };
 
-    window.generatePayslip = function(id) {
-        const employee = payrollData.employees.find(emp => emp.id === id);
+    window.generatePayslip = async function(id) {
+        const employee = await fetch(`/api/payroll/employees/${id}/`).then(res => res.json());
         if (employee) {
             showPayslip(employee);
         }
     };
 
-    window.deleteEmployee = function(id) {
+    window.deleteEmployee = async function(id) {
         if (confirm('Are you sure you want to delete this employee?')) {
-            const index = payrollData.employees.findIndex(emp => emp.id === id);
-            if (index !== -1) {
-                payrollData.employees.splice(index, 1);
-                applyFilters();
-                alert('Employee deleted successfully!');
+            try {
+                const response = await fetch(`/api/payroll/employees/${id}/`, { method: 'DELETE' });
+                if (response.ok) {
+                    await applyFilters();
+                    alert('Employee deleted successfully!');
+                } else {
+                    alert('Failed to delete employee.');
+                }
+            } catch (error) {
+                console.error('Error deleting employee:', error);
+                alert('An error occurred while deleting the employee.');
             }
         }
     };
@@ -511,7 +331,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <div class="detail-item">
                     <span class="detail-label">Employee ID:</span>
-                    <span class="detail-value">${employee.employeeId}</span>
+                    <span class="detail-value">${employee.employee_id}</span>
                 </div>
                 <div class="detail-item">
                     <span class="detail-label">Department:</span>
@@ -523,26 +343,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <div class="detail-item">
                     <span class="detail-label">Start Date:</span>
-                    <span class="detail-value">${formatDate(employee.startDate)}</span>
+                    <span class="detail-value">${formatDate(employee.start_date)}</span>
                 </div>
             </div>
             <div class="detail-section">
                 <h4>Salary Breakdown</h4>
                 <div class="detail-item">
                     <span class="detail-label">Basic Salary:</span>
-                    <span class="detail-value">KSh ${formatCurrency(employee.basicSalary)}</span>
+                    <span class="detail-value">KSh ${formatCurrency(employee.basic_salary)}</span>
                 </div>
                 <div class="detail-item">
                     <span class="detail-label">Housing Allowance:</span>
-                    <span class="detail-value">KSh ${formatCurrency(employee.housingAllowance)}</span>
+                    <span class="detail-value">KSh ${formatCurrency(employee.housing_allowance)}</span>
                 </div>
                 <div class="detail-item">
                     <span class="detail-label">Transport Allowance:</span>
-                    <span class="detail-value">KSh ${formatCurrency(employee.transportAllowance)}</span>
+                    <span class="detail-value">KSh ${formatCurrency(employee.transport_allowance)}</span>
                 </div>
                 <div class="detail-item">
                     <span class="detail-label">Medical Allowance:</span>
-                    <span class="detail-value">KSh ${formatCurrency(employee.medicalAllowance)}</span>
+                    <span class="detail-value">KSh ${formatCurrency(employee.medical_allowance)}</span>
                 </div>
                 <div class="detail-item">
                     <span class="detail-label">Total Deductions:</span>
@@ -573,7 +393,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function showPayslip(employee) {
         const allowances = calculateAllowances(employee);
         const deductions = calculateDeductions(employee);
-        const grossSalary = employee.basicSalary + allowances;
+        const grossSalary = employee.basic_salary + allowances;
         const netPay = calculateNetPay(employee);
 
         const payslipHtml = `
@@ -588,15 +408,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div>
                         <h4>Employee Details</h4>
                         <p><strong>Name:</strong> ${employee.name}</p>
-                        <p><strong>Employee ID:</strong> ${employee.employeeId}</p>
+                        <p><strong>Employee ID:</strong> ${employee.employee_id}</p>
                         <p><strong>Department:</strong> ${employee.department}</p>
                         <p><strong>Position:</strong> ${employee.position}</p>
-                        <p><strong>KRA PIN:</strong> ${employee.kraPin}</p>
+                        <p><strong>KRA PIN:</strong> ${employee.kra_pin}</p>
                     </div>
                     <div>
                         <h4>Bank Details</h4>
-                        <p><strong>Bank:</strong> ${employee.bankName}</p>
-                        <p><strong>Account:</strong> ${employee.accountNumber}</p>
+                        <p><strong>Bank:</strong> ${employee.bank_name}</p>
+                        <p><strong>Account:</strong> ${employee.account_number}</p>
                         <p><strong>Payment Date:</strong> ${formatDate(new Date())}</p>
                     </div>
                 </div>
@@ -606,19 +426,19 @@ document.addEventListener('DOMContentLoaded', function() {
                         <h4>Earnings</h4>
                         <div class="payslip-item">
                             <span>Basic Salary</span>
-                            <span>KSh ${formatCurrency(employee.basicSalary)}</span>
+                            <span>KSh ${formatCurrency(employee.basic_salary)}</span>
                         </div>
                         <div class="payslip-item">
                             <span>Housing Allowance</span>
-                            <span>KSh ${formatCurrency(employee.housingAllowance)}</span>
+                            <span>KSh ${formatCurrency(employee.housing_allowance)}</span>
                         </div>
                         <div class="payslip-item">
                             <span>Transport Allowance</span>
-                            <span>KSh ${formatCurrency(employee.transportAllowance)}</span>
+                            <span>KSh ${formatCurrency(employee.transport_allowance)}</span>
                         </div>
                         <div class="payslip-item">
                             <span>Medical Allowance</span>
-                            <span>KSh ${formatCurrency(employee.medicalAllowance)}</span>
+                            <span>KSh ${formatCurrency(employee.medical_allowance)}</span>
                         </div>
                         <div class="payslip-item" style="font-weight: bold; border-top: 2px solid #3498db; margin-top: 0.5rem; padding-top: 0.5rem;">
                             <span>Gross Salary</span>
@@ -696,21 +516,21 @@ document.addEventListener('DOMContentLoaded', function() {
     // Populate employee form for editing
     function populateEmployeeForm(employee) {
         document.getElementById('employeeName').value = employee.name;
-        document.getElementById('employeeId').value = employee.employeeId;
+        document.getElementById('employeeId').value = employee.employee_id;
         document.getElementById('employeeEmail').value = employee.email;
         document.getElementById('employeePhone').value = employee.phone;
-        document.getElementById('employeeNationalId').value = employee.nationalId;
-        document.getElementById('employeeKraPin').value = employee.kraPin;
+        document.getElementById('employeeNationalId').value = employee.national_id;
+        document.getElementById('employeeKraPin').value = employee.kra_pin;
         document.getElementById('employeeDepartment').value = employee.department;
         document.getElementById('employeePosition').value = employee.position;
-        document.getElementById('employeeStartDate').value = employee.startDate;
+        document.getElementById('employeeStartDate').value = employee.start_date;
         document.getElementById('employeeStatus').value = employee.status;
-        document.getElementById('basicSalary').value = employee.basicSalary;
-        document.getElementById('housingAllowance').value = employee.housingAllowance;
-        document.getElementById('transportAllowance').value = employee.transportAllowance;
-        document.getElementById('medicalAllowance').value = employee.medicalAllowance;
-        document.getElementById('bankName').value = employee.bankName;
-        document.getElementById('accountNumber').value = employee.accountNumber;
+        document.getElementById('basicSalary').value = employee.basic_salary;
+        document.getElementById('housingAllowance').value = employee.housing_allowance;
+        document.getElementById('transportAllowance').value = employee.transport_allowance;
+        document.getElementById('medicalAllowance').value = employee.medical_allowance;
+        document.getElementById('bankName').value = employee.bank_name;
+        document.getElementById('accountNumber').value = employee.account_number;
     }
 
     // Event Listeners
@@ -768,7 +588,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('processPayrollModal').classList.add('active');
     });
 
-    document.getElementById('processPayrollForm').addEventListener('submit', function(e) {
+    document.getElementById('processPayrollForm').addEventListener('submit', async function(e) {
         e.preventDefault();
         
         const selectedEmployees = document.querySelectorAll('.employee-checkbox:checked');
@@ -778,18 +598,25 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         if (confirm(`Process payroll for ${selectedEmployees.length} employee(s)?`)) {
-            // Update payroll status for selected employees
-            selectedEmployees.forEach(checkbox => {
-                const employeeId = parseInt(checkbox.dataset.id);
-                const employee = payrollData.employees.find(emp => emp.id === employeeId);
-                if (employee) {
-                    employee.payrollStatus = 'processed';
-                }
-            });
+            const employeeIds = Array.from(selectedEmployees).map(cb => cb.dataset.id);
+            try {
+                const response = await fetch('/api/payroll/process/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ employee_ids: employeeIds }),
+                });
 
-            applyFilters();
-            document.getElementById('processPayrollModal').classList.remove('active');
-            alert('Payroll processed successfully!');
+                if (response.ok) {
+                    await applyFilters();
+                    document.getElementById('processPayrollModal').classList.remove('active');
+                    alert('Payroll processed successfully!');
+                } else {
+                    alert('Failed to process payroll.');
+                }
+            } catch (error) {
+                console.error('Error processing payroll:', error);
+                alert('An error occurred while processing payroll.');
+            }
         }
     });
 
@@ -817,11 +644,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 const netPay = calculateNetPay(employee);
                 
                 return [
-                    employee.employeeId,
+                    employee.employee_id,
                     `"${employee.name}"`,
                     employee.department,
                     `"${employee.position}"`,
-                    employee.basicSalary,
+                    employee.basic_salary,
                     allowances,
                     deductions.total,
                     netPay,
@@ -886,34 +713,30 @@ document.addEventListener('DOMContentLoaded', function() {
         addEmployeeModal.classList.remove('active');
     });
 
-    addEmployeeForm.addEventListener('submit', function(e) {
+    addEmployeeForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
-        const newEmployee = {
-            id: Math.max(...payrollData.employees.map(emp => emp.id)) + 1,
-            name: document.getElementById('employeeName').value,
-            employeeId: document.getElementById('employeeId').value,
-            email: document.getElementById('employeeEmail').value,
-            phone: document.getElementById('employeePhone').value,
-            nationalId: document.getElementById('employeeNationalId').value,
-            kraPin: document.getElementById('employeeKraPin').value,
-            department: document.getElementById('employeeDepartment').value,
-            position: document.getElementById('employeePosition').value,
-            startDate: document.getElementById('employeeStartDate').value,
-            status: document.getElementById('employeeStatus').value,
-            basicSalary: parseFloat(document.getElementById('basicSalary').value),
-            housingAllowance: parseFloat(document.getElementById('housingAllowance').value),
-            transportAllowance: parseFloat(document.getElementById('transportAllowance').value),
-            medicalAllowance: parseFloat(document.getElementById('medicalAllowance').value),
-            bankName: document.getElementById('bankName').value,
-            accountNumber: document.getElementById('accountNumber').value,
-            payrollStatus: 'pending'
-        };
+        const formData = new FormData(addEmployeeForm);
+        const employeeData = Object.fromEntries(formData.entries());
 
-        payrollData.employees.unshift(newEmployee);
-        applyFilters();
-        addEmployeeModal.classList.remove('active');
-        alert('Employee added successfully!');
+        try {
+            const response = await fetch('/api/payroll/employees/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(employeeData),
+            });
+
+            if (response.ok) {
+                await applyFilters();
+                addEmployeeModal.classList.remove('active');
+                alert('Employee added successfully!');
+            } else {
+                alert('Failed to add employee.');
+            }
+        } catch (error) {
+            console.error('Error adding employee:', error);
+            alert('An error occurred while adding the employee.');
+        }
     });
 
     // Close modals when clicking outside
@@ -968,4 +791,3 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize the page
     initPage();
 });
-

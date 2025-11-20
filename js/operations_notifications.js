@@ -52,228 +52,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const tags = document.getElementById('tags');
     const replyMessage = document.getElementById('replyMessage');
 
-    // Sample notifications data for Kenyan clothing store operations
-    const notificationsData = {
-        overview: {
-            totalNotifications: 47,
-            unreadNotifications: 12,
-            sentToday: 6,
-            responseRate: 89
-        },
-        inbox: [
-            {
-                id: 1,
-                from: 'inventory',
-                to: 'operations',
-                type: 'alert',
-                priority: 'urgent',
-                subject: 'Low Stock Alert - Cotton T-Shirts',
-                message: 'Critical stock levels detected for cotton t-shirts in Nairobi Central store. Current stock: 15 units. Reorder threshold: 20 units. Immediate restocking required to avoid stockouts.',
-                timestamp: '2025-01-21T14:30:00Z',
-                status: 'unread',
-                tags: ['stock-alert', 'nairobi-central', 'cotton'],
-                read: false
-            },
-            {
-                id: 2,
-                from: 'finance',
-                to: 'operations',
-                type: 'update',
-                priority: 'high',
-                subject: 'Monthly Revenue Report - December 2024',
-                message: 'December revenue report is now available. Total revenue: KSh 2,450,000. Notable increase in online sales (35% growth). Detailed breakdown attached for review.',
-                timestamp: '2025-01-21T13:15:00Z',
-                status: 'unread',
-                tags: ['revenue', 'monthly-report', 'december'],
-                read: false
-            },
-            {
-                id: 3,
-                from: 'online-shop',
-                to: 'operations',
-                type: 'request',
-                priority: 'medium',
-                subject: 'Product Photography Request',
-                message: 'Need high-quality photos for 25 new arrivals in the spring collection. Please coordinate with the photography team for a session this week.',
-                timestamp: '2025-01-21T12:45:00Z',
-                status: 'unread',
-                tags: ['photography', 'spring-collection', 'new-arrivals'],
-                read: false
-            },
-            {
-                id: 4,
-                from: 'inventory',
-                to: 'operations',
-                type: 'update',
-                priority: 'medium',
-                subject: 'Supplier Delivery Confirmation',
-                message: 'Textile supplier from Nairobi has confirmed delivery of cotton fabrics for Wednesday, January 22nd. Expected delivery time: 10:00 AM. Please ensure receiving team is available.',
-                timestamp: '2025-01-21T11:20:00Z',
-                status: 'read',
-                tags: ['supplier', 'delivery', 'cotton-fabric'],
-                read: true
-            },
-            {
-                id: 5,
-                from: 'finance',
-                to: 'operations',
-                type: 'reminder',
-                priority: 'medium',
-                subject: 'Quarterly Tax Filing Due',
-                message: 'Reminder: Q4 2024 tax filing is due on January 31st. Please provide all necessary operational expense documentation by January 25th.',
-                timestamp: '2025-01-21T10:00:00Z',
-                status: 'read',
-                tags: ['tax-filing', 'quarterly', 'documentation'],
-                read: true
-            },
-            {
-                id: 6,
-                from: 'online-shop',
-                to: 'operations',
-                type: 'alert',
-                priority: 'high',
-                subject: 'Website Performance Issues',
-                message: 'Experiencing slow loading times on the product catalog page. Customer complaints increasing. Technical team needs operational input on peak traffic patterns.',
-                timestamp: '2025-01-21T09:30:00Z',
-                status: 'unread',
-                tags: ['website', 'performance', 'customer-complaints'],
-                read: false
-            },
-            {
-                id: 7,
-                from: 'inventory',
-                to: 'operations',
-                type: 'update',
-                priority: 'low',
-                subject: 'Weekly Inventory Audit Complete',
-                message: 'Weekly inventory audit for all stores completed. Overall accuracy: 98.5%. Minor discrepancies found in Mombasa store (3 items). Detailed report available in the system.',
-                timestamp: '2025-01-21T08:15:00Z',
-                status: 'read',
-                tags: ['audit', 'weekly', 'accuracy'],
-                read: true
-            },
-            {
-                id: 8,
-                from: 'finance',
-                to: 'operations',
-                type: 'request',
-                priority: 'medium',
-                subject: 'Budget Approval - Marketing Campaign',
-                message: 'Requesting approval for Valentine\'s Day marketing campaign budget: KSh 150,000. Campaign includes social media ads, in-store displays, and promotional materials.',
-                timestamp: '2025-01-20T16:45:00Z',
-                status: 'unread',
-                tags: ['budget', 'marketing', 'valentines'],
-                read: false
-            },
-            {
-                id: 9,
-                from: 'online-shop',
-                to: 'operations',
-                type: 'update',
-                priority: 'low',
-                subject: 'Customer Review Summary',
-                message: 'Weekly customer review summary: Average rating 4.6/5. Positive feedback on product quality and delivery speed. Some concerns about sizing accuracy for dresses.',
-                timestamp: '2025-01-20T15:30:00Z',
-                status: 'read',
-                tags: ['reviews', 'customer-feedback', 'quality'],
-                read: true
-            },
-            {
-                id: 10,
-                from: 'inventory',
-                to: 'operations',
-                type: 'alert',
-                priority: 'urgent',
-                subject: 'Damaged Goods Report - Kisumu Store',
-                message: 'Significant damage reported in recent shipment to Kisumu store. 12 dresses and 8 shirts affected by water damage during transport. Insurance claim process initiated.',
-                timestamp: '2025-01-20T14:20:00Z',
-                status: 'unread',
-                tags: ['damage', 'kisumu', 'insurance'],
-                read: false
-            }
-        ],
-        sent: [
-            {
-                id: 101,
-                from: 'operations',
-                to: 'inventory',
-                type: 'request',
-                priority: 'high',
-                subject: 'Urgent Restock Request - Nairobi Westlands',
-                message: 'Please prioritize restocking of popular items at Nairobi Westlands store. High demand for cotton t-shirts, denim jeans, and summer dresses. Customer complaints about empty shelves increasing.',
-                timestamp: '2025-01-21T15:00:00Z',
-                status: 'sent',
-                tags: ['restock', 'nairobi-westlands', 'urgent'],
-                read: true
-            },
-            {
-                id: 102,
-                from: 'operations',
-                to: 'finance',
-                type: 'update',
-                priority: 'medium',
-                subject: 'Staff Overtime Report - January',
-                message: 'January overtime report submitted. Total overtime hours: 145. Breakdown by store attached. Recommend hiring additional part-time staff for peak periods.',
-                timestamp: '2025-01-21T13:30:00Z',
-                status: 'sent',
-                tags: ['overtime', 'staffing', 'january'],
-                read: true
-            },
-            {
-                id: 103,
-                from: 'operations',
-                to: 'online-shop',
-                type: 'alert',
-                priority: 'medium',
-                subject: 'Store Closure Notification - Eldoret',
-                message: 'Eldoret store will be closed for maintenance on January 25th from 9 AM to 2 PM. Please update website to reflect temporary closure and redirect customers to nearby Nakuru store.',
-                timestamp: '2025-01-21T11:45:00Z',
-                status: 'sent',
-                tags: ['closure', 'maintenance', 'eldoret'],
-                read: true
-            },
-            {
-                id: 104,
-                from: 'operations',
-                to: 'inventory',
-                type: 'update',
-                priority: 'low',
-                subject: 'Quality Control Feedback',
-                message: 'Recent quality control checks show improvement in fabric quality from new supplier. Customer satisfaction scores increased by 8%. Recommend continuing partnership.',
-                timestamp: '2025-01-20T17:15:00Z',
-                status: 'sent',
-                tags: ['quality-control', 'supplier', 'feedback'],
-                read: true
-            },
-            {
-                id: 105,
-                from: 'operations',
-                to: 'finance',
-                type: 'request',
-                priority: 'high',
-                subject: 'Emergency Repair Budget - Mombasa Store',
-                message: 'Requesting emergency budget approval for air conditioning repair at Mombasa store. Estimated cost: KSh 45,000. High temperatures affecting customer comfort and staff productivity.',
-                timestamp: '2025-01-20T14:30:00Z',
-                status: 'sent',
-                tags: ['emergency', 'repair', 'mombasa'],
-                read: true
-            },
-            {
-                id: 106,
-                from: 'operations',
-                to: 'online-shop',
-                type: 'update',
-                priority: 'medium',
-                subject: 'New Product Launch Coordination',
-                message: 'Coordinating launch of spring collection on February 1st. All stores will receive inventory by January 28th. Please prepare website updates and promotional materials.',
-                timestamp: '2025-01-19T16:00:00Z',
-                status: 'sent',
-                tags: ['product-launch', 'spring-collection', 'coordination'],
-                read: true
-            }
-        ]
-    };
-
     // Current filters
     let currentFilters = {
         module: '',
@@ -287,20 +65,19 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentReplyId = null;
 
     // Initialize the page
-    function initPage() {
-        // Set overview numbers
-        document.getElementById('totalNotifications').textContent = notificationsData.overview.totalNotifications;
-        document.getElementById('unreadNotifications').textContent = notificationsData.overview.unreadNotifications;
-        document.getElementById('sentToday').textContent = notificationsData.overview.sentToday;
-        document.getElementById('responseRate').textContent = notificationsData.overview.responseRate;
-
-        // Load notifications
-        loadNotifications();
-
-        // Hide loading overlay after a short delay
-        setTimeout(() => {
-            morphOverlay.classList.remove('active');
-        }, 1000);
+    async function initPage() {
+        try {
+            await updateOverviewStats();
+            // Load notifications
+            await loadNotifications();
+        } catch (error) {
+            console.error('Error initializing page:', error);
+        } finally {
+            // Hide loading overlay after a short delay
+            setTimeout(() => {
+                morphOverlay.classList.remove('active');
+            }, 1000);
+        }
     }
 
     // Get module icon
@@ -344,27 +121,26 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Filter notifications
-    function filterNotifications(notifications) {
-        return notifications.filter(notification => {
-            if (currentFilters.module && notification.from !== currentFilters.module && notification.to !== currentFilters.module) return false;
-            if (currentFilters.type && notification.type !== currentFilters.type) return false;
-            if (currentFilters.status && notification.status !== currentFilters.status) return false;
-            return true;
+    async function filterNotifications(view) {
+        const params = new URLSearchParams({
+            view,
+            ...currentFilters
         });
+        return await fetch(`/api/notifications/operations/?${params.toString()}`).then(res => res.json());
     }
 
     // Load notifications
-    function loadNotifications() {
+    async function loadNotifications() {
         if (currentView === 'inbox') {
-            loadInboxNotifications();
+            await loadInboxNotifications();
         } else {
-            loadSentNotifications();
+            await loadSentNotifications();
         }
     }
 
     // Load inbox notifications
-    function loadInboxNotifications() {
-        const filteredNotifications = filterNotifications(notificationsData.inbox);
+    async function loadInboxNotifications() {
+        const filteredNotifications = await filterNotifications('inbox');
         let html = '';
 
         if (filteredNotifications.length === 0) {
@@ -408,8 +184,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Load sent notifications
-    function loadSentNotifications() {
-        const filteredNotifications = filterNotifications(notificationsData.sent);
+    async function loadSentNotifications() {
+        const filteredNotifications = await filterNotifications('sent');
         let html = '';
 
         if (filteredNotifications.length === 0) {
@@ -453,17 +229,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Global function for viewing notification details
-    window.viewNotificationDetails = function(id) {
-        let notification = notificationsData.inbox.find(n => n.id === id);
-        if (!notification) {
-            notification = notificationsData.sent.find(n => n.id === id);
-        }
-
+    window.viewNotificationDetails = async function(id) {
+        const notification = await fetch(`/api/notifications/operations/${id}/`).then(res => res.json());
         if (notification) {
             currentDetailsId = id;
             detailsModalTitle.textContent = `${notification.subject}`;
 
-            const isInbox = notificationsData.inbox.find(n => n.id === id);
+            const isInbox = notification.to === 'operations';
             const direction = isInbox ? 'From' : 'To';
             const module = isInbox ? notification.from : notification.to;
 
@@ -553,18 +325,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Update overview stats
-    function updateOverviewStats() {
-        const unreadCount = notificationsData.inbox.filter(n => !n.read).length;
-        document.getElementById('unreadNotifications').textContent = unreadCount;
+    async function updateOverviewStats() {
+        const overview = await fetch('/api/notifications/operations/overview/').then(res => res.json());
+        document.getElementById('totalNotifications').textContent = overview.total_notifications;
+        document.getElementById('unreadNotifications').textContent = overview.unread_notifications;
+        document.getElementById('sentToday').textContent = overview.sent_today;
+        document.getElementById('responseRate').textContent = overview.response_rate;
 
         // Update module unread counts
-        const inventoryUnread = notificationsData.inbox.filter(n => n.from === 'inventory' && !n.read).length;
-        const financeUnread = notificationsData.inbox.filter(n => n.from === 'finance' && !n.read).length;
-        const onlineShopUnread = notificationsData.inbox.filter(n => n.from === 'online-shop' && !n.read).length;
-
-        document.querySelector('.module-card.inventory .unread-count').textContent = inventoryUnread;
-        document.querySelector('.module-card.finance .unread-count').textContent = financeUnread;
-        document.querySelector('.module-card.online-shop .unread-count').textContent = onlineShopUnread;
+        document.querySelector('.module-card.inventory .unread-count').textContent = overview.inventory_unread;
+        document.querySelector('.module-card.finance .unread-count').textContent = overview.finance_unread;
+        document.querySelector('.module-card.online-shop .unread-count').textContent = overview.online_shop_unread;
     }
 
     // View toggle event listeners
@@ -617,18 +388,21 @@ document.addEventListener('DOMContentLoaded', function() {
         composeModal.classList.add('active');
     });
 
-    markAllReadBtn.addEventListener('click', function() {
-        notificationsData.inbox.forEach(notification => {
-            notification.read = true;
-            notification.status = 'read';
-        });
-        loadNotifications();
-        updateOverviewStats();
-        showNotification('All notifications marked as read', 'success');
+    markAllReadBtn.addEventListener('click', async function() {
+        try {
+            const response = await fetch('/api/notifications/operations/mark-all-read/', { method: 'POST' });
+            if (response.ok) {
+                await loadNotifications();
+                await updateOverviewStats();
+                showNotification('All notifications marked as read', 'success');
+            }
+        } catch (error) {
+            console.error('Error marking all as read:', error);
+        }
     });
 
-    refreshBtn.addEventListener('click', function() {
-        loadNotifications();
+    refreshBtn.addEventListener('click', async function() {
+        await loadNotifications();
         showNotification('Notifications refreshed', 'info');
     });
 
@@ -685,88 +459,88 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Form submissions
-    composeForm.addEventListener('submit', function(e) {
+    composeForm.addEventListener('submit', async function(e) {
         e.preventDefault();
 
         const formData = {
-            id: Date.now(),
-            from: 'operations',
             to: recipientModule.value,
             type: notificationType.value,
             priority: priority.value,
             subject: subject.value,
             message: message.value,
-            timestamp: new Date().toISOString(),
-            status: 'sent',
             tags: tags.value ? tags.value.split(',').map(tag => tag.trim()) : [],
-            read: true
         };
 
-        notificationsData.sent.unshift(formData);
-
-        composeModal.classList.remove('active');
-
-        if (currentView === 'sent') {
-            loadNotifications();
+        try {
+            const response = await fetch('/api/notifications/operations/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData),
+            });
+            if (response.ok) {
+                composeModal.classList.remove('active');
+                if (currentView === 'sent') {
+                    await loadNotifications();
+                }
+                showNotification('Notification sent successfully!', 'success');
+                await updateOverviewStats();
+            } else {
+                showNotification('Failed to send notification.', 'error');
+            }
+        } catch (error) {
+            console.error('Error sending notification:', error);
+            showNotification('An error occurred while sending the notification.', 'error');
         }
-
-        showNotification('Notification sent successfully!', 'success');
-
-        // Update sent today count
-        const currentSentToday = parseInt(document.getElementById('sentToday').textContent);
-        document.getElementById('sentToday').textContent = currentSentToday + 1;
     });
 
-    replyForm.addEventListener('submit', function(e) {
+    replyForm.addEventListener('submit', async function(e) {
         e.preventDefault();
 
-        const originalNotification = notificationsData.inbox.find(n => n.id === currentReplyId);
-        if (originalNotification) {
-            const replyData = {
-                id: Date.now(),
-                from: 'operations',
-                to: originalNotification.from,
-                type: 'update',
-                priority: 'medium',
-                subject: 'Re: ' + originalNotification.subject,
-                message: replyMessage.value,
-                timestamp: new Date().toISOString(),
-                status: 'sent',
-                tags: ['reply', ...originalNotification.tags],
-                read: true
-            };
+        const replyData = {
+            message: replyMessage.value,
+        };
 
-            notificationsData.sent.unshift(replyData);
+        try {
+            const response = await fetch(`/api/notifications/operations/${currentReplyId}/reply/`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(replyData),
+            });
+            if (response.ok) {
+                replyModal.classList.remove('active');
+                if (currentView === 'sent') {
+                    await loadNotifications();
+                }
+                showNotification('Reply sent successfully!', 'success');
+            } else {
+                showNotification('Failed to send reply.', 'error');
+            }
+        } catch (error) {
+            console.error('Error sending reply:', error);
+            showNotification('An error occurred while sending the reply.', 'error');
         }
-
-        replyModal.classList.remove('active');
-
-        if (currentView === 'sent') {
-            loadNotifications();
-        }
-
-        showNotification('Reply sent successfully!', 'success');
     });
 
     // Quick actions in details modal
-    markReadBtn.addEventListener('click', function() {
+    markReadBtn.addEventListener('click', async function() {
         if (currentDetailsId) {
-            const notification = notificationsData.inbox.find(n => n.id === currentDetailsId);
-            if (notification) {
-                notification.read = true;
-                notification.status = 'read';
-
-                detailsModal.classList.remove('active');
-                loadNotifications();
-                updateOverviewStats();
-                showNotification('Notification marked as read', 'success');
+            try {
+                const response = await fetch(`/api/notifications/operations/${currentDetailsId}/read/`, { method: 'POST' });
+                if (response.ok) {
+                    detailsModal.classList.remove('active');
+                    await loadNotifications();
+                    await updateOverviewStats();
+                    showNotification('Notification marked as read', 'success');
+                }
+            } catch (error) {
+                console.error('Error marking as read:', error);
             }
         }
     });
 
-    replyBtn.addEventListener('click', function() {
+    replyBtn.addEventListener('click', async function() {
         if (currentDetailsId) {
-            const notification = notificationsData.inbox.find(n => n.id === currentDetailsId);
+            const notification = await fetch(`/api/notifications/operations/${currentDetailsId}/`).then(res => res.json());
             if (notification) {
                 currentReplyId = currentDetailsId;
                 replyModalTitle.textContent = `Reply to: ${notification.subject}`;
@@ -783,22 +557,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    deleteNotificationBtn.addEventListener('click', function() {
+    deleteNotificationBtn.addEventListener('click', async function() {
         if (currentDetailsId && confirm('Are you sure you want to delete this notification? This action cannot be undone.')) {
-            let index = notificationsData.inbox.findIndex(n => n.id === currentDetailsId);
-            if (index !== -1) {
-                notificationsData.inbox.splice(index, 1);
-            } else {
-                index = notificationsData.sent.findIndex(n => n.id === currentDetailsId);
-                if (index !== -1) {
-                    notificationsData.sent.splice(index, 1);
+            try {
+                const response = await fetch(`/api/notifications/operations/${currentDetailsId}/`, { method: 'DELETE' });
+                if (response.ok) {
+                    detailsModal.classList.remove('active');
+                    await loadNotifications();
+                    await updateOverviewStats();
+                    showNotification('Notification deleted successfully', 'success');
                 }
+            } catch (error) {
+                console.error('Error deleting notification:', error);
             }
-
-            detailsModal.classList.remove('active');
-            loadNotifications();
-            updateOverviewStats();
-            showNotification('Notification deleted successfully', 'success');
         }
     });
 

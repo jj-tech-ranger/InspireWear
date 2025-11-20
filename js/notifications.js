@@ -28,202 +28,39 @@ document.addEventListener('DOMContentLoaded', function() {
     const usersGroup = document.getElementById('usersGroup');
     const scheduleGroup = document.getElementById('scheduleGroup');
 
-    // Sample notifications data for Kenyan clothing store
-    const notificationsData = {
-        summary: {
-            totalUnread: 12,
-            todayNotifications: 8,
-            urgentNotifications: 3,
-            totalNotifications: 156
-        },
-        notifications: [
-            {
-                id: 1,
-                title: 'Invoice Payment Overdue',
-                message: 'Invoice #INV-2025-001 from Rivatex East Africa for KSh 125,000 is 5 days overdue. Please follow up with the supplier.',
-                module: 'finance',
-                type: 'alert',
-                priority: 'urgent',
-                status: 'unread',
-                timestamp: '2025-01-21T14:30:00Z',
-                sender: 'Finance System',
-                recipients: ['finance.manager@inspirewear.co.ke'],
-                tags: ['payment', 'overdue', 'supplier']
-            },
-            {
-                id: 2,
-                title: 'Low Stock Alert - Cotton Fabric',
-                message: 'Cotton fabric inventory has dropped below minimum threshold. Current stock: 50 meters. Reorder point: 100 meters.',
-                module: 'inventory',
-                type: 'warning',
-                priority: 'high',
-                status: 'unread',
-                timestamp: '2025-01-21T13:15:00Z',
-                sender: 'Inventory System',
-                recipients: ['operations.manager@inspirewear.co.ke'],
-                tags: ['inventory', 'low-stock', 'fabric']
-            },
-            {
-                id: 3,
-                title: 'New Customer Registration',
-                message: 'A new customer "Westgate Boutique" has registered on the online shop. Customer ID: CUST-2025-045.',
-                module: 'crm',
-                type: 'info',
-                priority: 'normal',
-                status: 'unread',
-                timestamp: '2025-01-21T12:45:00Z',
-                sender: 'CRM System',
-                recipients: ['sales.manager@inspirewear.co.ke'],
-                tags: ['customer', 'registration', 'new']
-            },
-            {
-                id: 4,
-                title: 'Production Target Achieved',
-                message: 'Daily production target of 200 units has been achieved. Total produced: 215 units. Great work team!',
-                module: 'operations',
-                type: 'update',
-                priority: 'normal',
-                status: 'read',
-                timestamp: '2025-01-21T11:30:00Z',
-                sender: 'Operations System',
-                recipients: ['all@inspirewear.co.ke'],
-                tags: ['production', 'target', 'achievement']
-            },
-            {
-                id: 5,
-                title: 'Expense Approval Required',
-                message: 'Expense claim EXP-2025-012 from Mary Wanjiku for KSh 45,000 (Marketing Campaign) requires your approval.',
-                module: 'finance',
-                type: 'approval',
-                priority: 'high',
-                status: 'unread',
-                timestamp: '2025-01-21T10:15:00Z',
-                sender: 'Finance System',
-                recipients: ['finance.manager@inspirewear.co.ke'],
-                tags: ['expense', 'approval', 'marketing']
-            },
-            {
-                id: 6,
-                title: 'System Maintenance Scheduled',
-                message: 'Scheduled system maintenance on January 25, 2025 from 2:00 AM to 4:00 AM EAT. All modules will be temporarily unavailable.',
-                module: 'system',
-                type: 'info',
-                priority: 'normal',
-                status: 'read',
-                timestamp: '2025-01-21T09:00:00Z',
-                sender: 'System Administrator',
-                recipients: ['all@inspirewear.co.ke'],
-                tags: ['maintenance', 'scheduled', 'downtime']
-            },
-            {
-                id: 7,
-                title: 'Large Order Received',
-                message: 'New order #ORD-2025-089 for 500 units from Nakumatt Supermarkets. Total value: KSh 750,000. Delivery required by February 15.',
-                module: 'shop',
-                type: 'info',
-                priority: 'high',
-                status: 'unread',
-                timestamp: '2025-01-21T08:30:00Z',
-                sender: 'Online Shop',
-                recipients: ['sales.manager@inspirewear.co.ke', 'operations.manager@inspirewear.co.ke'],
-                tags: ['order', 'large', 'nakumatt']
-            },
-            {
-                id: 8,
-                title: 'Payroll Processing Reminder',
-                message: 'Monthly payroll processing is due in 3 days. Please ensure all timesheets and expense claims are submitted.',
-                module: 'finance',
-                type: 'reminder',
-                priority: 'normal',
-                status: 'read',
-                timestamp: '2025-01-21T07:45:00Z',
-                sender: 'HR System',
-                recipients: ['hr@inspirewear.co.ke', 'finance.manager@inspirewear.co.ke'],
-                tags: ['payroll', 'reminder', 'deadline']
-            },
-            {
-                id: 9,
-                title: 'Quality Control Issue',
-                message: 'Quality control has identified defects in batch #BATCH-2025-015. 25 units affected. Investigation required.',
-                module: 'operations',
-                type: 'alert',
-                priority: 'urgent',
-                status: 'unread',
-                timestamp: '2025-01-20T16:20:00Z',
-                sender: 'QC System',
-                recipients: ['operations.manager@inspirewear.co.ke', 'qc.supervisor@inspirewear.co.ke'],
-                tags: ['quality', 'defects', 'investigation']
-            },
-            {
-                id: 10,
-                title: 'Customer Feedback Received',
-                message: 'Positive feedback received from customer "Sarit Centre Boutique" rating our service 5/5 stars.',
-                module: 'crm',
-                type: 'info',
-                priority: 'low',
-                status: 'read',
-                timestamp: '2025-01-20T15:10:00Z',
-                sender: 'CRM System',
-                recipients: ['customer.service@inspirewear.co.ke'],
-                tags: ['feedback', 'positive', 'rating']
-            },
-            {
-                id: 11,
-                title: 'Bank Reconciliation Complete',
-                message: 'Bank reconciliation for KCB account ending in 7890 has been completed. All transactions matched successfully.',
-                module: 'finance',
-                type: 'update',
-                priority: 'normal',
-                status: 'read',
-                timestamp: '2025-01-20T14:30:00Z',
-                sender: 'Finance System',
-                recipients: ['finance.manager@inspirewear.co.ke'],
-                tags: ['reconciliation', 'bank', 'complete']
-            },
-            {
-                id: 12,
-                title: 'Equipment Maintenance Due',
-                message: 'Sewing machine #SM-005 is due for scheduled maintenance. Please schedule with Industrial Machines Ltd.',
-                module: 'operations',
-                type: 'reminder',
-                priority: 'normal',
-                status: 'unread',
-                timestamp: '2025-01-20T13:15:00Z',
-                sender: 'Maintenance System',
-                recipients: ['operations.manager@inspirewear.co.ke'],
-                tags: ['maintenance', 'equipment', 'scheduled']
-            }
-        ]
-    };
-
     // Pagination variables
     let currentPage = 1;
     const itemsPerPage = 10;
-    let filteredNotifications = [...notificationsData.notifications];
+    let filteredNotifications = [];
     let currentView = 'list';
 
     // Initialize the page
-    function initPage() {
-        // Set summary numbers
-        document.getElementById('unreadCount').textContent = notificationsData.summary.totalUnread;
-        document.getElementById('totalUnread').textContent = notificationsData.summary.totalUnread;
-        document.getElementById('todayNotifications').textContent = notificationsData.summary.todayNotifications;
-        document.getElementById('urgentNotifications').textContent = notificationsData.summary.urgentNotifications;
-        document.getElementById('totalNotifications').textContent = notificationsData.summary.totalNotifications;
+    async function initPage() {
+        try {
+            const summary = await fetch('/api/notifications/summary/').then(res => res.json());
+            // Set summary numbers
+            document.getElementById('unreadCount').textContent = summary.total_unread;
+            document.getElementById('totalUnread').textContent = summary.total_unread;
+            document.getElementById('todayNotifications').textContent = summary.today_notifications;
+            document.getElementById('urgentNotifications').textContent = summary.urgent_notifications;
+            document.getElementById('totalNotifications').textContent = summary.total_notifications;
 
-        // Set default schedule date and time
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        document.getElementById('scheduleDate').value = tomorrow.toISOString().split('T')[0];
-        document.getElementById('scheduleTime').value = '09:00';
+            // Set default schedule date and time
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            document.getElementById('scheduleDate').value = tomorrow.toISOString().split('T')[0];
+            document.getElementById('scheduleTime').value = '09:00';
 
-        // Load notifications
-        applyFilters();
-
-        // Hide loading overlay
-        setTimeout(() => {
-            morphOverlay.classList.remove('active');
-        }, 1000);
+            // Load notifications
+            await applyFilters();
+        } catch (error) {
+            console.error('Error initializing page:', error);
+        } finally {
+            // Hide loading overlay
+            setTimeout(() => {
+                morphOverlay.classList.remove('active');
+            }, 1000);
+        }
     }
 
     // Format timestamp to relative time
@@ -298,32 +135,30 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Apply filters and search
-    function applyFilters() {
+    async function applyFilters() {
         const searchTerm = searchNotifications.value.toLowerCase();
         const moduleFilter = filterModule.value;
         const typeFilter = filterType.value;
         const statusFilter = filterStatus.value;
         const priorityFilter = filterPriority.value;
 
-        filteredNotifications = notificationsData.notifications.filter(notification => {
-            const matchesSearch = notification.title.toLowerCase().includes(searchTerm) ||
-                                notification.message.toLowerCase().includes(searchTerm) ||
-                                notification.sender.toLowerCase().includes(searchTerm);
-            
-            const matchesModule = !moduleFilter || notification.module === moduleFilter;
-            const matchesType = !typeFilter || notification.type === typeFilter;
-            const matchesStatus = !statusFilter || notification.status === statusFilter;
-            const matchesPriority = !priorityFilter || notification.priority === priorityFilter;
-
-            return matchesSearch && matchesModule && matchesType && matchesStatus && matchesPriority;
+        const params = new URLSearchParams({
+            search: searchTerm,
+            module: moduleFilter,
+            type: typeFilter,
+            status: statusFilter,
+            priority: priorityFilter,
         });
 
-        // Sort by timestamp (newest first)
-        filteredNotifications.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-
-        currentPage = 1;
-        renderNotifications();
-        renderPagination();
+        try {
+            const notifications = await fetch(`/api/notifications/?${params.toString()}`).then(res => res.json());
+            filteredNotifications = notifications;
+            currentPage = 1;
+            renderNotifications();
+            renderPagination();
+        } catch (error) {
+            console.error('Error applying filters:', error);
+        }
     }
 
     // Render notifications
@@ -426,8 +261,8 @@ document.addEventListener('DOMContentLoaded', function() {
         renderPagination();
     };
 
-    window.viewNotificationDetails = function(id) {
-        const notification = notificationsData.notifications.find(notif => notif.id === id);
+    window.viewNotificationDetails = async function(id) {
+        const notification = await fetch(`/api/notifications/${id}/`).then(res => res.json());
         if (notification) {
             showNotificationDetails(notification);
             
@@ -438,56 +273,57 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
-    window.markAsRead = function(id) {
-        const notification = notificationsData.notifications.find(notif => notif.id === id);
-        if (notification && notification.status === 'unread') {
-            notification.status = 'read';
-            updateSummaryNumbers();
-            applyFilters();
+    window.markAsRead = async function(id) {
+        try {
+            const response = await fetch(`/api/notifications/${id}/read/`, { method: 'POST' });
+            if (response.ok) {
+                await updateSummaryNumbers();
+                await applyFilters();
+            }
+        } catch (error) {
+            console.error('Error marking as read:', error);
         }
     };
 
-    window.archiveNotification = function(id) {
-        const notification = notificationsData.notifications.find(notif => notif.id === id);
-        if (notification) {
-            notification.status = 'archived';
-            applyFilters();
-            alert('Notification archived successfully!');
+    window.archiveNotification = async function(id) {
+        try {
+            const response = await fetch(`/api/notifications/${id}/archive/`, { method: 'POST' });
+            if (response.ok) {
+                await applyFilters();
+                alert('Notification archived successfully!');
+            }
+        } catch (error) {
+            console.error('Error archiving notification:', error);
         }
     };
 
-    window.deleteNotification = function(id) {
+    window.deleteNotification = async function(id) {
         if (confirm('Are you sure you want to delete this notification?')) {
-            const index = notificationsData.notifications.findIndex(notif => notif.id === id);
-            if (index !== -1) {
-                notificationsData.notifications.splice(index, 1);
-                updateSummaryNumbers();
-                applyFilters();
-                alert('Notification deleted successfully!');
+            try {
+                const response = await fetch(`/api/notifications/${id}/`, { method: 'DELETE' });
+                if (response.ok) {
+                    await updateSummaryNumbers();
+                    await applyFilters();
+                    alert('Notification deleted successfully!');
+                }
+            } catch (error) {
+                console.error('Error deleting notification:', error);
             }
         }
     };
 
     // Update summary numbers
-    function updateSummaryNumbers() {
-        const unreadCount = notificationsData.notifications.filter(n => n.status === 'unread').length;
-        const todayCount = notificationsData.notifications.filter(n => {
-            const today = new Date().toDateString();
-            const notifDate = new Date(n.timestamp).toDateString();
-            return notifDate === today;
-        }).length;
-        const urgentCount = notificationsData.notifications.filter(n => n.priority === 'urgent' && n.status !== 'archived').length;
-
-        notificationsData.summary.totalUnread = unreadCount;
-        notificationsData.summary.todayNotifications = todayCount;
-        notificationsData.summary.urgentNotifications = urgentCount;
-        notificationsData.summary.totalNotifications = notificationsData.notifications.length;
-
-        document.getElementById('unreadCount').textContent = unreadCount;
-        document.getElementById('totalUnread').textContent = unreadCount;
-        document.getElementById('todayNotifications').textContent = todayCount;
-        document.getElementById('urgentNotifications').textContent = urgentCount;
-        document.getElementById('totalNotifications').textContent = notificationsData.notifications.length;
+    async function updateSummaryNumbers() {
+        try {
+            const summary = await fetch('/api/notifications/summary/').then(res => res.json());
+            document.getElementById('unreadCount').textContent = summary.total_unread;
+            document.getElementById('totalUnread').textContent = summary.total_unread;
+            document.getElementById('todayNotifications').textContent = summary.today_notifications;
+            document.getElementById('urgentNotifications').textContent = summary.urgent_notifications;
+            document.getElementById('totalNotifications').textContent = summary.total_notifications;
+        } catch (error) {
+            console.error('Error updating summary numbers:', error);
+        }
     }
 
     // Show notification details
@@ -610,25 +446,23 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Mark all read functionality
-    markAllRead.addEventListener('click', function() {
-        const unreadNotifications = notificationsData.notifications.filter(n => n.status === 'unread');
-        if (unreadNotifications.length === 0) {
-            alert('No unread notifications to mark as read.');
-            return;
-        }
-
-        if (confirm(`Mark ${unreadNotifications.length} notification(s) as read?`)) {
-            unreadNotifications.forEach(notification => {
-                notification.status = 'read';
-            });
-            updateSummaryNumbers();
-            applyFilters();
-            alert('All notifications marked as read!');
+    markAllRead.addEventListener('click', async function() {
+        if (confirm(`Mark all unread notifications as read?`)) {
+            try {
+                const response = await fetch('/api/notifications/read-all/', { method: 'POST' });
+                if (response.ok) {
+                    await updateSummaryNumbers();
+                    await applyFilters();
+                    alert('All notifications marked as read!');
+                }
+            } catch (error) {
+                console.error('Error marking all as read:', error);
+            }
         }
     });
 
     // Archive selected functionality
-    archiveSelected.addEventListener('click', function() {
+    archiveSelected.addEventListener('click', async function() {
         const selectedCheckboxes = document.querySelectorAll('.notification-checkbox:checked');
         const selectedIds = Array.from(selectedCheckboxes).map(cb => parseInt(cb.dataset.id));
         
@@ -638,14 +472,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         if (confirm(`Archive ${selectedIds.length} notification(s)?`)) {
-            selectedIds.forEach(id => {
-                const notification = notificationsData.notifications.find(notif => notif.id === id);
-                if (notification) {
-                    notification.status = 'archived';
+            try {
+                const response = await fetch('/api/notifications/archive-selected/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ids: selectedIds }),
+                });
+                if (response.ok) {
+                    await applyFilters();
+                    alert('Selected notifications archived successfully!');
                 }
-            });
-            applyFilters();
-            alert('Selected notifications archived successfully!');
+            } catch (error) {
+                console.error('Error archiving selected:', error);
+            }
         }
     });
 
@@ -739,28 +578,29 @@ document.addEventListener('DOMContentLoaded', function() {
         sendNotificationModal.classList.remove('active');
     });
 
-    sendNotificationForm.addEventListener('submit', function(e) {
+    sendNotificationForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
-        const newNotification = {
-            id: Math.max(...notificationsData.notifications.map(notif => notif.id)) + 1,
-            title: document.getElementById('notificationTitle').value,
-            message: document.getElementById('notificationMessage').value,
-            module: document.getElementById('notificationModule').value,
-            type: document.getElementById('notificationType').value,
-            priority: document.getElementById('notificationPriority').value,
-            status: 'unread',
-            timestamp: new Date().toISOString(),
-            sender: 'Finance Manager',
-            recipients: ['selected.recipients@inspirewear.co.ke'],
-            tags: ['manual', 'sent']
-        };
+        const formData = new FormData(sendNotificationForm);
+        const newNotification = Object.fromEntries(formData.entries());
 
-        notificationsData.notifications.unshift(newNotification);
-        updateSummaryNumbers();
-        applyFilters();
-        sendNotificationModal.classList.remove('active');
-        alert('Notification sent successfully!');
+        try {
+            const response = await fetch('/api/notifications/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newNotification),
+            });
+            if (response.ok) {
+                await updateSummaryNumbers();
+                await applyFilters();
+                sendNotificationModal.classList.remove('active');
+                alert('Notification sent successfully!');
+            } else {
+                alert('Failed to send notification.');
+            }
+        } catch (error) {
+            console.error('Error sending notification:', error);
+        }
     });
 
     // Close modals when clicking outside
@@ -801,4 +641,3 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize the page
     initPage();
 });
-

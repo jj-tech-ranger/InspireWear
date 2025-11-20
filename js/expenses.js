@@ -28,243 +28,43 @@ document.addEventListener('DOMContentLoaded', function() {
     const expenseReceipt = document.getElementById('expenseReceipt');
     const uploadedFiles = document.getElementById('uploadedFiles');
 
-    // Sample expenses data for Kenyan clothing store
-    const expensesData = {
-        summary: {
-            totalExpenses: 1892300,
-            pendingExpenses: 124800,
-            approvedExpenses: 1567500,
-            rejectedExpenses: 25000
-        },
-        expenses: [
-            {
-                id: 1,
-                date: '2025-01-20',
-                employee: 'John Kamau',
-                department: 'Operations',
-                description: 'Fabric purchase from Rivatex',
-                category: 'supplies',
-                amount: 125000,
-                location: 'Eldoret',
-                vendor: 'Rivatex East Africa',
-                status: 'approved',
-                priority: 'normal',
-                approver: 'Finance Manager',
-                hasReceipt: true,
-                receiptCount: 2,
-                notes: 'Bulk purchase for Q1 production',
-                submittedDate: '2025-01-20',
-                approvedDate: '2025-01-21'
-            },
-            {
-                id: 2,
-                date: '2025-01-19',
-                employee: 'Mary Wanjiku',
-                department: 'Marketing',
-                description: 'Digital marketing campaign - Facebook Ads',
-                category: 'marketing',
-                amount: 45000,
-                location: 'Nairobi',
-                vendor: 'Meta Platforms',
-                status: 'submitted',
-                priority: 'urgent',
-                approver: 'Department Head',
-                hasReceipt: true,
-                receiptCount: 1,
-                notes: 'Q1 brand awareness campaign',
-                submittedDate: '2025-01-19'
-            },
-            {
-                id: 3,
-                date: '2025-01-18',
-                employee: 'Peter Ochieng',
-                department: 'Sales',
-                description: 'Client meeting lunch at Java House',
-                category: 'meals',
-                amount: 3500,
-                location: 'Nairobi',
-                vendor: 'Java House',
-                status: 'paid',
-                priority: 'normal',
-                approver: 'Finance Manager',
-                hasReceipt: true,
-                receiptCount: 1,
-                notes: 'Meeting with Westgate Boutique management',
-                submittedDate: '2025-01-18',
-                approvedDate: '2025-01-19',
-                paidDate: '2025-01-20'
-            },
-            {
-                id: 4,
-                date: '2025-01-17',
-                employee: 'Grace Akinyi',
-                department: 'Operations',
-                description: 'Sewing machine maintenance',
-                category: 'maintenance',
-                amount: 32000,
-                location: 'Nairobi',
-                vendor: 'Industrial Machines Ltd',
-                status: 'approved',
-                priority: 'urgent',
-                approver: 'Department Head',
-                hasReceipt: true,
-                receiptCount: 3,
-                notes: 'Emergency repair for production line',
-                submittedDate: '2025-01-17',
-                approvedDate: '2025-01-17'
-            },
-            {
-                id: 5,
-                date: '2025-01-16',
-                employee: 'David Mwangi',
-                department: 'Admin',
-                description: 'Office supplies - stationery and printing',
-                category: 'office',
-                amount: 8500,
-                location: 'Nairobi',
-                vendor: 'Prestige Stationery',
-                status: 'rejected',
-                priority: 'low',
-                approver: 'Finance Manager',
-                hasReceipt: false,
-                receiptCount: 0,
-                notes: 'Rejected due to missing receipt',
-                submittedDate: '2025-01-16',
-                rejectedDate: '2025-01-18',
-                rejectionReason: 'Missing receipt documentation'
-            },
-            {
-                id: 6,
-                date: '2025-01-15',
-                employee: 'John Kamau',
-                department: 'Operations',
-                description: 'Transport - delivery to Mombasa store',
-                category: 'transport',
-                amount: 15000,
-                location: 'Mombasa',
-                vendor: 'Mombasa Express',
-                status: 'paid',
-                priority: 'normal',
-                approver: 'Finance Manager',
-                hasReceipt: true,
-                receiptCount: 1,
-                notes: 'Urgent delivery for new store opening',
-                submittedDate: '2025-01-15',
-                approvedDate: '2025-01-16',
-                paidDate: '2025-01-17'
-            },
-            {
-                id: 7,
-                date: '2025-01-14',
-                employee: 'Mary Wanjiku',
-                department: 'Marketing',
-                description: 'Trade show booth rental - Nairobi Fashion Week',
-                category: 'marketing',
-                amount: 85000,
-                location: 'Nairobi',
-                vendor: 'Expo Solutions Kenya',
-                status: 'submitted',
-                priority: 'normal',
-                approver: 'CEO',
-                hasReceipt: true,
-                receiptCount: 2,
-                notes: 'Annual fashion week participation',
-                submittedDate: '2025-01-14'
-            },
-            {
-                id: 8,
-                date: '2025-01-13',
-                employee: 'Peter Ochieng',
-                department: 'Sales',
-                description: 'Travel expenses - Kisumu sales trip',
-                category: 'travel',
-                amount: 12000,
-                location: 'Kisumu',
-                vendor: 'Various',
-                status: 'approved',
-                priority: 'normal',
-                approver: 'Department Head',
-                hasReceipt: true,
-                receiptCount: 4,
-                notes: 'Fuel, accommodation, and meals',
-                submittedDate: '2025-01-13',
-                approvedDate: '2025-01-14'
-            },
-            {
-                id: 9,
-                date: '2025-01-12',
-                employee: 'Grace Akinyi',
-                department: 'Operations',
-                description: 'Electricity bill - January',
-                category: 'utilities',
-                amount: 28000,
-                location: 'Nairobi',
-                vendor: 'Kenya Power',
-                status: 'paid',
-                priority: 'normal',
-                approver: 'Finance Manager',
-                hasReceipt: true,
-                receiptCount: 1,
-                notes: 'Monthly electricity bill',
-                submittedDate: '2025-01-12',
-                approvedDate: '2025-01-12',
-                paidDate: '2025-01-13'
-            },
-            {
-                id: 10,
-                date: '2025-01-11',
-                employee: 'David Mwangi',
-                department: 'Admin',
-                description: 'Office rent - January',
-                category: 'rent',
-                amount: 180000,
-                location: 'Nairobi',
-                vendor: 'Westlands Properties',
-                status: 'paid',
-                priority: 'urgent',
-                approver: 'CEO',
-                hasReceipt: true,
-                receiptCount: 1,
-                notes: 'Monthly office rent payment',
-                submittedDate: '2025-01-11',
-                approvedDate: '2025-01-11',
-                paidDate: '2025-01-11'
-            }
-        ]
-    };
-
     // Pagination variables
     let currentPage = 1;
     const itemsPerPage = 10;
-    let filteredExpenses = [...expensesData.expenses];
+    let filteredExpenses = [];
     let sortColumn = '';
     let sortDirection = 'asc';
     let uploadedFilesList = [];
 
     // Initialize the page
-    function initPage() {
-        // Set summary numbers
-        document.getElementById('totalExpenses').textContent = formatCurrency(expensesData.summary.totalExpenses);
-        document.getElementById('pendingExpenses').textContent = formatCurrency(expensesData.summary.pendingExpenses);
-        document.getElementById('approvedExpenses').textContent = formatCurrency(expensesData.summary.approvedExpenses);
-        document.getElementById('rejectedExpenses').textContent = formatCurrency(expensesData.summary.rejectedExpenses);
+    async function initPage() {
+        try {
+            const summary = await fetch('/api/expenses/summary/').then(res => res.json());
+            // Set summary numbers
+            document.getElementById('totalExpenses').textContent = formatCurrency(summary.total_expenses);
+            document.getElementById('pendingExpenses').textContent = formatCurrency(summary.pending_expenses);
+            document.getElementById('approvedExpenses').textContent = formatCurrency(summary.approved_expenses);
+            document.getElementById('rejectedExpenses').textContent = formatCurrency(summary.rejected_expenses);
 
-        // Set default dates
-        const today = new Date();
-        const thirtyDaysAgo = new Date(today.getTime() - (30 * 24 * 60 * 60 * 1000));
-        filterDateTo.value = today.toISOString().split('T')[0];
-        filterDateFrom.value = thirtyDaysAgo.toISOString().split('T')[0];
+            // Set default dates
+            const today = new Date();
+            const thirtyDaysAgo = new Date(today.getTime() - (30 * 24 * 60 * 60 * 1000));
+            filterDateTo.value = today.toISOString().split('T')[0];
+            filterDateFrom.value = thirtyDaysAgo.toISOString().split('T')[0];
 
-        // Set default expense date
-        document.getElementById('expenseDate').value = today.toISOString().split('T')[0];
+            // Set default expense date
+            document.getElementById('expenseDate').value = today.toISOString().split('T')[0];
 
-        // Load expenses
-        applyFilters();
-
-        // Hide loading overlay
-        setTimeout(() => {
-            morphOverlay.classList.remove('active');
-        }, 1000);
+            // Load expenses
+            await applyFilters();
+        } catch (error) {
+            console.error('Error initializing page:', error);
+        } finally {
+            // Hide loading overlay
+            setTimeout(() => {
+                morphOverlay.classList.remove('active');
+            }, 1000);
+        }
     }
 
     // Format currency for KES
@@ -310,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Apply filters and search
-    function applyFilters() {
+    async function applyFilters() {
         const searchTerm = searchExpenses.value.toLowerCase();
         const categoryFilter = filterCategory.value;
         const statusFilter = filterStatus.value;
@@ -318,49 +118,26 @@ document.addEventListener('DOMContentLoaded', function() {
         const dateFromFilter = filterDateFrom.value;
         const dateToFilter = filterDateTo.value;
 
-        filteredExpenses = expensesData.expenses.filter(expense => {
-            const matchesSearch = expense.description.toLowerCase().includes(searchTerm) ||
-                                expense.employee.toLowerCase().includes(searchTerm) ||
-                                expense.vendor.toLowerCase().includes(searchTerm);
-            
-            const matchesCategory = !categoryFilter || expense.category === categoryFilter;
-            const matchesStatus = !statusFilter || expense.status === statusFilter;
-            const matchesEmployee = !employeeFilter || expense.employee === employeeFilter;
-            
-            let matchesDateRange = true;
-            if (dateFromFilter && dateToFilter) {
-                const expenseDate = new Date(expense.date);
-                const fromDate = new Date(dateFromFilter);
-                const toDate = new Date(dateToFilter);
-                matchesDateRange = expenseDate >= fromDate && expenseDate <= toDate;
-            }
-
-            return matchesSearch && matchesCategory && matchesStatus && matchesEmployee && matchesDateRange;
+        const params = new URLSearchParams({
+            search: searchTerm,
+            category: categoryFilter,
+            status: statusFilter,
+            employee: employeeFilter,
+            date_from: dateFromFilter,
+            date_to: dateToFilter,
+            sort_by: sortColumn,
+            sort_dir: sortDirection,
         });
 
-        // Apply sorting
-        if (sortColumn) {
-            filteredExpenses.sort((a, b) => {
-                let aValue = a[sortColumn];
-                let bValue = b[sortColumn];
-
-                if (sortColumn === 'date') {
-                    aValue = new Date(aValue);
-                    bValue = new Date(bValue);
-                } else if (sortColumn === 'amount') {
-                    aValue = parseFloat(aValue);
-                    bValue = parseFloat(bValue);
-                }
-
-                if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
-                if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
-                return 0;
-            });
+        try {
+            const expenses = await fetch(`/api/expenses/?${params.toString()}`).then(res => res.json());
+            filteredExpenses = expenses;
+            currentPage = 1;
+            renderExpenses();
+            renderPagination();
+        } catch (error) {
+            console.error('Error applying filters:', error);
         }
-
-        currentPage = 1;
-        renderExpenses();
-        renderPagination();
     }
 
     // Render expenses table
@@ -396,10 +173,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         ${expense.priority === 'urgent' ? '<span class="priority-indicator urgent">Urgent</span>' : ''}
                     </td>
                     <td>
-                        <span class="receipt-status ${expense.hasReceipt ? 'available' : 'missing'}" 
-                              onclick="${expense.hasReceipt ? `viewReceipt(${expense.id})` : ''}">
-                            <i class="fas ${expense.hasReceipt ? 'fa-file-image' : 'fa-exclamation-triangle'}"></i>
-                            ${expense.hasReceipt ? `${expense.receiptCount} file(s)` : 'Missing'}
+                        <span class="receipt-status ${expense.has_receipt ? 'available' : 'missing'}" 
+                              onclick="${expense.has_receipt ? `viewReceipt(${expense.id})` : ''}">
+                            <i class="fas ${expense.has_receipt ? 'fa-file-image' : 'fa-exclamation-triangle'}"></i>
+                            ${expense.has_receipt ? `${expense.receipt_count} file(s)` : 'Missing'}
                         </span>
                     </td>
                     <td>
@@ -542,61 +319,80 @@ document.addEventListener('DOMContentLoaded', function() {
         renderPagination();
     };
 
-    window.viewExpense = function(id) {
-        const expense = expensesData.expenses.find(exp => exp.id === id);
+    window.viewExpense = async function(id) {
+        const expense = await fetch(`/api/expenses/${id}/`).then(res => res.json());
         if (expense) {
             showExpenseDetails(expense);
         }
     };
 
-    window.editExpense = function(id) {
-        const expense = expensesData.expenses.find(exp => exp.id === id);
+    window.editExpense = async function(id) {
+        const expense = await fetch(`/api/expenses/${id}/`).then(res => res.json());
         if (expense) {
             populateExpenseForm(expense);
             addExpenseModal.classList.add('active');
         }
     };
 
-    window.approveExpense = function(id) {
+    window.approveExpense = async function(id) {
         if (confirm('Are you sure you want to approve this expense?')) {
-            const expense = expensesData.expenses.find(exp => exp.id === id);
-            if (expense) {
-                expense.status = 'approved';
-                expense.approvedDate = new Date().toISOString().split('T')[0];
-                applyFilters();
-                alert('Expense approved successfully!');
+            try {
+                const response = await fetch(`/api/expenses/${id}/approve/`, { method: 'POST' });
+                if (response.ok) {
+                    await applyFilters();
+                    alert('Expense approved successfully!');
+                } else {
+                    alert('Failed to approve expense.');
+                }
+            } catch (error) {
+                console.error('Error approving expense:', error);
+                alert('An error occurred while approving the expense.');
             }
         }
     };
 
-    window.rejectExpense = function(id) {
+    window.rejectExpense = async function(id) {
         const reason = prompt('Please provide a reason for rejection:');
         if (reason) {
-            const expense = expensesData.expenses.find(exp => exp.id === id);
-            if (expense) {
-                expense.status = 'rejected';
-                expense.rejectedDate = new Date().toISOString().split('T')[0];
-                expense.rejectionReason = reason;
-                applyFilters();
-                alert('Expense rejected successfully!');
+            try {
+                const response = await fetch(`/api/expenses/${id}/reject/`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ reason }),
+                });
+                if (response.ok) {
+                    await applyFilters();
+                    alert('Expense rejected successfully!');
+                } else {
+                    alert('Failed to reject expense.');
+                }
+            } catch (error) {
+                console.error('Error rejecting expense:', error);
+                alert('An error occurred while rejecting the expense.');
             }
         }
     };
 
-    window.deleteExpense = function(id) {
+    window.deleteExpense = async function(id) {
         if (confirm('Are you sure you want to delete this expense?')) {
-            const index = expensesData.expenses.findIndex(exp => exp.id === id);
-            if (index !== -1) {
-                expensesData.expenses.splice(index, 1);
-                applyFilters();
-                alert('Expense deleted successfully!');
+            try {
+                const response = await fetch(`/api/expenses/${id}/`, { method: 'DELETE' });
+                if (response.ok) {
+                    await applyFilters();
+                    alert('Expense deleted successfully!');
+                } else {
+                    alert('Failed to delete expense.');
+                }
+            } catch (error) {
+                console.error('Error deleting expense:', error);
+                alert('An error occurred while deleting the expense.');
             }
         }
     };
 
-    window.viewReceipt = function(id) {
-        const expense = expensesData.expenses.find(exp => exp.id === id);
-        if (expense && expense.hasReceipt) {
+    window.viewReceipt = async function(id) {
+        const expense = await fetch(`/api/expenses/${id}/`).then(res => res.json());
+        if (expense && expense.has_receipt) {
             showReceiptViewer(expense);
         }
     };
@@ -688,11 +484,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // Simulate receipt viewing (in real app, would load actual files)
         const receiptHtml = `
             <div class="receipt-navigation">
-                <button class="receipt-nav-btn" onclick="previousReceipt()" ${expense.receiptCount <= 1 ? 'disabled' : ''}>
+                <button class="receipt-nav-btn" onclick="previousReceipt()" ${expense.receipt_count <= 1 ? 'disabled' : ''}>
                     <i class="fas fa-chevron-left"></i>
                 </button>
-                <span class="receipt-counter">1 of ${expense.receiptCount}</span>
-                <button class="receipt-nav-btn" onclick="nextReceipt()" ${expense.receiptCount <= 1 ? 'disabled' : ''}>
+                <span class="receipt-counter">1 of ${expense.receipt_count}</span>
+                <button class="receipt-nav-btn" onclick="nextReceipt()" ${expense.receipt_count <= 1 ? 'disabled' : ''}>
                     <i class="fas fa-chevron-right"></i>
                 </button>
             </div>
@@ -774,7 +570,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Bulk approve functionality
-    bulkApprove.addEventListener('click', function() {
+    bulkApprove.addEventListener('click', async function() {
         const selectedCheckboxes = document.querySelectorAll('.expense-checkbox:checked');
         const selectedIds = Array.from(selectedCheckboxes).map(cb => parseInt(cb.dataset.id));
         
@@ -784,15 +580,22 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         if (confirm(`Are you sure you want to approve ${selectedIds.length} expense(s)?`)) {
-            selectedIds.forEach(id => {
-                const expense = expensesData.expenses.find(exp => exp.id === id);
-                if (expense && expense.status === 'submitted') {
-                    expense.status = 'approved';
-                    expense.approvedDate = new Date().toISOString().split('T')[0];
+            try {
+                const response = await fetch('/api/expenses/bulk-approve/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ids: selectedIds }),
+                });
+                if (response.ok) {
+                    await applyFilters();
+                    alert('Selected expenses approved successfully!');
+                } else {
+                    alert('Failed to approve expenses.');
                 }
-            });
-            applyFilters();
-            alert('Selected expenses approved successfully!');
+            } catch (error) {
+                console.error('Error bulk approving expenses:', error);
+                alert('An error occurred while approving expenses.');
+            }
         }
     });
 
@@ -890,37 +693,54 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Save as draft
-    saveDraftExpense.addEventListener('click', function() {
-        alert('Expense saved as draft!');
-        addExpenseModal.classList.remove('active');
+    saveDraftExpense.addEventListener('click', async function() {
+        const formData = new FormData(addExpenseForm);
+        const expenseData = Object.fromEntries(formData.entries());
+        expenseData.status = 'draft';
+
+        try {
+            const response = await fetch('/api/expenses/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(expenseData),
+            });
+            if (response.ok) {
+                alert('Expense saved as draft!');
+                addExpenseModal.classList.remove('active');
+                await applyFilters();
+            } else {
+                alert('Failed to save draft.');
+            }
+        } catch (error) {
+            console.error('Error saving draft:', error);
+            alert('An error occurred while saving the draft.');
+        }
     });
 
-    addExpenseForm.addEventListener('submit', function(e) {
+    addExpenseForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
-        const newExpense = {
-            id: Math.max(...expensesData.expenses.map(exp => exp.id)) + 1,
-            date: document.getElementById('expenseDate').value,
-            employee: document.getElementById('expenseEmployee').value,
-            department: 'Operations', // Default department
-            description: document.getElementById('expenseDescription').value,
-            category: document.getElementById('expenseCategory').value,
-            amount: parseFloat(document.getElementById('expenseAmount').value),
-            location: document.getElementById('expenseLocation').value,
-            vendor: document.getElementById('expenseVendor').value,
-            status: 'submitted',
-            priority: document.getElementById('expensePriority').value,
-            approver: document.getElementById('expenseApprover').value,
-            hasReceipt: uploadedFilesList.length > 0,
-            receiptCount: uploadedFilesList.length,
-            notes: document.getElementById('expenseNotes').value,
-            submittedDate: new Date().toISOString().split('T')[0]
-        };
+        const formData = new FormData(addExpenseForm);
+        const expenseData = Object.fromEntries(formData.entries());
+        expenseData.status = 'submitted';
 
-        expensesData.expenses.unshift(newExpense);
-        applyFilters();
-        addExpenseModal.classList.remove('active');
-        alert('Expense submitted for approval successfully!');
+        try {
+            const response = await fetch('/api/expenses/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(expenseData),
+            });
+            if (response.ok) {
+                await applyFilters();
+                addExpenseModal.classList.remove('active');
+                alert('Expense submitted for approval successfully!');
+            } else {
+                alert('Failed to submit expense.');
+            }
+        } catch (error) {
+            console.error('Error submitting expense:', error);
+            alert('An error occurred while submitting the expense.');
+        }
     });
 
     // Close modals when clicking outside
@@ -974,4 +794,3 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize the page
     initPage();
 });
-

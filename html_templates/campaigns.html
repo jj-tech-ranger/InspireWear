@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InspireWear | Email Campaigns</title>
+    <link rel="stylesheet" href="../css/campaigns.css">
+    <link rel="stylesheet" href="../css/finance.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <link rel="icon" href="../img/favicon.png" type="image/x-icon">
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="morph-overlay" id="morphOverlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p class="loading-text">Loading Email Campaigns...</p>
+        </div>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="logo-container">
+            <img src="../img/logo.png" alt="InspireWear Logo" class="logo">
+            <h1 class="logo-text">InspireWear</h1>
+        </div>
+
+        <a href="../templates/index.html" class="home-button">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+
+        <div class="module-heading">
+            <span class="star">✧</span>
+            <h1>CUSTOMER CRM</h1>
+            <span class="star">✧</span>
+        </div>
+
+        <nav class="finance-nav">
+            <ul>
+                <li><a href="../templates/customer_dasboard.html"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                <li><a href="../templates/customers.html"><i class="fas fa-users"></i> Customers</a></li>
+                <li><a href="../templates/loyalty.html"><i class="fas fa-star"></i> Loyalty Program</a></li>
+                <li class="active"><a href="../templates/campaigns.html"><i class="fas fa-envelope"></i> Email Campaigns</a></li>
+                <li><a href="../templates/feedback.html"><i class="fas fa-comment-alt"></i> Feedback</a></li>
+                <li><a href="../templates/customer_reports.html"><i class="fas fa-chart-pie"></i> Reports</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <header class="finance-header">
+            <h2>Email Campaigns</h2>
+            <div class="header-actions">
+                <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon theme-icon"></i>
+                </button>
+                <div class="profile-container">
+                    <button class="profile-btn" id="profileBtn" aria-label="User profile" aria-expanded="false">
+                        <img src="../img/user.png" alt="Profile" class="profile-img">
+                        <span>Marketing Manager</span>
+                    </button>
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <a href="../templates/index.html" class="dropdown-item">
+                            <i class="fas fa-home"></i> Back to Home
+                        </a>
+                        <a href="../templates/login.html" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Campaign Stats -->
+        <div class="campaign-stats">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-paper-plane"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>Total Campaigns</h3>
+                    <p class="amount"><span id="totalCampaigns">24</span></p>
+                    <p class="change positive"><i class="fas fa-arrow-up"></i> 15% from last quarter</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-envelope-open"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>Open Rate</h3>
+                    <p class="amount"><span id="openRate">32.5</span>%</p>
+                    <p class="change positive"><i class="fas fa-arrow-up"></i> 5.2% from last quarter</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-mouse-pointer"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>Click Rate</h3>
+                    <p class="amount"><span id="clickRate">8.7</span>%</p>
+                    <p class="change negative"><i class="fas fa-arrow-down"></i> 1.3% from last quarter</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>Conversion Rate</h3>
+                    <p class="amount"><span id="conversionRate">3.2</span>%</p>
+                    <p class="change positive"><i class="fas fa-arrow-up"></i> 0.8% from last quarter</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Campaign Actions -->
+        <div class="campaign-actions">
+            <button id="createCampaignBtn" class="btn-primary"><i class="fas fa-plus"></i> Create Campaign</button>
+            <div class="campaign-filters">
+                <div class="filter-group">
+                    <label for="campaignStatus">Status:</label>
+                    <select id="campaignStatus">
+                        <option value="all">All</option>
+                        <option value="draft">Draft</option>
+                        <option value="scheduled">Scheduled</option>
+                        <option value="sent">Sent</option>
+                        <option value="archived">Archived</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="campaignType">Type:</label>
+                    <select id="campaignType">
+                        <option value="all">All</option>
+                        <option value="promotional">Promotional</option>
+                        <option value="newsletter">Newsletter</option>
+                        <option value="transactional">Transactional</option>
+                        <option value="loyalty">Loyalty</option>
+                    </select>
+                </div>
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="campaignSearch" placeholder="Search campaigns...">
+                </div>
+            </div>
+        </div>
+
+        <!-- Campaigns Table -->
+        <div class="campaigns-table-container">
+            <table class="campaigns-table">
+                <thead>
+                    <tr>
+                        <th>Campaign Name</th>
+                        <th>Recipients</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Open Rate</th>
+                        <th>Click Rate</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="campaignsTable">
+                    <!-- Campaigns will be loaded by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Templates Section -->
+        <div class="templates-section">
+            <div class="section-header">
+                <h3>Email Templates</h3>
+                <button id="createTemplateBtn" class="btn-primary"><i class="fas fa-plus"></i> Create Template</button>
+            </div>
+            <div class="templates-grid" id="templatesGrid">
+                <!-- Templates will be loaded by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="finance-footer">
+            <div class="footer-content">
+                <p class="footer-text">© 2025 InspireWear. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#" class="footer-link">Terms</a>
+                    <a href="#" class="footer-link">Privacy</a>
+                    <a href="#" class="footer-link">Contact</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Create Campaign Modal -->
+    <div class="modal-overlay" id="createCampaignModal">
+        <div class="modal large-modal">
+            <div class="modal-header">
+                <h3>Create New Email Campaign</h3>
+                <button class="modal-close" id="campaignModalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="createCampaignForm">
+                    <div class="form-group">
+                        <label for="campaignName">Campaign Name</label>
+                        <input type="text" id="campaignName" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="campaignTemplate">Template</label>
+                            <select id="campaignTemplate" required>
+                                <option value="">Select Template</option>
+                                <option value="summer_sale">Summer Sale</option>
+                                <option value="new_arrivals">New Arrivals</option>
+                                <option value="loyalty_rewards">Loyalty Rewards</option>
+                                <option value="abandoned_cart">Abandoned Cart</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="campaignType">Campaign Type</label>
+                            <select id="campaignTypeSelect" required>
+                                <option value="promotional">Promotional</option>
+                                <option value="newsletter">Newsletter</option>
+                                <option value="transactional">Transactional</option>
+                                <option value="loyalty">Loyalty</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="campaignSubject">Email Subject</label>
+                        <input type="text" id="campaignSubject" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="campaignRecipients">Recipients</label>
+                        <div class="recipients-options">
+                            <div class="recipient-option">
+                                <input type="radio" id="allCustomers" name="recipients" value="all" checked>
+                                <label for="allCustomers">All Customers (2,450)</label>
+                            </div>
+                            <div class="recipient-option">
+                                <input type="radio" id="loyaltyMembers" name="recipients" value="loyalty">
+                                <label for="loyaltyMembers">Loyalty Members (1,240)</label>
+                            </div>
+                            <div class="recipient-option">
+                                <input type="radio" id="customSegment" name="recipients" value="segment">
+                                <label for="customSegment">Custom Segment</label>
+                                <select id="segmentSelect" disabled>
+                                    <option value="nairobi">Nairobi Customers</option>
+                                    <option value="repeat">Repeat Customers</option>
+                                    <option value="inactive">Inactive Customers</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="campaignSchedule">Schedule</label>
+                            <select id="campaignSchedule" required>
+                                <option value="now">Send Immediately</option>
+                                <option value="scheduled">Schedule for Later</option>
+                            </select>
+                            <div id="scheduleDateContainer" style="display: none; margin-top: 10px;">
+                                <input type="datetime-local" id="scheduleDate">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="campaignPriority">Priority</label>
+                            <select id="campaignPriority">
+                                <option value="normal">Normal</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="campaignContent">Email Content</label>
+                        <div class="email-preview">
+                            <div class="email-preview-header">
+                                <h4>Summer Sale Preview</h4>
+                                <p>This is a preview of how your email will look</p>
+                            </div>
+                            <div class="email-preview-content">
+                                <img src="../img/email_template.jpg" alt="Email Template Preview" style="max-width: 100%;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="cancelCreateCampaign">Cancel</button>
+                        <button type="button" class="btn-secondary" id="saveDraftBtn">Save Draft</button>
+                        <button type="submit" class="btn-primary">Schedule Campaign</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Template Modal -->
+    <div class="modal-overlay" id="createTemplateModal">
+        <div class="modal large-modal">
+            <div class="modal-header">
+                <h3>Create New Email Template</h3>
+                <button class="modal-close" id="templateModalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="createTemplateForm">
+                    <div class="form-group">
+                        <label for="templateName">Template Name</label>
+                        <input type="text" id="templateName" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="templateCategory">Category</label>
+                            <select id="templateCategory" required>
+                                <option value="promotional">Promotional</option>
+                                <option value="newsletter">Newsletter</option>
+                                <option value="transactional">Transactional</option>
+                                <option value="loyalty">Loyalty</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="templateType">Template Type</label>
+                            <select id="templateType" required>
+                                <option value="basic">Basic</option>
+                                <option value="image_heavy">Image Heavy</option>
+                                <option value="product_showcase">Product Showcase</option>
+                                <option value="discount">Discount</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="templateSubject">Default Subject</label>
+                        <input type="text" id="templateSubject" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="templateContent">Template Content</label>
+                        <div class="template-editor">
+                            <div class="editor-toolbar">
+                                <button type="button" class="editor-btn"><i class="fas fa-bold"></i></button>
+                                <button type="button" class="editor-btn"><i class="fas fa-italic"></i></button>
+                                <button type="button" class="editor-btn"><i class="fas fa-underline"></i></button>
+                                <button type="button" class="editor-btn"><i class="fas fa-align-left"></i></button>
+                                <button type="button" class="editor-btn"><i class="fas fa-align-center"></i></button>
+                                <button type="button" class="editor-btn"><i class="fas fa-align-right"></i></button>
+                                <button type="button" class="editor-btn"><i class="fas fa-image"></i></button>
+                                <button type="button" class="editor-btn"><i class="fas fa-link"></i></button>
+                            </div>
+                            <div class="editor-content" contenteditable="true">
+                                <h1>Your Email Heading</h1>
+                                <p>Start typing your email content here...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="templatePreview">Mobile Preview</label>
+                        <div class="mobile-preview">
+                            <div class="mobile-screen">
+                                <div class="mobile-header">
+                                    <h4 id="previewSubject">Default Subject</h4>
+                                </div>
+                                <div class="mobile-content">
+                                    <p>Mobile preview will appear here</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="cancelCreateTemplate">Cancel</button>
+                        <button type="submit" class="btn-primary">Save Template</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Campaign Report Modal -->
+    <div class="modal-overlay" id="campaignReportModal">
+        <div class="modal large-modal">
+            <div class="modal-header">
+                <h3>Campaign Performance Report</h3>
+                <button class="modal-close" id="reportModalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="report-header">
+                    <h4 id="reportCampaignName">Summer Sale 2025</h4>
+                    <p class="report-meta">Sent: <span id="reportSentDate">June 15, 2025</span> | Recipients: <span id="reportRecipients">2,450</span></p>
+                </div>
+
+                <div class="report-stats">
+                    <div class="report-stat">
+                        <h5>Open Rate</h5>
+                        <p class="stat-value">32.5%</p>
+                        <p class="stat-change positive"><i class="fas fa-arrow-up"></i> 5.2% from average</p>
+                    </div>
+                    <div class="report-stat">
+                        <h5>Click Rate</h5>
+                        <p class="stat-value">8.7%</p>
+                        <p class="stat-change negative"><i class="fas fa-arrow-down"></i> 1.3% from average</p>
+                    </div>
+                    <div class="report-stat">
+                        <h5>Conversion Rate</h5>
+                        <p class="stat-value">3.2%</p>
+                        <p class="stat-change positive"><i class="fas fa-arrow-up"></i> 0.8% from average</p>
+                    </div>
+                    <div class="report-stat">
+                        <h5>Revenue Generated</h5>
+                        <p class="stat-value">KES 245,800</p>
+                        <p class="stat-change positive"><i class="fas fa-arrow-up"></i> 18% from similar campaigns</p>
+                    </div>
+                </div>
+
+                <div class="report-charts">
+                    <div class="chart-container">
+                        <h5>Performance Over Time</h5>
+                        <canvas id="performanceChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h5>Device Breakdown</h5>
+                        <canvas id="deviceChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="report-actions">
+                    <button class="btn-secondary"><i class="fas fa-download"></i> Download Report</button>
+                    <button class="btn-primary"><i class="fas fa-share"></i> Share Report</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/campaigns.js"></script>
+</body>
+</html>

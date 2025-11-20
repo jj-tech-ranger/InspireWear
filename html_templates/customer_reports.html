@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InspireWear | CRM Reports</title>
+    <link rel="stylesheet" href="../css/customer_reports.css">
+    <link rel="stylesheet" href="../css/finance.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <link rel="icon" href="../img/favicon.png" type="image/x-icon">
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="morph-overlay" id="morphOverlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p class="loading-text">Loading Reports Module...</p>
+        </div>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="logo-container">
+            <img src="../img/logo.png" alt="InspireWear Logo" class="logo">
+            <h1 class="logo-text">InspireWear</h1>
+        </div>
+
+        <a href="../templates/index.html" class="home-button">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+
+        <div class="module-heading">
+            <span class="star">✧</span>
+            <h1>CUSTOMER CRM</h1>
+            <span class="star">✧</span>
+        </div>
+
+        <nav class="finance-nav">
+            <ul>
+                <li><a href="../templates/customer_dasboard.html"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                <li><a href="../templates/customers.html"><i class="fas fa-users"></i> Customers</a></li>
+                <li><a href="../templates/loyalty.html"><i class="fas fa-star"></i> Loyalty Program</a></li>
+                <li><a href="../templates/campaigns.html"><i class="fas fa-envelope"></i> Email Campaigns</a></li>
+                <li><a href="../templates/feedback.html"><i class="fas fa-comment-alt"></i> Feedback</a></li>
+                <li class="active"><a href="../templates/customer_reports.html"><i class="fas fa-chart-pie"></i> Reports</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <header class="finance-header">
+            <h2>CRM Reports</h2>
+            <div class="header-actions">
+                <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon theme-icon"></i>
+                </button>
+                <div class="profile-container">
+                    <button class="profile-btn" id="profileBtn" aria-label="User profile" aria-expanded="false">
+                        <img src="../img/user.png" alt="Profile" class="profile-img">
+                        <span>Reports Analyst</span>
+                    </button>
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <a href="../templates/index.html" class="dropdown-item">
+                            <i class="fas fa-home"></i> Back to Home
+                        </a>
+                        <a href="../templates/login.html" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Report Filters -->
+        <div class="report-filters">
+            <div class="filter-group">
+                <label for="reportType">Report Type:</label>
+                <select id="reportType">
+                    <option value="customer-growth">Customer Growth</option>
+                    <option value="loyalty-performance">Loyalty Performance</option>
+                    <option value="campaign-analytics">Campaign Analytics</option>
+                    <option value="feedback-trends">Feedback Trends</option>
+                    <option value="sales-correlation">Sales Correlation</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="timePeriod">Time Period:</label>
+                <select id="timePeriod">
+                    <option value="last-week">Last Week</option>
+                    <option value="last-month" selected>Last Month</option>
+                    <option value="last-quarter">Last Quarter</option>
+                    <option value="last-year">Last Year</option>
+                    <option value="custom">Custom Range</option>
+                </select>
+                <div id="customDateRange" style="display: none; margin-top: 10px;">
+                    <input type="date" id="startDate">
+                    <span>to</span>
+                    <input type="date" id="endDate">
+                </div>
+            </div>
+            <div class="filter-group">
+                <label for="locationFilter">Location:</label>
+                <select id="locationFilter">
+                    <option value="all">All Locations</option>
+                    <option value="nairobi">Nairobi</option>
+                    <option value="mombasa">Mombasa</option>
+                    <option value="kisumu">Kisumu</option>
+                    <option value="nakuru">Nakuru</option>
+                </select>
+            </div>
+            <button id="generateReportBtn" class="btn-primary"><i class="fas fa-sync-alt"></i> Generate</button>
+            <button id="exportReportBtn" class="btn-secondary"><i class="fas fa-download"></i> Export</button>
+        </div>
+
+        <!-- Report Summary -->
+        <div class="report-summary">
+            <div class="summary-card">
+                <h3>Report Summary</h3>
+                <div class="summary-stats">
+                    <div class="stat">
+                        <span class="stat-label">Total Customers</span>
+                        <span class="stat-value">2,450</span>
+                        <span class="stat-change positive"><i class="fas fa-arrow-up"></i> 15%</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Active Members</span>
+                        <span class="stat-value">1,240</span>
+                        <span class="stat-change positive"><i class="fas fa-arrow-up"></i> 22%</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Avg. Satisfaction</span>
+                        <span class="stat-value">4.2</span>
+                        <span class="stat-change negative"><i class="fas fa-arrow-down"></i> 0.3</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Campaign ROI</span>
+                        <span class="stat-value">3.8x</span>
+                        <span class="stat-change positive"><i class="fas fa-arrow-up"></i> 0.5x</span>
+                    </div>
+                </div>
+            </div>
+            <div class="summary-notes">
+                <h3>Key Insights</h3>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> Customer base grew by 15% in the last quarter</li>
+                    <li><i class="fas fa-check-circle"></i> Loyalty members show 2.5x higher purchase frequency</li>
+                    <li><i class="fas fa-exclamation-circle"></i> Nairobi region accounts for 62% of total revenue</li>
+                    <li><i class="fas fa-check-circle"></i> Email campaigns have highest conversion rate (8.7%)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Report Content -->
+        <div class="report-content">
+            <div class="chart-container large-chart">
+                <div class="chart-header">
+                    <h3>Customer Growth Trend</h3>
+                    <div class="chart-actions">
+                        <button class="chart-action-btn"><i class="fas fa-expand"></i></button>
+                        <button class="chart-action-btn"><i class="fas fa-download"></i></button>
+                    </div>
+                </div>
+                <div class="chart">
+                    <canvas id="customerGrowthChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-grid">
+                <div class="chart-container">
+                    <h3>Customer Locations</h3>
+                    <div class="chart">
+                        <canvas id="customerLocationsChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <h3>Loyalty Tier Distribution</h3>
+                    <div class="chart">
+                        <canvas id="loyaltyTiersChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <h3>Feedback Sentiment</h3>
+                    <div class="chart">
+                        <canvas id="feedbackSentimentChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <h3>Campaign Performance</h3>
+                    <div class="chart">
+                        <canvas id="campaignPerformanceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="data-table-container">
+                <div class="table-header">
+                    <h3>Detailed Customer Metrics</h3>
+                    <button id="exportDataBtn" class="btn-secondary"><i class="fas fa-download"></i> Export Data</button>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>Current</th>
+                            <th>Previous</th>
+                            <th>Change</th>
+                            <th>Trend</th>
+                        </tr>
+                    </thead>
+                    <tbody id="metricsTable">
+                        <!-- Data will be loaded by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="finance-footer">
+            <div class="footer-content">
+                <p class="footer-text">© 2025 InspireWear. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#" class="footer-link">Terms</a>
+                    <a href="#" class="footer-link">Privacy</a>
+                    <a href="#" class="footer-link">Contact</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Fullscreen Chart Modal -->
+    <div class="modal-overlay" id="fullscreenChartModal">
+        <div class="modal fullscreen-modal">
+            <div class="modal-header">
+                <h3 id="fullscreenChartTitle">Customer Growth Trend</h3>
+                <button class="modal-close" id="fullscreenModalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="fullscreen-chart-container">
+                    <canvas id="fullscreenChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/customer_reports.js"></script>
+</body>
+</html>

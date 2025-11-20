@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InspireWear | Task Management</title>
+    <link rel="stylesheet" href="../css/operations.css">
+    <link rel="stylesheet" href="../css/task_management.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <link rel="icon" href="../img/favicon.png" type="image/x-icon">
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="morph-overlay" id="morphOverlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p class="loading-text">Loading Task Management...</p>
+        </div>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="logo-container">
+            <img src="../img/logo.png" alt="InspireWear Logo" class="logo">
+            <h1 class="logo-text">InspireWear</h1>
+        </div>
+
+        <a href="../templates/index.html" class="home-button">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+
+        <div class="module-heading">
+            <span class="star">✧</span>
+            <h1>OPERATIONS</h1>
+            <span class="star">✧</span>
+        </div>
+
+        <nav class="operations-nav">
+            <ul>
+                <li><a href="../templates/operations_dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="../templates/staff_scheduling.html"><i class="fas fa-calendar-alt"></i> Staff Scheduling</a></li>
+                <li><a href="../templates/returns_exchanges.html"><i class="fas fa-exchange-alt"></i> Returns & Exchanges</a></li>
+                <li class="active"><a href="../templates/task_management.html"><i class="fas fa-tasks"></i> Tasks</a></li>
+                <li><a href="../templates/operations_notifications.html"><i class="fas fa-bell"></i> Notifications</a></li>
+                <li><a href="../templates/operations_reports.html"><i class="fas fa-chart-pie"></i> Reports</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <header class="operations-header">
+            <h2>Task Management</h2>
+            <div class="header-actions">
+                <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon theme-icon"></i>
+                </button>
+                <div class="profile-container">
+                    <button class="profile-btn" id="profileBtn" aria-label="User profile" aria-expanded="false">
+                        <img src="../img/user.png" alt="Profile" class="profile-img">
+                        <span>Operations Manager</span>
+                    </button>
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <a href="../templates/index.html" class="dropdown-item">
+                            <i class="fas fa-home"></i> Back to Home
+                        </a>
+                        <a href="../templates/login.html" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Overview Cards -->
+        <div class="overview-cards">
+            <div class="card total-tasks">
+                <div class="card-icon">
+                    <i class="fas fa-tasks"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Total Tasks</h3>
+                    <p class="amount"><span id="totalTasks">24</span></p>
+                    <p class="change positive"><i class="fas fa-arrow-up"></i> 3 new this week</p>
+                </div>
+            </div>
+
+            <div class="card pending-tasks">
+                <div class="card-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Pending Tasks</h3>
+                    <p class="amount"><span id="pendingTasks">8</span></p>
+                    <p class="change negative"><i class="fas fa-arrow-up"></i> 2 overdue</p>
+                </div>
+            </div>
+
+            <div class="card completed-tasks">
+                <div class="card-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Completed Today</h3>
+                    <p class="amount"><span id="completedToday">5</span></p>
+                    <p class="change positive"><i class="fas fa-arrow-up"></i> 25% more than yesterday</p>
+                </div>
+            </div>
+
+            <div class="card team-productivity">
+                <div class="card-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Team Productivity</h3>
+                    <p class="amount"><span id="productivity">87</span>%</p>
+                    <p class="change positive"><i class="fas fa-arrow-up"></i> 5% increase</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- View Toggle and Actions -->
+        <div class="view-controls">
+            <div class="view-toggle">
+                <button id="boardViewBtn" class="view-btn active">
+                    <i class="fas fa-columns"></i> Board View
+                </button>
+                <button id="listViewBtn" class="view-btn">
+                    <i class="fas fa-list"></i> List View
+                </button>
+            </div>
+            <div class="filter-controls">
+                <select id="priorityFilter" class="filter-select">
+                    <option value="">All Priorities</option>
+                    <option value="high">High Priority</option>
+                    <option value="medium">Medium Priority</option>
+                    <option value="low">Low Priority</option>
+                </select>
+                <select id="assigneeFilter" class="filter-select">
+                    <option value="">All Assignees</option>
+                    <option value="Grace Wanjiku">Grace Wanjiku</option>
+                    <option value="John Mwangi">John Mwangi</option>
+                    <option value="Susan Akinyi">Susan Akinyi</option>
+                    <option value="David Omondi">David Omondi</option>
+                    <option value="Mary Njeri">Mary Njeri</option>
+                </select>
+                <button id="clearFilters" class="btn-secondary"><i class="fas fa-times"></i> Clear</button>
+            </div>
+            <div class="action-controls">
+                <button id="addTaskBtn" class="btn-primary"><i class="fas fa-plus"></i> Add Task</button>
+                <button id="exportBtn" class="btn-secondary"><i class="fas fa-download"></i> Export</button>
+            </div>
+        </div>
+
+        <!-- Board View -->
+        <div id="boardView" class="board-view">
+            <div class="board-columns">
+                <div class="board-column" data-status="todo">
+                    <div class="column-header">
+                        <h3><i class="fas fa-circle-notch"></i> To Do</h3>
+                        <span class="task-count" id="todoCount">0</span>
+                    </div>
+                    <div class="column-content" id="todoColumn">
+                        <!-- Tasks will be loaded here -->
+                    </div>
+                </div>
+
+                <div class="board-column" data-status="in-progress">
+                    <div class="column-header">
+                        <h3><i class="fas fa-play-circle"></i> In Progress</h3>
+                        <span class="task-count" id="inProgressCount">0</span>
+                    </div>
+                    <div class="column-content" id="inProgressColumn">
+                        <!-- Tasks will be loaded here -->
+                    </div>
+                </div>
+
+                <div class="board-column" data-status="review">
+                    <div class="column-header">
+                        <h3><i class="fas fa-eye"></i> Review</h3>
+                        <span class="task-count" id="reviewCount">0</span>
+                    </div>
+                    <div class="column-content" id="reviewColumn">
+                        <!-- Tasks will be loaded here -->
+                    </div>
+                </div>
+
+                <div class="board-column" data-status="completed">
+                    <div class="column-header">
+                        <h3><i class="fas fa-check-circle"></i> Completed</h3>
+                        <span class="task-count" id="completedCount">0</span>
+                    </div>
+                    <div class="column-content" id="completedColumn">
+                        <!-- Tasks will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- List View -->
+        <div id="listView" class="list-view" style="display: none;">
+            <div class="table-container">
+                <table class="tasks-table">
+                    <thead>
+                        <tr>
+                            <th>Task</th>
+                            <th>Assignee</th>
+                            <th>Priority</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                            <th>Progress</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tasksTableBody">
+                        <!-- Tasks will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Team Performance Section -->
+        <div class="performance-section">
+            <div class="performance-card">
+                <h3>Team Performance</h3>
+                <div class="team-stats" id="teamStats">
+                    <!-- Team statistics will be loaded by JavaScript -->
+                </div>
+            </div>
+            <div class="performance-card">
+                <h3>Task Distribution</h3>
+                <div class="chart" id="distributionChart">
+                    <canvas id="distributionCanvas"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="operations-footer">
+            <div class="footer-content">
+                <p class="footer-text">© 2025 InspireWear. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#" class="footer-link">Terms</a>
+                    <a href="#" class="footer-link">Privacy</a>
+                    <a href="#" class="footer-link">Contact</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Add/Edit Task Modal -->
+    <div class="modal-overlay" id="taskModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="taskModalTitle">Add New Task</h3>
+                <button class="modal-close" id="taskModalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="taskForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="taskTitle">Task Title</label>
+                            <input type="text" id="taskTitle" required placeholder="Enter task title">
+                        </div>
+                        <div class="form-group">
+                            <label for="taskPriority">Priority</label>
+                            <select id="taskPriority" required>
+                                <option value="">Select Priority</option>
+                                <option value="high">High Priority</option>
+                                <option value="medium">Medium Priority</option>
+                                <option value="low">Low Priority</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="taskDescription">Description</label>
+                        <textarea id="taskDescription" rows="3" placeholder="Enter task description..."></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="taskAssignee">Assignee</label>
+                            <select id="taskAssignee" required>
+                                <option value="">Select Assignee</option>
+                                <option value="Grace Wanjiku">Grace Wanjiku</option>
+                                <option value="John Mwangi">John Mwangi</option>
+                                <option value="Susan Akinyi">Susan Akinyi</option>
+                                <option value="David Omondi">David Omondi</option>
+                                <option value="Mary Njeri">Mary Njeri</option>
+                                <option value="Peter Kamau">Peter Kamau</option>
+                                <option value="Catherine Wanjiku">Catherine Wanjiku</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="taskDueDate">Due Date</label>
+                            <input type="date" id="taskDueDate" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="taskStatus">Status</label>
+                            <select id="taskStatus" required>
+                                <option value="todo">To Do</option>
+                                <option value="in-progress">In Progress</option>
+                                <option value="review">Review</option>
+                                <option value="completed">Completed</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="taskProgress">Progress (%)</label>
+                            <input type="number" id="taskProgress" min="0" max="100" value="0" placeholder="0">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="taskTags">Tags (comma separated)</label>
+                        <input type="text" id="taskTags" placeholder="e.g., urgent, inventory, customer-service">
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="cancelTask">Cancel</button>
+                        <button type="submit" class="btn-primary">Save Task</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Task Details Modal -->
+    <div class="modal-overlay" id="detailsModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="detailsModalTitle">Task Details</h3>
+                <button class="modal-close" id="detailsModalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="details-content" id="detailsContent">
+                    <!-- Details will be populated by JavaScript -->
+                </div>
+                <div class="quick-actions">
+                    <h4>Quick Actions</h4>
+                    <div class="action-buttons">
+                        <button id="markCompleteBtn" class="btn-success">
+                            <i class="fas fa-check"></i> Mark Complete
+                        </button>
+                        <button id="editTaskBtn" class="btn-primary">
+                            <i class="fas fa-edit"></i> Edit Task
+                        </button>
+                        <button id="deleteTaskBtn" class="btn-danger">
+                            <i class="fas fa-trash"></i> Delete Task
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/task_management.js"></script>
+</body>
+</html>
+

@@ -21,33 +21,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const nextPageBtn = document.getElementById('nextPage');
     const pageInfo = document.getElementById('pageInfo');
 
-    // Sample customer data for Kenyan clothing store
-    const customersData = [
-        { id: 1, firstName: 'Wanjiku', lastName: 'Mwangi', email: 'wanjiku@example.com', phone: '712345678', location: 'Nairobi', totalSpent: 12500, lastPurchase: '2025-06-15', status: 'active' },
-        { id: 2, firstName: 'Kamau', lastName: 'Otieno', email: 'kamau@example.com', phone: '723456789', location: 'Mombasa', totalSpent: 8500, lastPurchase: '2025-06-10', status: 'active' },
-        { id: 3, firstName: 'Achieng', lastName: 'Okoth', email: 'achieng@example.com', phone: '734567890', location: 'Kisumu', totalSpent: 4200, lastPurchase: '2025-05-28', status: 'pending' },
-        { id: 4, firstName: 'Njoroge', lastName: 'Kariuki', email: 'njoroge@example.com', phone: '745678901', location: 'Nakuru', totalSpent: 15000, lastPurchase: '2025-06-18', status: 'active' },
-        { id: 5, firstName: 'Fatuma', lastName: 'Abdi', email: 'fatuma@example.com', phone: '756789012', location: 'Nairobi', totalSpent: 0, lastPurchase: '2025-01-05', status: 'inactive' },
-        { id: 6, firstName: 'James', lastName: 'Mutua', email: 'james@example.com', phone: '767890123', location: 'Nairobi', totalSpent: 3200, lastPurchase: '2025-06-12', status: 'active' },
-        { id: 7, firstName: 'Grace', lastName: 'Wambui', email: 'grace@example.com', phone: '778901234', location: 'Nairobi', totalSpent: 7800, lastPurchase: '2025-06-05', status: 'active' },
-        { id: 8, firstName: 'Peter', lastName: 'Kipchoge', email: 'peter@example.com', phone: '789012345', location: 'Eldoret', totalSpent: 5600, lastPurchase: '2025-05-20', status: 'active' },
-        { id: 9, firstName: 'Sarah', lastName: 'Atieno', email: 'sarah@example.com', phone: '790123456', location: 'Kisumu', totalSpent: 2300, lastPurchase: '2025-05-15', status: 'pending' },
-        { id: 10, firstName: 'David', lastName: 'Omondi', email: 'david@example.com', phone: '701234567', location: 'Nairobi', totalSpent: 9800, lastPurchase: '2025-06-20', status: 'active' },
-        { id: 11, firstName: 'Lilian', lastName: 'Wanjiru', email: 'lilian@example.com', phone: '712345679', location: 'Thika', totalSpent: 4500, lastPurchase: '2025-06-08', status: 'active' },
-        { id: 12, firstName: 'Brian', lastName: 'Kimani', email: 'brian@example.com', phone: '723456780', location: 'Nairobi', totalSpent: 6700, lastPurchase: '2025-06-14', status: 'active' },
-        { id: 13, firstName: 'Esther', lastName: 'Nyambura', email: 'esther@example.com', phone: '734567891', location: 'Nakuru', totalSpent: 1200, lastPurchase: '2025-04-22', status: 'inactive' },
-        { id: 14, firstName: 'Joseph', lastName: 'Kamande', email: 'joseph@example.com', phone: '745678902', location: 'Nairobi', totalSpent: 8900, lastPurchase: '2025-06-17', status: 'active' },
-        { id: 15, firstName: 'Mercy', lastName: 'Chebet', email: 'mercy@example.com', phone: '756789013', location: 'Eldoret', totalSpent: 5400, lastPurchase: '2025-06-09', status: 'active' }
-    ];
-
     // Pagination variables
     let currentPage = 1;
     const rowsPerPage = 10;
-    let filteredCustomers = [...customersData];
+    let filteredCustomers = [];
 
     // Initialize the page
-    function initPage() {
-        loadCustomers();
+    async function initPage() {
+        await loadCustomers();
 
         // Hide loading overlay after a short delay
         setTimeout(() => {
@@ -67,9 +48,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Load customers into the table with pagination
-    function loadCustomers() {
+    async function loadCustomers() {
         // Apply filters
-        applyFilters();
+        await applyFilters();
 
         // Calculate pagination
         const startIndex = (currentPage - 1) * rowsPerPage;
@@ -85,14 +66,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 html += `
                     <tr>
                         <td>${customer.id}</td>
-                        <td>${customer.firstName} ${customer.lastName}</td>
+                        <td>${customer.first_name} ${customer.last_name}</td>
                         <td>
                             <div>${customer.email}</div>
                             <div class="text-muted">+254 ${customer.phone}</div>
                         </td>
                         <td>${customer.location}</td>
-                        <td>${formatCurrency(customer.totalSpent)}</td>
-                        <td>${formatDate(customer.lastPurchase)}</td>
+                        <td>${formatCurrency(customer.total_spent)}</td>
+                        <td>${formatDate(customer.last_purchase)}</td>
                         <td><span class="status ${customer.status}">${customer.status}</span></td>
                         <td>
                             <button class="action-btn view-btn" data-id="${customer.id}" title="View Profile"><i class="fas fa-eye"></i></button>
@@ -126,25 +107,25 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Apply filters based on search and dropdowns
-    function applyFilters() {
+    async function applyFilters() {
         const searchTerm = customerSearch.value.toLowerCase();
         const statusFilterValue = statusFilter.value;
         const locationFilterValue = locationFilter.value;
 
-        filteredCustomers = customersData.filter(customer => {
-            const fullName = `${customer.firstName} ${customer.lastName}`.toLowerCase();
-            const matchesSearch = fullName.includes(searchTerm) ||
-                                customer.email.toLowerCase().includes(searchTerm) ||
-                                customer.phone.includes(searchTerm);
-
-            const matchesStatus = statusFilterValue === 'all' || customer.status === statusFilterValue;
-            const matchesLocation = locationFilterValue === 'all' || customer.location === locationFilterValue;
-
-            return matchesSearch && matchesStatus && matchesLocation;
+        const params = new URLSearchParams({
+            search: searchTerm,
+            status: statusFilterValue,
+            location: locationFilterValue,
         });
 
-        // Reset to first page when filters change
-        currentPage = 1;
+        try {
+            const customers = await fetch(`/api/customers/?${params.toString()}`).then(res => res.json());
+            filteredCustomers = customers;
+            // Reset to first page when filters change
+            currentPage = 1;
+        } catch (error) {
+            console.error('Error applying filters:', error);
+        }
     }
 
     // Update pagination information
@@ -157,13 +138,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Open edit modal with customer data
-    function openEditModal(customerId) {
-        const customer = customersData.find(c => c.id === customerId);
+    async function openEditModal(customerId) {
+        const customer = await fetch(`/api/customers/${customerId}/`).then(res => res.json());
         if (!customer) return;
 
         document.getElementById('editCustomerId').value = customer.id;
-        document.getElementById('editFirstName').value = customer.firstName;
-        document.getElementById('editLastName').value = customer.lastName;
+        document.getElementById('editFirstName').value = customer.first_name;
+        document.getElementById('editLastName').value = customer.last_name;
         document.getElementById('editEmail').value = customer.email;
         document.getElementById('editPhone').value = customer.phone;
         document.getElementById('editLocation').value = customer.location;
@@ -173,12 +154,18 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Delete customer
-    function deleteCustomer(customerId) {
-        const index = customersData.findIndex(c => c.id === customerId);
-        if (index !== -1) {
-            customersData.splice(index, 1);
-            loadCustomers();
-            alert('Customer deleted successfully!');
+    async function deleteCustomer(customerId) {
+        try {
+            const response = await fetch(`/api/customers/${customerId}/`, { method: 'DELETE' });
+            if (response.ok) {
+                await loadCustomers();
+                alert('Customer deleted successfully!');
+            } else {
+                alert('Failed to delete customer.');
+            }
+        } catch (error) {
+            console.error('Error deleting customer:', error);
+            alert('An error occurred while deleting the customer.');
         }
     }
 
@@ -228,51 +215,56 @@ document.addEventListener('DOMContentLoaded', function() {
         addCustomerModal.classList.remove('active');
     });
 
-    addCustomerForm.addEventListener('submit', function(e) {
+    addCustomerForm.addEventListener('submit', async function(e) {
         e.preventDefault();
 
-        // Generate new customer ID
-        const newId = customersData.length > 0 ? Math.max(...customersData.map(c => c.id)) + 1 : 1;
+        const formData = new FormData(addCustomerForm);
+        const newCustomer = Object.fromEntries(formData.entries());
 
-        // Create new customer
-        const newCustomer = {
-            id: newId,
-            firstName: document.getElementById('customerFirstName').value,
-            lastName: document.getElementById('customerLastName').value,
-            email: document.getElementById('customerEmail').value,
-            phone: document.getElementById('customerPhone').value,
-            location: document.getElementById('customerLocation').value,
-            totalSpent: 0,
-            lastPurchase: new Date().toISOString().split('T')[0],
-            status: 'active'
-        };
-
-        customersData.unshift(newCustomer);
-        loadCustomers();
-
-        alert('Customer added successfully!');
-        addCustomerModal.classList.remove('active');
-        this.reset();
+        try {
+            const response = await fetch('/api/customers/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newCustomer),
+            });
+            if (response.ok) {
+                await loadCustomers();
+                alert('Customer added successfully!');
+                addCustomerModal.classList.remove('active');
+                this.reset();
+            } else {
+                alert('Failed to add customer.');
+            }
+        } catch (error) {
+            console.error('Error adding customer:', error);
+            alert('An error occurred while adding the customer.');
+        }
     });
 
     // Edit customer form
-    editCustomerForm.addEventListener('submit', function(e) {
+    editCustomerForm.addEventListener('submit', async function(e) {
         e.preventDefault();
 
-        const customerId = parseInt(document.getElementById('editCustomerId').value);
-        const customer = customersData.find(c => c.id === customerId);
+        const formData = new FormData(editCustomerForm);
+        const updatedCustomer = Object.fromEntries(formData.entries());
+        const customerId = updatedCustomer.id;
 
-        if (customer) {
-            customer.firstName = document.getElementById('editFirstName').value;
-            customer.lastName = document.getElementById('editLastName').value;
-            customer.email = document.getElementById('editEmail').value;
-            customer.phone = document.getElementById('editPhone').value;
-            customer.location = document.getElementById('editLocation').value;
-            customer.status = document.getElementById('editStatus').value;
-
-            loadCustomers();
-            alert('Customer updated successfully!');
-            editCustomerModal.classList.remove('active');
+        try {
+            const response = await fetch(`/api/customers/${customerId}/`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedCustomer),
+            });
+            if (response.ok) {
+                await loadCustomers();
+                alert('Customer updated successfully!');
+                editCustomerModal.classList.remove('active');
+            } else {
+                alert('Failed to update customer.');
+            }
+        } catch (error) {
+            console.error('Error updating customer:', error);
+            alert('An error occurred while updating the customer.');
         }
     });
 

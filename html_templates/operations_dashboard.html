@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InspireWear | Operations Dashboard</title>
+    <link rel="stylesheet" href="../css/operations.css">
+    <link rel="stylesheet" href="../css/finance.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <link rel="icon" href="../img/favicon.png" type="image/x-icon">
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="morph-overlay" id="morphOverlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p class="loading-text">Loading Operations Module...</p>
+        </div>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="logo-container">
+            <img src="../img/logo.png" alt="InspireWear Logo" class="logo">
+            <h1 class="logo-text">InspireWear</h1>
+        </div>
+
+        <a href="../templates/index.html" class="home-button">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+
+        <div class="module-heading">
+            <span class="star">✧</span>
+            <h1>OPERATIONS</h1>
+            <span class="star">✧</span>
+        </div>
+
+        <nav class="operations-nav">
+            <ul>
+                <li class="active"><a href="../templates/operations_dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="../templates/staff_scheduling.html"><i class="fas fa-calendar-alt"></i> Staff Scheduling</a></li>
+                <li><a href="../templates/returns_exchanges.html"><i class="fas fa-exchange-alt"></i> Returns & Exchanges</a></li>
+                <li><a href="../templates/task_management.html"><i class="fas fa-tasks"></i> Tasks</a></li>
+                <li><a href="../templates/operations_notifications.html"><i class="fas fa-bell"></i> Notifications</a></li>
+                <li><a href="../templates/operations_reports.html"><i class="fas fa-chart-pie"></i> Reports</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <header class="operations-header">
+            <h2>Operations Dashboard</h2>
+            <div class="header-actions">
+                <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon theme-icon"></i>
+                </button>
+                <div class="profile-container">
+                    <button class="profile-btn" id="profileBtn" aria-label="User profile" aria-expanded="false">
+                        <img src="../img/user.png" alt="Profile" class="profile-img">
+                        <span>Operations Manager</span>
+                    </button>
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <a href="../templates/index.html" class="dropdown-item">
+                            <i class="fas fa-home"></i> Back to Home
+                        </a>
+                        <a href="../templates/login.html" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Overview Cards -->
+        <div class="overview-cards">
+            <div class="card staff-on-duty">
+                <div class="card-icon">
+                    <i class="fas fa-user-clock"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Staff On Duty</h3>
+                    <p class="amount"><span id="staffOnDuty">18</span>/24</p>
+                    <p class="change positive"><i class="fas fa-arrow-up"></i> 2 more than yesterday</p>
+                </div>
+            </div>
+
+            <div class="card pending-returns">
+                <div class="card-icon">
+                    <i class="fas fa-undo"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Pending Returns</h3>
+                    <p class="amount"><span id="pendingReturns">7</span></p>
+                    <p class="change negative"><i class="fas fa-arrow-up"></i> 3 more than yesterday</p>
+                </div>
+            </div>
+
+            <div class="card daily-tasks">
+                <div class="card-icon">
+                    <i class="fas fa-clipboard-list"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Daily Tasks</h3>
+                    <p class="amount"><span id="completedTasks">42</span>/60</p>
+                    <p class="change positive"><i class="fas fa-arrow-up"></i> 70% completed</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="charts-section">
+            <div class="chart-container">
+                <h3>Daily Store Traffic (Last 7 Days)</h3>
+                <div class="chart" id="storeTrafficChart">
+                    <canvas id="storeTrafficCanvas"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h3>Staff Distribution</h3>
+                <div class="chart" id="staffDistributionChart">
+                    <canvas id="staffDistributionCanvas"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activities -->
+        <div class="recent-activities">
+            <div class="section-header">
+                <h3>Recent Activities</h3>
+                <button id="addActivityBtn" class="btn-primary"><i class="fas fa-plus"></i> Add Activity</button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Activity</th>
+                        <th>Location</th>
+                        <th>Staff</th>
+                        <th>Status</th>
+                        <th>Priority</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="activitiesTable">
+                    <!-- Activities will be loaded by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Footer -->
+        <footer class="operations-footer">
+            <div class="footer-content">
+                <p class="footer-text">© 2025 InspireWear. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#" class="footer-link">Terms</a>
+                    <a href="#" class="footer-link">Privacy</a>
+                    <a href="#" class="footer-link">Contact</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Add Activity Modal -->
+    <div class="modal-overlay" id="addActivityModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Add New Activity</h3>
+                <button class="modal-close" id="modalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="addActivityForm">
+                    <div class="form-group">
+                        <label for="activityTime">Time</label>
+                        <input type="datetime-local" id="activityTime" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="activityDescription">Activity Description</label>
+                        <input type="text" id="activityDescription" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="activityLocation">Location</label>
+                        <select id="activityLocation" required>
+                            <option value="">Select Location</option>
+                            <option value="Nairobi">Nairobi</option>
+                            <option value="Mombasa">Mombasa</option>
+                            <option value="Kisumu">Kisumu</option>
+                            <option value="Nakuru">Nakuru</option>
+                            <option value="Eldoret">Eldoret</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="activityStaff">Assigned Staff</label>
+                            <select id="activityStaff" required>
+                                <option value="">Select Staff</option>
+                                <option value="John Mwangi">John Mwangi</option>
+                                <option value="Susan Akinyi">Susan Akinyi</option>
+                                <option value="David Omondi">David Omondi</option>
+                                <option value="Grace Wambui">Grace Wambui</option>
+                                <option value="Peter Kamau">Peter Kamau</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="activityPriority">Priority</label>
+                            <select id="activityPriority" required>
+                                <option value="">Select Priority</option>
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="cancelAddActivity">Cancel</button>
+                        <button type="submit" class="btn-primary">Save Activity</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/operations.js"></script>
+</body>
+</html>

@@ -22,69 +22,37 @@ document.addEventListener('DOMContentLoaded', function() {
     const feedbackCustomer = document.getElementById('feedbackCustomer');
     const addFeedbackBtn = document.getElementById('addFeedbackBtn');
 
-    // Sample feedback data
-    const feedbackData = {
-        positiveFeedback: 78,
-        negativeFeedback: 12,
-        totalFeedback: 245,
-        responseTime: 4.2,
-        feedback: [
-            { id: 1, customer: 'Wanjiku Mwangi', feedback: 'I absolutely love the new summer collection! The quality is excellent and the designs are very stylish. Will definitely shop again.', type: 'positive', date: '2025-06-15', source: 'website', status: 'resolved', email: 'wanjiku@example.com', phone: '+254712345678' },
-            { id: 2, customer: 'Kamau Otieno', feedback: 'The delivery took longer than expected and the shirt I ordered was the wrong size. Disappointed with this experience.', type: 'negative', date: '2025-06-14', source: 'email', status: 'in-progress', email: 'kamau@example.com', phone: '+254723456789' },
-            { id: 3, customer: 'Achieng Okoth', feedback: 'I like the new designs but the prices seem a bit high compared to last season.', type: 'neutral', date: '2025-06-13', source: 'social', status: 'new', email: 'achieng@example.com', phone: '+254734567890' },
-            { id: 4, customer: 'Njoroge Kariuki', feedback: 'Excellent customer service! The staff helped me find exactly what I was looking for.', type: 'positive', date: '2025-06-12', source: 'in-store', status: 'resolved', email: 'njoroge@example.com', phone: '+254745678901' },
-            { id: 5, customer: 'Fatuma Abdi', feedback: 'The mobile app keeps crashing when I try to checkout. Very frustrating!', type: 'negative', date: '2025-06-11', source: 'website', status: 'in-progress', email: 'fatuma@example.com', phone: '+254756789012' },
-            { id: 6, customer: 'James Mutua', feedback: 'Great selection of products and easy to navigate website. Checkout was smooth.', type: 'positive', date: '2025-06-10', source: 'website', status: 'resolved', email: 'james@example.com', phone: '+254767890123' },
-            { id: 7, customer: 'Grace Wambui', feedback: 'I received a damaged item. How can I get a replacement?', type: 'negative', date: '2025-06-09', source: 'email', status: 'new', email: 'grace@example.com', phone: '+254778901234' },
-            { id: 8, customer: 'Peter Kipchoge', feedback: 'The loyalty program benefits are really good. Keep up the good work!', type: 'positive', date: '2025-06-08', source: 'social', status: 'resolved', email: 'peter@example.com', phone: '+254789012345' },
-            { id: 9, customer: 'Sarah Atieno', feedback: 'I would like to see more plus-size options in your collections.', type: 'neutral', date: '2025-06-07', source: 'website', status: 'new', email: 'sarah@example.com', phone: '+254790123456' },
-            { id: 10, customer: 'David Omondi', feedback: 'Fast shipping and the product quality exceeded my expectations.', type: 'positive', date: '2025-06-06', source: 'website', status: 'resolved', email: 'david@example.com', phone: '+254701234567' }
-        ],
-        customers: [
-            { id: 1, name: 'Wanjiku Mwangi' },
-            { id: 2, name: 'Kamau Otieno' },
-            { id: 3, name: 'Achieng Okoth' },
-            { id: 4, name: 'Njoroge Kariuki' },
-            { id: 5, name: 'Fatuma Abdi' },
-            { id: 6, name: 'James Mutua' },
-            { id: 7, name: 'Grace Wambui' },
-            { id: 8, name: 'Peter Kipchoge' },
-            { id: 9, name: 'Sarah Atieno' },
-            { id: 10, name: 'David Omondi' },
-            { id: 11, name: 'Lilian Wanjiru' },
-            { id: 12, name: 'Brian Kimani' },
-            { id: 13, name: 'Esther Nyambura' },
-            { id: 14, name: 'Joseph Kamande' },
-            { id: 15, name: 'Mercy Chebet' }
-        ]
-    };
-
     // Pagination variables
     let currentPage = 1;
     const rowsPerPage = 8;
-    let filteredFeedback = [...feedbackData.feedback];
+    let filteredFeedback = [];
 
     // Initialize the page
-    function initPage() {
-        // Set overview numbers
-        document.getElementById('positiveFeedback').textContent = feedbackData.positiveFeedback;
-        document.getElementById('negativeFeedback').textContent = feedbackData.negativeFeedback;
-        document.getElementById('totalFeedback').textContent = feedbackData.totalFeedback;
-        document.getElementById('responseTime').textContent = feedbackData.responseTime;
+    async function initPage() {
+        try {
+            const summary = await fetch('/api/feedback/summary/').then(res => res.json());
+            // Set overview numbers
+            document.getElementById('positiveFeedback').textContent = summary.positive_feedback;
+            document.getElementById('negativeFeedback').textContent = summary.negative_feedback;
+            document.getElementById('totalFeedback').textContent = summary.total_feedback;
+            document.getElementById('responseTime').textContent = summary.response_time;
 
-        // Load feedback table
-        loadFeedback();
+            // Load feedback table
+            await loadFeedback();
 
-        // Load charts
-        initCharts();
+            // Load charts
+            await initCharts();
 
-        // Populate customer dropdown
-        populateCustomerDropdown();
-
-        // Hide loading overlay after a short delay
-        setTimeout(() => {
-            morphOverlay.classList.remove('active');
-        }, 800);
+            // Populate customer dropdown
+            await populateCustomerDropdown();
+        } catch (error) {
+            console.error('Error initializing page:', error);
+        } finally {
+            // Hide loading overlay after a short delay
+            setTimeout(() => {
+                morphOverlay.classList.remove('active');
+            }, 800);
+        }
     }
 
     // Format date
@@ -94,9 +62,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Load feedback into the table with pagination
-    function loadFeedback() {
+    async function loadFeedback() {
         // Apply filters
-        applyFilters();
+        await applyFilters();
 
         // Calculate pagination
         const startIndex = (currentPage - 1) * rowsPerPage;
@@ -140,24 +108,27 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Apply filters based on search and dropdowns
-    function applyFilters() {
+    async function applyFilters() {
         const searchTerm = feedbackSearch.value.toLowerCase();
         const typeFilter = feedbackType.value;
         const sourceFilter = feedbackSource.value;
         const statusFilter = feedbackStatus.value;
 
-        filteredFeedback = feedbackData.feedback.filter(item => {
-            const matchesSearch = item.customer.toLowerCase().includes(searchTerm) ||
-                                item.feedback.toLowerCase().includes(searchTerm);
-            const matchesType = typeFilter === 'all' || item.type === typeFilter;
-            const matchesSource = sourceFilter === 'all' || item.source === sourceFilter;
-            const matchesStatus = statusFilter === 'all' || item.status === statusFilter;
-
-            return matchesSearch && matchesType && matchesSource && matchesStatus;
+        const params = new URLSearchParams({
+            search: searchTerm,
+            type: typeFilter,
+            source: sourceFilter,
+            status: statusFilter,
         });
 
-        // Reset to first page when filters change
-        currentPage = 1;
+        try {
+            const feedback = await fetch(`/api/feedback/?${params.toString()}`).then(res => res.json());
+            filteredFeedback = feedback;
+            // Reset to first page when filters change
+            currentPage = 1;
+        } catch (error) {
+            console.error('Error applying filters:', error);
+        }
     }
 
     // Update pagination information
@@ -170,107 +141,121 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Open feedback detail modal
-    function openFeedbackDetail(feedbackId) {
-        const feedback = feedbackData.feedback.find(f => f.id === feedbackId);
-        if (!feedback) return;
+    async function openFeedbackDetail(feedbackId) {
+        try {
+            const feedback = await fetch(`/api/feedback/${feedbackId}/`).then(res => res.json());
+            if (!feedback) return;
 
-        document.getElementById('detailCustomer').textContent = feedback.customer;
-        document.getElementById('detailDate').textContent = formatDate(feedback.date);
-        document.getElementById('detailSource').textContent = feedback.source;
-        document.getElementById('detailType').innerHTML = `<span class="sentiment-badge ${feedback.type}">${feedback.type}</span>`;
-        document.getElementById('detailStatus').innerHTML = `<span class="status-badge ${feedback.status}">${feedback.status}</span>`;
-        document.getElementById('detailFeedback').textContent = feedback.feedback;
-        document.getElementById('detailEmail').textContent = feedback.email;
-        document.getElementById('detailPhone').textContent = feedback.phone;
+            document.getElementById('detailCustomer').textContent = feedback.customer;
+            document.getElementById('detailDate').textContent = formatDate(feedback.date);
+            document.getElementById('detailSource').textContent = feedback.source;
+            document.getElementById('detailType').innerHTML = `<span class="sentiment-badge ${feedback.type}">${feedback.type}</span>`;
+            document.getElementById('detailStatus').innerHTML = `<span class="status-badge ${feedback.status}">${feedback.status}</span>`;
+            document.getElementById('detailFeedback').textContent = feedback.feedback;
+            document.getElementById('detailEmail').textContent = feedback.email;
+            document.getElementById('detailPhone').textContent = feedback.phone;
 
-        feedbackDetailModal.classList.add('active');
+            feedbackDetailModal.classList.add('active');
+        } catch (error) {
+            console.error('Error opening feedback detail:', error);
+        }
     }
 
     // Populate customer dropdown
-    function populateCustomerDropdown() {
-        let html = '<option value="">Select Customer</option>';
+    async function populateCustomerDropdown() {
+        try {
+            const customers = await fetch('/api/customers/').then(res => res.json());
+            let html = '<option value="">Select Customer</option>';
 
-        feedbackData.customers.forEach(customer => {
-            html += `<option value="${customer.id}">${customer.name}</option>`;
-        });
+            customers.forEach(customer => {
+                html += `<option value="${customer.id}">${customer.name}</option>`;
+            });
 
-        feedbackCustomer.innerHTML = html;
+            feedbackCustomer.innerHTML = html;
+        } catch (error) {
+            console.error('Error populating customer dropdown:', error);
+        }
     }
 
     // Initialize charts
-    function initCharts() {
-        // Sentiment Trend Chart
-        const sentimentCtx = document.getElementById('sentimentChart').getContext('2d');
-        new Chart(sentimentCtx, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                datasets: [
-                    {
-                        label: 'Positive',
-                        data: [65, 59, 70, 71, 76, 78],
-                        backgroundColor: 'rgba(46, 204, 113, 0.2)',
-                        borderColor: 'rgba(46, 204, 113, 1)',
-                        borderWidth: 2,
-                        tension: 0.4
-                    },
-                    {
-                        label: 'Negative',
-                        data: [15, 20, 18, 14, 13, 12],
-                        backgroundColor: 'rgba(231, 76, 60, 0.2)',
-                        borderColor: 'rgba(231, 76, 60, 1)',
-                        borderWidth: 2,
-                        tension: 0.4
-                    },
-                    {
-                        label: 'Neutral',
-                        data: [20, 21, 12, 15, 11, 10],
-                        backgroundColor: 'rgba(149, 165, 166, 0.2)',
-                        borderColor: 'rgba(149, 165, 166, 1)',
-                        borderWidth: 2,
-                        tension: 0.4
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true
+    async function initCharts() {
+        try {
+            const chartData = await fetch('/api/feedback/charts/').then(res => res.json());
+            // Sentiment Trend Chart
+            const sentimentCtx = document.getElementById('sentimentChart').getContext('2d');
+            new Chart(sentimentCtx, {
+                type: 'line',
+                data: {
+                    labels: chartData.sentiment_trend.labels,
+                    datasets: [
+                        {
+                            label: 'Positive',
+                            data: chartData.sentiment_trend.positive,
+                            backgroundColor: 'rgba(46, 204, 113, 0.2)',
+                            borderColor: 'rgba(46, 204, 113, 1)',
+                            borderWidth: 2,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Negative',
+                            data: chartData.sentiment_trend.negative,
+                            backgroundColor: 'rgba(231, 76, 60, 0.2)',
+                            borderColor: 'rgba(231, 76, 60, 1)',
+                            borderWidth: 2,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Neutral',
+                            data: chartData.sentiment_trend.neutral,
+                            backgroundColor: 'rgba(149, 165, 166, 0.2)',
+                            borderColor: 'rgba(149, 165, 166, 1)',
+                            borderWidth: 2,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
                     }
                 }
-            }
-        });
+            });
 
-        // Source Chart
-        const sourceCtx = document.getElementById('sourceChart').getContext('2d');
-        new Chart(sourceCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Website', 'Email', 'Social Media', 'In-Store', 'Phone'],
-                datasets: [{
-                    data: [45, 25, 15, 10, 5],
-                    backgroundColor: [
-                        'rgba(52, 152, 219, 0.8)',
-                        'rgba(155, 89, 182, 0.8)',
-                        'rgba(46, 204, 113, 0.8)',
-                        'rgba(241, 196, 15, 0.8)',
-                        'rgba(231, 76, 60, 0.8)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'right',
+            // Source Chart
+            const sourceCtx = document.getElementById('sourceChart').getContext('2d');
+            new Chart(sourceCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: chartData.source_distribution.labels,
+                    datasets: [{
+                        data: chartData.source_distribution.data,
+                        backgroundColor: [
+                            'rgba(52, 152, 219, 0.8)',
+                            'rgba(155, 89, 182, 0.8)',
+                            'rgba(46, 204, 113, 0.8)',
+                            'rgba(241, 196, 15, 0.8)',
+                            'rgba(231, 76, 60, 0.8)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                        }
                     }
                 }
-            }
-        });
+            });
+        } catch (error) {
+            console.error('Error initializing charts:', error);
+        }
     }
 
     // Theme Toggle
@@ -341,40 +326,32 @@ document.addEventListener('DOMContentLoaded', function() {
         newFeedbackModal.classList.remove('active');
     });
 
-    newFeedbackForm.addEventListener('submit', function(e) {
+    newFeedbackForm.addEventListener('submit', async function(e) {
         e.preventDefault();
 
-        const customerId = parseInt(feedbackCustomer.value);
-        const customer = feedbackData.customers.find(c => c.id === customerId);
-        const type = document.getElementById('feedbackTypeSelect').value;
-        const source = document.getElementById('feedbackSourceSelect').value;
-        const date = document.getElementById('feedbackDate').value;
-        const content = document.getElementById('feedbackContent').value;
-        const status = document.getElementById('feedbackStatusSelect').value;
+        const formData = new FormData(newFeedbackForm);
+        const feedbackData = Object.fromEntries(formData.entries());
 
-        if (customer && date && content) {
-            // In a real app, you would send this data to your backend
-            const newId = feedbackData.feedback.length > 0 ? Math.max(...feedbackData.feedback.map(f => f.id)) + 1 : 1;
+        if (feedbackData.customer_id && feedbackData.date && feedbackData.content) {
+            try {
+                const response = await fetch('/api/feedback/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(feedbackData),
+                });
 
-            feedbackData.feedback.unshift({
-                id: newId,
-                customer: customer.name,
-                feedback: content,
-                type: type,
-                date: date,
-                source: source,
-                status: status,
-                email: 'example@email.com', // In real app, get from customer data
-                phone: '+254700000000'      // In real app, get from customer data
-            });
-
-            feedbackData.totalFeedback++;
-            document.getElementById('totalFeedback').textContent = feedbackData.totalFeedback;
-
-            alert('Feedback added successfully!');
-            newFeedbackModal.classList.remove('active');
-            this.reset();
-            loadFeedback();
+                if (response.ok) {
+                    alert('Feedback added successfully!');
+                    newFeedbackModal.classList.remove('active');
+                    this.reset();
+                    await initPage(); // Refresh data
+                } else {
+                    alert('Failed to add feedback.');
+                }
+            } catch (error) {
+                console.error('Error adding feedback:', error);
+                alert('An error occurred while adding feedback.');
+            }
         }
     });
 

@@ -25,70 +25,32 @@ document.addEventListener('DOMContentLoaded', function() {
     const rewardsGrid = document.getElementById('rewardsGrid');
     const memberSelect = document.getElementById('memberSelect');
 
-    // Sample loyalty program data
-    const loyaltyData = {
-        totalMembers: 1240,
-        pointsRedeemed: 245800,
-        redemptionRate: 68,
-        topMembers: [
-            { id: 1, name: 'Wanjiku Mwangi', points: 42500, lastActivity: '2025-06-15', tier: 'platinum' },
-            { id: 2, name: 'Njoroge Kariuki', points: 38700, lastActivity: '2025-06-18', tier: 'platinum' },
-            { id: 3, name: 'Grace Wambui', points: 21500, lastActivity: '2025-06-12', tier: 'gold' },
-            { id: 4, name: 'Kamau Otieno', points: 18700, lastActivity: '2025-06-10', tier: 'gold' },
-            { id: 5, name: 'David Omondi', points: 9800, lastActivity: '2025-06-20', tier: 'silver' },
-            { id: 6, name: 'James Mutua', points: 8700, lastActivity: '2025-06-14', tier: 'silver' },
-            { id: 7, name: 'Lilian Wanjiru', points: 6500, lastActivity: '2025-06-08', tier: 'silver' },
-            { id: 8, name: 'Joseph Kamande', points: 5900, lastActivity: '2025-06-17', tier: 'silver' },
-            { id: 9, name: 'Mercy Chebet', points: 5400, lastActivity: '2025-06-09', tier: 'silver' },
-            { id: 10, name: 'Brian Kimani', points: 4700, lastActivity: '2025-06-14', tier: 'silver' }
-        ],
-        rewards: [
-            { id: 1, name: '10% Discount Voucher', description: 'Get 10% off your next purchase', points: 1000, category: 'discount', stock: 45, image: 'discount.jpg' },
-            { id: 2, name: 'Free T-Shirt', description: 'Premium InspireWear branded t-shirt', points: 2500, category: 'product', stock: 12, image: 'tshirt.jpg' },
-            { id: 3, name: 'Free Shipping', description: 'Free shipping on your next order', points: 1500, category: 'service', stock: 0, image: 'shipping.jpg' },
-            { id: 4, name: 'VIP Shopping Day', description: 'Exclusive shopping event invitation', points: 5000, category: 'experience', stock: 8, image: 'vip.jpg' },
-            { id: 5, name: '5% Discount Voucher', description: 'Get 5% off your next purchase', points: 500, category: 'discount', stock: 120, image: 'discount.jpg' },
-            { id: 6, name: 'Styling Session', description: 'Free personal styling session', points: 3000, category: 'service', stock: 5, image: 'styling.jpg' }
-        ],
-        allMembers: [
-            { id: 1, name: 'Wanjiku Mwangi' },
-            { id: 2, name: 'Njoroge Kariuki' },
-            { id: 3, name: 'Grace Wambui' },
-            { id: 4, name: 'Kamau Otieno' },
-            { id: 5, name: 'David Omondi' },
-            { id: 6, name: 'James Mutua' },
-            { id: 7, name: 'Lilian Wanjiru' },
-            { id: 8, name: 'Joseph Kamande' },
-            { id: 9, name: 'Mercy Chebet' },
-            { id: 10, name: 'Brian Kimani' },
-            { id: 11, name: 'Esther Nyambura' },
-            { id: 12, name: 'Peter Kipchoge' },
-            { id: 13, name: 'Sarah Atieno' },
-            { id: 14, name: 'Fatuma Abdi' },
-            { id: 15, name: 'Achieng Okoth' }
-        ]
-    };
-
     // Initialize the page
-    function initPage() {
-        // Set overview numbers
-        document.getElementById('totalMembers').textContent = formatNumber(loyaltyData.totalMembers);
-        document.getElementById('pointsRedeemed').textContent = formatNumber(loyaltyData.pointsRedeemed);
-        document.getElementById('redemptionRate').textContent = loyaltyData.redemptionRate;
+    async function initPage() {
+        try {
+            const loyaltyData = await fetch('/api/loyalty/summary/').then(res => res.json());
 
-        // Load top members table
-        loadTopMembers();
+            // Set overview numbers
+            document.getElementById('totalMembers').textContent = formatNumber(loyaltyData.total_members);
+            document.getElementById('pointsRedeemed').textContent = formatNumber(loyaltyData.points_redeemed);
+            document.getElementById('redemptionRate').textContent = loyaltyData.redemption_rate;
 
-        // Load rewards inventory
-        loadRewards();
+            // Load top members table
+            loadTopMembers();
 
-        // Populate member select dropdown
-        populateMemberSelect();
+            // Load rewards inventory
+            loadRewards();
 
-        // Hide loading overlay after a short delay
-        setTimeout(() => {
-            morphOverlay.classList.remove('active');
-        }, 800);
+            // Populate member select dropdown
+            populateMemberSelect();
+        } catch (error) {
+            console.error('Error initializing page:', error);
+        } finally {
+            // Hide loading overlay after a short delay
+            setTimeout(() => {
+                morphOverlay.classList.remove('active');
+            }, 800);
+        }
     }
 
     // Format numbers
@@ -103,79 +65,96 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Load top members into the table
-    function loadTopMembers() {
-        let html = '';
+    async function loadTopMembers() {
+        try {
+            const topMembers = await fetch('/api/loyalty/top-members/').then(res => res.json());
+            let html = '';
 
-        loyaltyData.topMembers.forEach((member, index) => {
-            html += `
-                <tr>
-                    <td>${index + 1}</td>
-                    <td>${member.name}</td>
-                    <td>${formatNumber(member.points)}</td>
-                    <td>${formatDate(member.lastActivity)}</td>
-                    <td><span class="tier-badge ${member.tier}">${member.tier}</span></td>
-                    <td>
-                        <button class="action-btn view-btn" data-id="${member.id}" title="View Profile"><i class="fas fa-eye"></i></button>
-                        <button class="action-btn points-btn" data-id="${member.id}" title="Add Points"><i class="fas fa-plus-circle"></i></button>
-                        <button class="action-btn message-btn" data-id="${member.id}" title="Send Message"><i class="fas fa-envelope"></i></button>
-                    </td>
-                </tr>
-            `;
-        });
-
-        membersTable.innerHTML = html;
-
-        // Add event listeners to action buttons
-        document.querySelectorAll('.points-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const memberId = parseInt(this.getAttribute('data-id'));
-                const member = loyaltyData.allMembers.find(m => m.id === memberId);
-                if (member) {
-                    memberSelect.value = memberId;
-                    addPointsModal.classList.add('active');
-                }
+            topMembers.forEach((member, index) => {
+                html += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${member.name}</td>
+                        <td>${formatNumber(member.points)}</td>
+                        <td>${formatDate(member.last_activity)}</td>
+                        <td><span class="tier-badge ${member.tier}">${member.tier}</span></td>
+                        <td>
+                            <button class="action-btn view-btn" data-id="${member.id}" title="View Profile"><i class="fas fa-eye"></i></button>
+                            <button class="action-btn points-btn" data-id="${member.id}" title="Add Points"><i class="fas fa-plus-circle"></i></button>
+                            <button class="action-btn message-btn" data-id="${member.id}" title="Send Message"><i class="fas fa-envelope"></i></button>
+                        </td>
+                    </tr>
+                `;
             });
-        });
+
+            membersTable.innerHTML = html;
+
+            // Add event listeners to action buttons
+            document.querySelectorAll('.points-btn').forEach(btn => {
+                btn.addEventListener('click', async function() {
+                    const memberId = parseInt(this.getAttribute('data-id'));
+                    const member = await fetch(`/api/members/${memberId}/`).then(res => res.json());
+                    if (member) {
+                        memberSelect.value = memberId;
+                        addPointsModal.classList.add('active');
+                    }
+                });
+            });
+        } catch (error) {
+            console.error('Error loading top members:', error);
+            membersTable.innerHTML = '<tr><td colspan="6">Error loading members.</td></tr>';
+        }
     }
 
     // Load rewards into the grid
-    function loadRewards() {
-        let html = '';
+    async function loadRewards() {
+        try {
+            const rewards = await fetch('/api/loyalty/rewards/').then(res => res.json());
+            let html = '';
 
-        loyaltyData.rewards.forEach(reward => {
-            html += `
-                <div class="reward-card">
-                    <div class="reward-image">
-                        ${reward.image ? `<img src="../img/rewards/${reward.image}" alt="${reward.name}">` : `<i class="fas fa-gift"></i>`}
-                    </div>
-                    <div class="reward-details">
-                        <h4 class="reward-name">${reward.name}</h4>
-                        <p class="reward-description">${reward.description}</p>
-                        <div class="reward-meta">
-                            <span class="reward-points">${formatNumber(reward.points)} pts</span>
-                            <span class="reward-stock">${reward.stock > 0 ? `${reward.stock} available` : 'Out of stock'}</span>
+            rewards.forEach(reward => {
+                html += `
+                    <div class="reward-card">
+                        <div class="reward-image">
+                            ${reward.image ? `<img src="../img/rewards/${reward.image}" alt="${reward.name}">` : `<i class="fas fa-gift"></i>`}
                         </div>
-                        <div class="reward-actions">
-                            <button class="btn-secondary" data-id="${reward.id}"><i class="fas fa-edit"></i> Edit</button>
-                            <button class="btn-primary" data-id="${reward.id}"><i class="fas fa-gift"></i> Redeem</button>
+                        <div class="reward-details">
+                            <h4 class="reward-name">${reward.name}</h4>
+                            <p class="reward-description">${reward.description}</p>
+                            <div class="reward-meta">
+                                <span class="reward-points">${formatNumber(reward.points)} pts</span>
+                                <span class="reward-stock">${reward.stock > 0 ? `${reward.stock} available` : 'Out of stock'}</span>
+                            </div>
+                            <div class="reward-actions">
+                                <button class="btn-secondary" data-id="${reward.id}"><i class="fas fa-edit"></i> Edit</button>
+                                <button class="btn-primary" data-id="${reward.id}"><i class="fas fa-gift"></i> Redeem</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            `;
-        });
+                `;
+            });
 
-        rewardsGrid.innerHTML = html;
+            rewardsGrid.innerHTML = html;
+        } catch (error) {
+            console.error('Error loading rewards:', error);
+            rewardsGrid.innerHTML = '<p>Error loading rewards.</p>';
+        }
     }
 
     // Populate member select dropdown
-    function populateMemberSelect() {
-        let html = '<option value="">Select Member</option>';
+    async function populateMemberSelect() {
+        try {
+            const allMembers = await fetch('/api/members/').then(res => res.json());
+            let html = '<option value="">Select Member</option>';
 
-        loyaltyData.allMembers.forEach(member => {
-            html += `<option value="${member.id}">${member.name}</option>`;
-        });
+            allMembers.forEach(member => {
+                html += `<option value="${member.id}">${member.name}</option>`;
+            });
 
-        memberSelect.innerHTML = html;
+            memberSelect.innerHTML = html;
+        } catch (error) {
+            console.error('Error populating member select:', error);
+        }
     }
 
     // Theme Toggle
@@ -229,7 +208,7 @@ document.addEventListener('DOMContentLoaded', function() {
         addPointsModal.classList.remove('active');
     });
 
-    addPointsForm.addEventListener('submit', function(e) {
+    addPointsForm.addEventListener('submit', async function(e) {
         e.preventDefault();
 
         const memberId = parseInt(memberSelect.value);
@@ -237,11 +216,28 @@ document.addEventListener('DOMContentLoaded', function() {
         const reason = pointsReason.value === 'other' ? otherReason.value : pointsReason.value;
 
         if (memberId && points) {
-            // In a real app, you would send this data to your backend
-            alert(`${points} points added to member ${memberId} for reason: ${reason}`);
-            addPointsModal.classList.remove('active');
-            this.reset();
-            otherReasonContainer.style.display = 'none';
+            try {
+                const response = await fetch('/api/loyalty/add-points/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ member_id: memberId, points, reason }),
+                });
+
+                if (response.ok) {
+                    alert(`${points} points added to member ${memberId} for reason: ${reason}`);
+                    addPointsModal.classList.remove('active');
+                    this.reset();
+                    otherReasonContainer.style.display = 'none';
+                    initPage(); // Refresh data
+                } else {
+                    alert('Failed to add points.');
+                }
+            } catch (error) {
+                console.error('Error adding points:', error);
+                alert('An error occurred while adding points.');
+            }
         }
     });
 
@@ -257,34 +253,34 @@ document.addEventListener('DOMContentLoaded', function() {
         addRewardModal.classList.remove('active');
     });
 
-    addRewardForm.addEventListener('submit', function(e) {
+    addRewardForm.addEventListener('submit', async function(e) {
         e.preventDefault();
 
-        const rewardName = rewardName.value;
-        const description = rewardDescription.value;
-        const points = parseInt(rewardPoints.value);
-        const category = rewardCategory.value;
-        const stock = parseInt(rewardStock.value);
+        const formData = new FormData(addRewardForm);
+        const rewardData = Object.fromEntries(formData.entries());
 
-        if (rewardName && description && points) {
-            // In a real app, you would send this data to your backend
-            alert(`Reward "${rewardName}" added successfully!`);
-            addRewardModal.classList.remove('active');
-            this.reset();
+        if (rewardData.name && rewardData.description && rewardData.points) {
+            try {
+                const response = await fetch('/api/loyalty/rewards/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(rewardData),
+                });
 
-            // Add to rewards array and reload
-            const newId = loyaltyData.rewards.length > 0 ? Math.max(...loyaltyData.rewards.map(r => r.id)) + 1 : 1;
-            loyaltyData.rewards.push({
-                id: newId,
-                name: rewardName,
-                description: description,
-                points: points,
-                category: category,
-                stock: stock,
-                image: null
-            });
-
-            loadRewards();
+                if (response.ok) {
+                    alert(`Reward "${rewardData.name}" added successfully!`);
+                    addRewardModal.classList.remove('active');
+                    this.reset();
+                    loadRewards(); // Refresh rewards
+                } else {
+                    alert('Failed to add reward.');
+                }
+            } catch (error) {
+                console.error('Error adding reward:', error);
+                alert('An error occurred while adding the reward.');
+            }
         }
     });
 
@@ -300,19 +296,32 @@ document.addEventListener('DOMContentLoaded', function() {
         editProgramModal.classList.remove('active');
     });
 
-    editProgramForm.addEventListener('submit', function(e) {
+    editProgramForm.addEventListener('submit', async function(e) {
         e.preventDefault();
 
-        const programName = programName.value;
-        const pointsRate = parseInt(pointsRate.value);
-        const signupBonus = parseInt(signupBonus.value);
-        const birthdayBonus = parseInt(birthdayBonus.value);
-        const pointValue = parseFloat(pointValue.value);
+        const formData = new FormData(editProgramForm);
+        const programData = Object.fromEntries(formData.entries());
 
-        if (programName && pointsRate && signupBonus && birthdayBonus && pointValue) {
-            // In a real app, you would send this data to your backend
-            alert('Loyalty program updated successfully!');
-            editProgramModal.classList.remove('active');
+        if (programData.name && programData.points_rate && programData.signup_bonus && programData.birthday_bonus && programData.point_value) {
+            try {
+                const response = await fetch('/api/loyalty/program/', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(programData),
+                });
+
+                if (response.ok) {
+                    alert('Loyalty program updated successfully!');
+                    editProgramModal.classList.remove('active');
+                } else {
+                    alert('Failed to update loyalty program.');
+                }
+            } catch (error) {
+                console.error('Error updating loyalty program:', error);
+                alert('An error occurred while updating the loyalty program.');
+            }
         }
     });
 

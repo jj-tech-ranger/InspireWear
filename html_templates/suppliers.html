@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InspireWear | Suppliers</title>
+    <link rel="stylesheet" href="../css/inventory.css">
+    <link rel="stylesheet" href="../css/suppliers.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <link rel="icon" href="../img/favicon.png" type="image/x-icon">
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="morph-overlay" id="morphOverlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p class="loading-text">Loading Suppliers...</p>
+        </div>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="logo-container">
+            <img src="../img/logo.png" alt="InspireWear Logo" class="logo">
+            <h1 class="logo-text">InspireWear</h1>
+        </div>
+
+        <a href="../templates/index.html" class="home-button">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+
+        <div class="module-heading">
+            <span class="star">✧</span>
+            <h1>INVENTORY</h1>
+            <span class="star">✧</span>
+        </div>
+
+        <nav class="inventory-nav">
+            <ul>
+                <li><a href="../templates/inventory_dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                <li><a href="../templates/products.html"><i class="fas fa-tshirt"></i> Products</a></li>
+                <li><a href="../templates/variants.html"><i class="fas fa-palette"></i> Variants</a></li>
+                <li class="active"><a href="../templates/suppliers.html"><i class="fas fa-truck"></i> Suppliers</a></li>
+                <li><a href="../templates/orders.html"><i class="fas fa-boxes"></i> Orders</a></li>
+                <li><a href="../templates/inventory_notifications.html"><i class="fas fa-bell"></i> Notifications</a></li>
+                <li><a href="../templates/inventory_reports.html"><i class="fas fa-chart-bar"></i> Reports</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <header class="inventory-header">
+            <h2>Suppliers Management</h2>
+            <div class="header-actions">
+                <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon theme-icon"></i>
+                </button>
+                <div class="profile-container">
+                    <button class="profile-btn" id="profileBtn" aria-label="User profile" aria-expanded="false">
+                        <img src="../img/user.png" alt="Profile" class="profile-img">
+                        <span>Inventory Manager</span>
+                    </button>
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <a href="../templates/index.html" class="dropdown-item">
+                            <i class="fas fa-home"></i> Back to Home
+                        </a>
+                        <a href="../templates/login.html" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Suppliers Overview Cards -->
+        <div class="overview-cards">
+            <div class="card total-suppliers">
+                <div class="card-icon">
+                    <i class="fas fa-truck"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Total Suppliers</h3>
+                    <p class="amount"><span id="totalSuppliers">47</span></p>
+                    <p class="change positive"><i class="fas fa-arrow-up"></i> 6% from last month</p>
+                </div>
+            </div>
+
+            <div class="card active-suppliers">
+                <div class="card-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Active Suppliers</h3>
+                    <p class="amount"><span id="activeSuppliers">42</span></p>
+                    <p class="change positive"><i class="fas fa-arrow-up"></i> 4% from last month</p>
+                </div>
+            </div>
+
+            <div class="card pending-orders">
+                <div class="card-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Pending Orders</h3>
+                    <p class="amount"><span id="pendingOrders">23</span></p>
+                    <p class="change negative"><i class="fas fa-arrow-down"></i> 12% from last month</p>
+                </div>
+            </div>
+
+            <div class="card total-value">
+                <div class="card-icon">
+                    <i class="fas fa-coins"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Monthly Orders Value</h3>
+                    <p class="amount">KSh <span id="monthlyValue">2,456,800</span></p>
+                    <p class="change positive"><i class="fas fa-arrow-up"></i> 18% from last month</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Suppliers Filter and Search -->
+        <div class="suppliers-controls">
+            <div class="search-filter-section">
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="supplierSearch" placeholder="Search suppliers..." class="search-input">
+                </div>
+                <div class="filter-container">
+                    <select id="statusFilter" class="filter-select">
+                        <option value="">All Status</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                        <option value="pending">Pending</option>
+                    </select>
+                    <select id="locationFilter" class="filter-select">
+                        <option value="">All Locations</option>
+                        <option value="Nairobi">Nairobi</option>
+                        <option value="Mombasa">Mombasa</option>
+                        <option value="Kisumu">Kisumu</option>
+                        <option value="Nakuru">Nakuru</option>
+                        <option value="Eldoret">Eldoret</option>
+                        <option value="Thika">Thika</option>
+                        <option value="Machakos">Machakos</option>
+                    </select>
+                    <select id="categoryFilter" class="filter-select">
+                        <option value="">All Categories</option>
+                        <option value="Fabric Suppliers">Fabric Suppliers</option>
+                        <option value="Accessories">Accessories</option>
+                        <option value="Leather Goods">Leather Goods</option>
+                        <option value="Packaging">Packaging</option>
+                        <option value="Equipment">Equipment</option>
+                    </select>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <button id="addSupplierBtn" class="btn-primary">
+                    <i class="fas fa-plus"></i> Add Supplier
+                </button>
+                <button id="importSuppliersBtn" class="btn-secondary">
+                    <i class="fas fa-upload"></i> Import
+                </button>
+                <button id="exportSuppliersBtn" class="btn-secondary">
+                    <i class="fas fa-download"></i> Export
+                </button>
+            </div>
+        </div>
+
+        <!-- Suppliers Grid -->
+        <div class="suppliers-grid" id="suppliersGrid">
+            <!-- Suppliers will be loaded by JavaScript -->
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination-container">
+            <div class="pagination-info">
+                <span id="paginationInfo">Showing 1-12 of 47 suppliers</span>
+            </div>
+            <div class="pagination-controls">
+                <button id="prevPage" class="pagination-btn" disabled>
+                    <i class="fas fa-chevron-left"></i> Previous
+                </button>
+                <div class="page-numbers" id="pageNumbers">
+                    <!-- Page numbers will be generated by JavaScript -->
+                </div>
+                <button id="nextPage" class="pagination-btn">
+                    Next <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="inventory-footer">
+            <div class="footer-content">
+                <p class="footer-text">© 2025 InspireWear. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#" class="footer-link">Terms</a>
+                    <a href="#" class="footer-link">Privacy</a>
+                    <a href="#" class="footer-link">Contact</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Add Supplier Modal -->
+    <div class="modal-overlay" id="addSupplierModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Add New Supplier</h3>
+                <button class="modal-close" id="modalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="addSupplierForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="supplierName">Supplier Name</label>
+                            <input type="text" id="supplierName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="supplierCode">Supplier Code</label>
+                            <input type="text" id="supplierCode" required placeholder="Auto-generated or custom">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="contactPerson">Contact Person</label>
+                            <input type="text" id="contactPerson" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="supplierCategory">Category</label>
+                            <select id="supplierCategory" required>
+                                <option value="">Select Category</option>
+                                <option value="Fabric Suppliers">Fabric Suppliers</option>
+                                <option value="Accessories">Accessories</option>
+                                <option value="Leather Goods">Leather Goods</option>
+                                <option value="Packaging">Packaging</option>
+                                <option value="Equipment">Equipment</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="supplierPhone">Phone Number</label>
+                            <input type="tel" id="supplierPhone" required placeholder="+254...">
+                        </div>
+                        <div class="form-group">
+                            <label for="supplierEmail">Email Address</label>
+                            <input type="email" id="supplierEmail" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="supplierAddress">Address</label>
+                        <textarea id="supplierAddress" rows="2" required placeholder="Full address including city"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="supplierLocation">Primary Location</label>
+                            <select id="supplierLocation" required>
+                                <option value="">Select Location</option>
+                                <option value="Nairobi">Nairobi</option>
+                                <option value="Mombasa">Mombasa</option>
+                                <option value="Kisumu">Kisumu</option>
+                                <option value="Nakuru">Nakuru</option>
+                                <option value="Eldoret">Eldoret</option>
+                                <option value="Thika">Thika</option>
+                                <option value="Machakos">Machakos</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="paymentTerms">Payment Terms (Days)</label>
+                            <input type="number" id="paymentTerms" required placeholder="e.g., 30">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="supplierNotes">Notes</label>
+                        <textarea id="supplierNotes" rows="3" placeholder="Additional notes about this supplier..."></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="cancelAddSupplier">Cancel</button>
+                        <button type="submit" class="btn-primary">Save Supplier</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Supplier Modal -->
+    <div class="modal-overlay" id="editSupplierModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Edit Supplier</h3>
+                <button class="modal-close" id="editModalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editSupplierForm">
+                    <input type="hidden" id="editSupplierId">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editSupplierName">Supplier Name</label>
+                            <input type="text" id="editSupplierName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editSupplierCode">Supplier Code</label>
+                            <input type="text" id="editSupplierCode" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editContactPerson">Contact Person</label>
+                            <input type="text" id="editContactPerson" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editSupplierCategory">Category</label>
+                            <select id="editSupplierCategory" required>
+                                <option value="">Select Category</option>
+                                <option value="Fabric Suppliers">Fabric Suppliers</option>
+                                <option value="Accessories">Accessories</option>
+                                <option value="Leather Goods">Leather Goods</option>
+                                <option value="Packaging">Packaging</option>
+                                <option value="Equipment">Equipment</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editSupplierPhone">Phone Number</label>
+                            <input type="tel" id="editSupplierPhone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editSupplierEmail">Email Address</label>
+                            <input type="email" id="editSupplierEmail" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="editSupplierAddress">Address</label>
+                        <textarea id="editSupplierAddress" rows="2" required></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editSupplierLocation">Primary Location</label>
+                            <select id="editSupplierLocation" required>
+                                <option value="">Select Location</option>
+                                <option value="Nairobi">Nairobi</option>
+                                <option value="Mombasa">Mombasa</option>
+                                <option value="Kisumu">Kisumu</option>
+                                <option value="Nakuru">Nakuru</option>
+                                <option value="Eldoret">Eldoret</option>
+                                <option value="Thika">Thika</option>
+                                <option value="Machakos">Machakos</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editPaymentTerms">Payment Terms (Days)</label>
+                            <input type="number" id="editPaymentTerms" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="editSupplierNotes">Notes</label>
+                        <textarea id="editSupplierNotes" rows="3"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="cancelEditSupplier">Cancel</button>
+                        <button type="submit" class="btn-primary">Update Supplier</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Supplier Details Modal -->
+    <div class="modal-overlay" id="supplierDetailsModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="supplierDetailsTitle">Supplier Details</h3>
+                <button class="modal-close" id="detailsModalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="supplierDetailsContent">
+                    <!-- Supplier details will be loaded by JavaScript -->
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="closeSupplierDetails">Close</button>
+                    <button type="button" class="btn-primary" id="editFromDetails">Edit Supplier</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/suppliers.js"></script>
+</body>
+</html>
+

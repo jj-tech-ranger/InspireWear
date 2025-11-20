@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InspireWear | Returns & Exchanges</title>
+    <link rel="stylesheet" href="../css/operations.css">
+    <link rel="stylesheet" href="../css/returns_exchanges.css">
+    <link rel="stylesheet" href="../../../Downloads/returns_exchanges.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <link rel="icon" href="../img/favicon.png" type="image/x-icon">
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="morph-overlay" id="morphOverlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p class="loading-text">Loading Returns & Exchanges...</p>
+        </div>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="logo-container">
+            <img src="../img/logo.png" alt="InspireWear Logo" class="logo">
+            <h1 class="logo-text">InspireWear</h1>
+        </div>
+
+        <a href="../templates/index.html" class="home-button">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+
+        <div class="module-heading">
+            <span class="star">✧</span>
+            <h1>OPERATIONS</h1>
+            <span class="star">✧</span>
+        </div>
+
+        <nav class="operations-nav">
+            <ul>
+                <li><a href="../templates/operations_dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="../templates/staff_scheduling.html"><i class="fas fa-calendar-alt"></i> Staff Scheduling</a></li>
+                <li class="active"><a href="../templates/returns_exchanges.html"><i class="fas fa-exchange-alt"></i> Returns & Exchanges</a></li>
+                <li><a href="../templates/task_management.html"><i class="fas fa-tasks"></i> Tasks</a></li>
+                <li><a href="../templates/operations_notifications.html"><i class="fas fa-bell"></i> Notifications</a></li>
+                <li><a href="../templates/operations_reports.html"><i class="fas fa-chart-pie"></i> Reports</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <header class="operations-header">
+            <h2>Returns & Exchanges</h2>
+            <div class="header-actions">
+                <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon theme-icon"></i>
+                </button>
+                <div class="profile-container">
+                    <button class="profile-btn" id="profileBtn" aria-label="User profile" aria-expanded="false">
+                        <img src="../img/user.png" alt="Profile" class="profile-img">
+                        <span>Operations Manager</span>
+                    </button>
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <a href="../templates/index.html" class="dropdown-item">
+                            <i class="fas fa-home"></i> Back to Home
+                        </a>
+                        <a href="../templates/login.html" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Overview Cards -->
+        <div class="overview-cards">
+            <div class="card pending-returns">
+                <div class="card-icon">
+                    <i class="fas fa-undo"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Pending Returns</h3>
+                    <p class="amount"><span id="pendingReturns">12</span></p>
+                    <p class="change negative"><i class="fas fa-arrow-up"></i> 3 more than yesterday</p>
+                </div>
+            </div>
+
+            <div class="card pending-exchanges">
+                <div class="card-icon">
+                    <i class="fas fa-exchange-alt"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Pending Exchanges</h3>
+                    <p class="amount"><span id="pendingExchanges">8</span></p>
+                    <p class="change positive"><i class="fas fa-arrow-down"></i> 2 less than yesterday</p>
+                </div>
+            </div>
+
+            <div class="card refund-amount">
+                <div class="card-icon">
+                    <i class="fas fa-money-bill-wave"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Refund Amount</h3>
+                    <p class="amount">KSh <span id="refundAmount">145,600</span></p>
+                    <p class="change neutral"><i class="fas fa-minus"></i> This week</p>
+                </div>
+            </div>
+
+            <div class="card processing-time">
+                <div class="card-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Avg Processing Time</h3>
+                    <p class="amount"><span id="processingTime">2.5</span> days</p>
+                    <p class="change positive"><i class="fas fa-arrow-down"></i> 0.5 days faster</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter and Actions -->
+        <div class="filter-actions">
+            <div class="filter-controls">
+                <select id="statusFilter" class="filter-select">
+                    <option value="">All Status</option>
+                    <option value="pending">Pending</option>
+                    <option value="approved">Approved</option>
+                    <option value="processing">Processing</option>
+                    <option value="completed">Completed</option>
+                    <option value="rejected">Rejected</option>
+                </select>
+                <select id="typeFilter" class="filter-select">
+                    <option value="">All Types</option>
+                    <option value="return">Returns</option>
+                    <option value="exchange">Exchanges</option>
+                </select>
+                <input type="date" id="dateFilter" class="filter-input" placeholder="Filter by date">
+                <button id="clearFilters" class="btn-secondary"><i class="fas fa-times"></i> Clear</button>
+            </div>
+            <div class="action-controls">
+                <button id="addReturnBtn" class="btn-primary"><i class="fas fa-plus"></i> Add Return</button>
+                <button id="addExchangeBtn" class="btn-primary"><i class="fas fa-exchange-alt"></i> Add Exchange</button>
+                <button id="exportBtn" class="btn-secondary"><i class="fas fa-download"></i> Export</button>
+            </div>
+        </div>
+
+        <!-- Returns & Exchanges Table -->
+        <div class="table-container">
+            <table class="returns-table">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Product</th>
+                        <th>Type</th>
+                        <th>Reason</th>
+                        <th>Amount</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="returnsTableBody">
+                    <!-- Returns and exchanges data will be loaded by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Statistics Section -->
+        <div class="statistics-section">
+            <div class="stat-card">
+                <h3>Return Reasons</h3>
+                <div class="reason-stats" id="reasonStats">
+                    <!-- Reason statistics will be loaded by JavaScript -->
+                </div>
+            </div>
+            <div class="stat-card">
+                <h3>Monthly Trends</h3>
+                <div class="chart" id="trendsChart">
+                    <canvas id="trendsCanvas"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="operations-footer">
+            <div class="footer-content">
+                <p class="footer-text">© 2025 InspireWear. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#" class="footer-link">Terms</a>
+                    <a href="#" class="footer-link">Privacy</a>
+                    <a href="#" class="footer-link">Contact</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Add/Edit Return Modal -->
+    <div class="modal-overlay" id="returnModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="returnModalTitle">Add New Return</h3>
+                <button class="modal-close" id="returnModalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="returnForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="orderId">Order ID</label>
+                            <input type="text" id="orderId" required placeholder="ORD-2025-001">
+                        </div>
+                        <div class="form-group">
+                            <label for="customerName">Customer Name</label>
+                            <input type="text" id="customerName" required placeholder="John Doe">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="customerEmail">Customer Email</label>
+                            <input type="email" id="customerEmail" required placeholder="john@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="customerPhone">Customer Phone</label>
+                            <input type="tel" id="customerPhone" required placeholder="+254 712 345 678">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="productName">Product Name</label>
+                            <input type="text" id="productName" required placeholder="Cotton T-Shirt">
+                        </div>
+                        <div class="form-group">
+                            <label for="productSku">Product SKU</label>
+                            <input type="text" id="productSku" required placeholder="TSH-001-M">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="returnType">Type</label>
+                            <select id="returnType" required>
+                                <option value="">Select Type</option>
+                                <option value="return">Return</option>
+                                <option value="exchange">Exchange</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="returnAmount">Amount (KSh)</label>
+                            <input type="number" id="returnAmount" min="0" step="0.01" required placeholder="1500.00">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="returnReason">Reason</label>
+                        <select id="returnReason" required>
+                            <option value="">Select Reason</option>
+                            <option value="defective">Defective Product</option>
+                            <option value="wrong-size">Wrong Size</option>
+                            <option value="wrong-color">Wrong Color</option>
+                            <option value="not-as-described">Not as Described</option>
+                            <option value="damaged-shipping">Damaged in Shipping</option>
+                            <option value="changed-mind">Changed Mind</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="returnNotes">Additional Notes</label>
+                        <textarea id="returnNotes" rows="3" placeholder="Additional details about the return/exchange..."></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="cancelReturn">Cancel</button>
+                        <button type="submit" class="btn-primary">Save Return/Exchange</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Return Details Modal -->
+    <div class="modal-overlay" id="detailsModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="detailsModalTitle">Return Details</h3>
+                <button class="modal-close" id="detailsModalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="details-content" id="detailsContent">
+                    <!-- Details will be populated by JavaScript -->
+                </div>
+                <div class="status-update-section">
+                    <h4>Update Status</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="newStatus">New Status</label>
+                            <select id="newStatus">
+                                <option value="pending">Pending</option>
+                                <option value="approved">Approved</option>
+                                <option value="processing">Processing</option>
+                                <option value="completed">Completed</option>
+                                <option value="rejected">Rejected</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button id="updateStatusBtn" class="btn-primary">Update Status</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/returns_exchanges.js"></script>
+</body>
+</html>
+

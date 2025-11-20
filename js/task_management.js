@@ -55,147 +55,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const tasksTableBody = document.getElementById('tasksTableBody');
     const teamStats = document.getElementById('teamStats');
 
-    // Sample task data for Kenyan clothing store operations
-    const tasksData = {
-        overview: {
-            totalTasks: 24,
-            pendingTasks: 8,
-            completedToday: 5,
-            productivity: 87
-        },
-        tasks: [
-            {
-                id: 1,
-                title: 'Update inventory for new cotton collection',
-                description: 'Add new cotton t-shirts, dresses, and pants to the inventory system with proper SKUs and pricing.',
-                assignee: 'Grace Wanjiku',
-                priority: 'high',
-                dueDate: '2025-01-25',
-                status: 'todo',
-                progress: 0,
-                tags: ['inventory', 'urgent', 'cotton'],
-                createdDate: '2025-01-20'
-            },
-            {
-                id: 2,
-                title: 'Process customer returns from Nairobi Central',
-                description: 'Handle 5 pending returns from our Nairobi Central store, including quality checks and refund processing.',
-                assignee: 'John Mwangi',
-                priority: 'medium',
-                dueDate: '2025-01-23',
-                status: 'in-progress',
-                progress: 60,
-                tags: ['returns', 'customer-service', 'nairobi'],
-                createdDate: '2025-01-18'
-            },
-            {
-                id: 3,
-                title: 'Prepare monthly sales report for Mombasa store',
-                description: 'Compile sales data, analyze trends, and prepare comprehensive report for Mombasa branch performance.',
-                assignee: 'Susan Akinyi',
-                priority: 'medium',
-                dueDate: '2025-01-24',
-                status: 'review',
-                progress: 85,
-                tags: ['reports', 'sales', 'mombasa'],
-                createdDate: '2025-01-15'
-            },
-            {
-                id: 4,
-                title: 'Staff training on new POS system',
-                description: 'Conduct training sessions for all staff members on the new point-of-sale system across all locations.',
-                assignee: 'David Omondi',
-                priority: 'high',
-                dueDate: '2025-01-22',
-                status: 'completed',
-                progress: 100,
-                tags: ['training', 'pos', 'staff'],
-                createdDate: '2025-01-10'
-            },
-            {
-                id: 5,
-                title: 'Quality check for Kisumu store deliveries',
-                description: 'Inspect incoming merchandise at Kisumu store and ensure all items meet quality standards.',
-                assignee: 'Mary Njeri',
-                priority: 'medium',
-                dueDate: '2025-01-26',
-                status: 'todo',
-                progress: 0,
-                tags: ['quality', 'delivery', 'kisumu'],
-                createdDate: '2025-01-19'
-            },
-            {
-                id: 6,
-                title: 'Update website product catalog',
-                description: 'Add new product photos and descriptions to the online store, focusing on the latest fashion trends.',
-                assignee: 'Peter Kamau',
-                priority: 'low',
-                dueDate: '2025-01-28',
-                status: 'in-progress',
-                progress: 30,
-                tags: ['website', 'catalog', 'photos'],
-                createdDate: '2025-01-17'
-            },
-            {
-                id: 7,
-                title: 'Coordinate with suppliers for fabric delivery',
-                description: 'Follow up with textile suppliers in Nairobi for timely delivery of cotton and silk fabrics.',
-                assignee: 'Catherine Wanjiku',
-                priority: 'high',
-                dueDate: '2025-01-21',
-                status: 'in-progress',
-                progress: 75,
-                tags: ['suppliers', 'fabric', 'coordination'],
-                createdDate: '2025-01-16'
-            },
-            {
-                id: 8,
-                title: 'Plan promotional campaign for Valentine\'s Day',
-                description: 'Design and execute marketing campaign for Valentine\'s Day collection across all stores.',
-                assignee: 'Grace Wanjiku',
-                priority: 'medium',
-                dueDate: '2025-02-01',
-                status: 'todo',
-                progress: 0,
-                tags: ['marketing', 'promotion', 'valentines'],
-                createdDate: '2025-01-20'
-            },
-            {
-                id: 9,
-                title: 'Audit Eldoret store cash registers',
-                description: 'Perform monthly audit of all cash registers and payment systems at the Eldoret branch.',
-                assignee: 'John Mwangi',
-                priority: 'medium',
-                dueDate: '2025-01-27',
-                status: 'review',
-                progress: 90,
-                tags: ['audit', 'cash', 'eldoret'],
-                createdDate: '2025-01-14'
-            },
-            {
-                id: 10,
-                title: 'Customer feedback analysis',
-                description: 'Analyze customer feedback from all stores and prepare improvement recommendations.',
-                assignee: 'Susan Akinyi',
-                priority: 'low',
-                dueDate: '2025-01-30',
-                status: 'todo',
-                progress: 0,
-                tags: ['feedback', 'analysis', 'improvement'],
-                createdDate: '2025-01-18'
-            }
-        ],
-        teamMembers: [
-            { name: 'Grace Wanjiku', tasksAssigned: 6, tasksCompleted: 4, efficiency: 92 },
-            { name: 'John Mwangi', tasksAssigned: 5, tasksCompleted: 3, efficiency: 88 },
-            { name: 'Susan Akinyi', tasksAssigned: 4, tasksCompleted: 3, efficiency: 95 },
-            { name: 'David Omondi', tasksAssigned: 3, tasksCompleted: 2, efficiency: 85 },
-            { name: 'Mary Njeri', tasksAssigned: 3, tasksCompleted: 2, efficiency: 90 },
-            { name: 'Peter Kamau', tasksAssigned: 2, tasksCompleted: 1, efficiency: 80 },
-            { name: 'Catherine Wanjiku', tasksAssigned: 1, tasksCompleted: 1, efficiency: 100 }
-        ]
-    };
-
     // Current filters
     let currentFilters = {
         priority: '',
@@ -210,24 +69,29 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentDetailsId = null;
 
     // Initialize the page
-    function initPage() {
-        // Set overview numbers
-        document.getElementById('totalTasks').textContent = tasksData.overview.totalTasks;
-        document.getElementById('pendingTasks').textContent = tasksData.overview.pendingTasks;
-        document.getElementById('completedToday').textContent = tasksData.overview.completedToday;
-        document.getElementById('productivity').textContent = tasksData.overview.productivity;
+    async function initPage() {
+        try {
+            const overview = await fetch('/api/tasks/overview/').then(res => res.json());
+            // Set overview numbers
+            document.getElementById('totalTasks').textContent = overview.total_tasks;
+            document.getElementById('pendingTasks').textContent = overview.pending_tasks;
+            document.getElementById('completedToday').textContent = overview.completed_today;
+            document.getElementById('productivity').textContent = overview.productivity;
 
-        // Load tasks
-        loadTasks();
+            // Load tasks
+            await loadTasks();
 
-        // Load team statistics
-        loadTeamStats();
-        initDistributionChart();
-
-        // Hide loading overlay after a short delay
-        setTimeout(() => {
-            morphOverlay.classList.remove('active');
-        }, 1000);
+            // Load team statistics
+            await loadTeamStats();
+            await initDistributionChart();
+        } catch (error) {
+            console.error('Error initializing page:', error);
+        } finally {
+            // Hide loading overlay after a short delay
+            setTimeout(() => {
+                morphOverlay.classList.remove('active');
+            }, 1000);
+        }
     }
 
     // Get initials from name
@@ -262,27 +126,24 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Filter tasks data
-    function filterTasks() {
-        return tasksData.tasks.filter(task => {
-            if (currentFilters.priority && task.priority !== currentFilters.priority) return false;
-            if (currentFilters.assignee && task.assignee !== currentFilters.assignee) return false;
-            return true;
-        });
+    async function filterTasks() {
+        const params = new URLSearchParams(currentFilters);
+        return await fetch(`/api/tasks/?${params.toString()}`).then(res => res.json());
     }
 
     // Load tasks based on current view
-    function loadTasks() {
+    async function loadTasks() {
         if (currentView === 'board') {
-            loadBoardView();
+            await loadBoardView();
         } else {
-            loadListView();
+            await loadListView();
         }
         updateTaskCounts();
     }
 
     // Load board view
-    function loadBoardView() {
-        const filteredTasks = filterTasks();
+    async function loadBoardView() {
+        const filteredTasks = await filterTasks();
         
         // Clear columns
         todoColumn.innerHTML = '';
@@ -318,7 +179,7 @@ document.addEventListener('DOMContentLoaded', function() {
         card.className = `task-card ${task.priority}-priority`;
         card.onclick = () => viewTaskDetails(task.id);
 
-        const dueDateClass = isOverdue(task.dueDate) ? 'overdue' : isDueSoon(task.dueDate) ? 'due-soon' : '';
+        const dueDateClass = isOverdue(task.due_date) ? 'overdue' : isDueSoon(task.due_date) ? 'due-soon' : '';
 
         card.innerHTML = `
             <div class="task-header">
@@ -331,7 +192,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="assignee-avatar">${getInitials(task.assignee)}</div>
                     <span>${task.assignee.split(' ')[0]}</span>
                 </div>
-                <div class="task-due-date ${dueDateClass}">${formatDate(task.dueDate)}</div>
+                <div class="task-due-date ${dueDateClass}">${formatDate(task.due_date)}</div>
             </div>
             <div class="task-progress">
                 <div class="progress-bar">
@@ -349,8 +210,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Load list view
-    function loadListView() {
-        const filteredTasks = filterTasks();
+    async function loadListView() {
+        const filteredTasks = await filterTasks();
         let html = '';
 
         if (filteredTasks.length === 0) {
@@ -363,7 +224,7 @@ document.addEventListener('DOMContentLoaded', function() {
             `;
         } else {
             filteredTasks.forEach(task => {
-                const dueDateClass = isOverdue(task.dueDate) ? 'overdue' : isDueSoon(task.dueDate) ? 'due-soon' : '';
+                const dueDateClass = isOverdue(task.due_date) ? 'overdue' : isDueSoon(task.due_date) ? 'due-soon' : '';
                 
                 html += `
                     <tr>
@@ -380,7 +241,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             </div>
                         </td>
                         <td><span class="priority-badge ${task.priority}">${task.priority}</span></td>
-                        <td><span class="task-due-date ${dueDateClass}">${formatDate(task.dueDate)}</span></td>
+                        <td><span class="task-due-date ${dueDateClass}">${formatDate(task.due_date)}</span></td>
                         <td><span class="status-badge ${task.status}">${task.status.replace('-', ' ')}</span></td>
                         <td>
                             <div class="progress-cell">
@@ -410,29 +271,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Update task counts in board view
-    function updateTaskCounts() {
-        const filteredTasks = filterTasks();
-        const counts = {
-            todo: 0,
-            'in-progress': 0,
-            review: 0,
-            completed: 0
-        };
-
-        filteredTasks.forEach(task => {
-            counts[task.status]++;
-        });
-
+    async function updateTaskCounts() {
+        const counts = await fetch('/api/tasks/counts/').then(res => res.json());
         document.getElementById('todoCount').textContent = counts.todo;
-        document.getElementById('inProgressCount').textContent = counts['in-progress'];
+        document.getElementById('inProgressCount').textContent = counts.in_progress;
         document.getElementById('reviewCount').textContent = counts.review;
         document.getElementById('completedCount').textContent = counts.completed;
     }
 
     // Load team statistics
-    function loadTeamStats() {
+    async function loadTeamStats() {
+        const teamMembers = await fetch('/api/team/stats/').then(res => res.json());
         let html = '';
-        tasksData.teamMembers.forEach(member => {
+        teamMembers.forEach(member => {
             html += `
                 <div class="team-member">
                     <div class="member-info">
@@ -441,11 +292,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                     <div class="member-stats">
                         <div class="stat-item">
-                            <span class="stat-value">${member.tasksAssigned}</span>
+                            <span class="stat-value">${member.tasks_assigned}</span>
                             <span>Assigned</span>
                         </div>
                         <div class="stat-item">
-                            <span class="stat-value">${member.tasksCompleted}</span>
+                            <span class="stat-value">${member.tasks_completed}</span>
                             <span>Completed</span>
                         </div>
                         <div class="stat-item">
@@ -460,16 +311,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Initialize distribution chart
-    function initDistributionChart() {
+    async function initDistributionChart() {
+        const statusCounts = await fetch('/api/tasks/distribution/').then(res => res.json());
         const ctx = document.getElementById('distributionCanvas').getContext('2d');
         
-        const statusCounts = {
-            'To Do': tasksData.tasks.filter(t => t.status === 'todo').length,
-            'In Progress': tasksData.tasks.filter(t => t.status === 'in-progress').length,
-            'Review': tasksData.tasks.filter(t => t.status === 'review').length,
-            'Completed': tasksData.tasks.filter(t => t.status === 'completed').length
-        };
-
         new Chart(ctx, {
             type: 'doughnut',
             data: {
@@ -498,13 +343,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Global functions for onclick handlers
-    window.viewTaskDetails = function(id) {
-        const task = tasksData.tasks.find(t => t.id === id);
+    window.viewTaskDetails = async function(id) {
+        const task = await fetch(`/api/tasks/${id}/`).then(res => res.json());
         if (task) {
             currentDetailsId = id;
             detailsModalTitle.textContent = `Task Details - ${task.title}`;
             
-            const dueDateClass = isOverdue(task.dueDate) ? 'overdue' : isDueSoon(task.dueDate) ? 'due-soon' : '';
+            const dueDateClass = isOverdue(task.due_date) ? 'overdue' : isDueSoon(task.due_date) ? 'due-soon' : '';
             
             detailsContent.innerHTML = `
                 <div class="detail-row">
@@ -525,7 +370,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <div class="detail-row">
                     <span class="detail-label">Due Date:</span>
-                    <span class="detail-value"><span class="task-due-date ${dueDateClass}">${formatDate(task.dueDate)}</span></span>
+                    <span class="detail-value"><span class="task-due-date ${dueDateClass}">${formatDate(task.due_date)}</span></span>
                 </div>
                 <div class="detail-row">
                     <span class="detail-label">Status:</span>
@@ -537,7 +382,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <div class="detail-row">
                     <span class="detail-label">Created:</span>
-                    <span class="detail-value">${formatDate(task.createdDate)}</span>
+                    <span class="detail-value">${formatDate(task.created_date)}</span>
                 </div>
                 <div class="detail-row">
                     <span class="detail-label">Tags:</span>
@@ -549,8 +394,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
-    window.editTask = function(id) {
-        const task = tasksData.tasks.find(t => t.id === id);
+    window.editTask = async function(id) {
+        const task = await fetch(`/api/tasks/${id}/`).then(res => res.json());
         if (task) {
             currentEditId = id;
             taskModalTitle.textContent = 'Edit Task';
@@ -560,7 +405,7 @@ document.addEventListener('DOMContentLoaded', function() {
             taskDescription.value = task.description;
             taskAssignee.value = task.assignee;
             taskPriority.value = task.priority;
-            taskDueDate.value = task.dueDate;
+            taskDueDate.value = task.due_date;
             taskStatus.value = task.status;
             taskProgress.value = task.progress;
             taskTags.value = task.tags.join(', ');
@@ -569,31 +414,30 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
-    window.deleteTask = function(id) {
-        const task = tasksData.tasks.find(t => t.id === id);
-        if (task && confirm(`Are you sure you want to delete the task "${task.title}"? This action cannot be undone.`)) {
-            const index = tasksData.tasks.findIndex(t => t.id === id);
-            if (index !== -1) {
-                tasksData.tasks.splice(index, 1);
-                loadTasks();
-                showNotification('Task deleted successfully!', 'success');
-                updateOverviewStats();
+    window.deleteTask = async function(id) {
+        if (confirm(`Are you sure you want to delete this task? This action cannot be undone.`)) {
+            try {
+                const response = await fetch(`/api/tasks/${id}/`, { method: 'DELETE' });
+                if (response.ok) {
+                    await loadTasks();
+                    showNotification('Task deleted successfully!', 'success');
+                    await updateOverviewStats();
+                } else {
+                    showNotification('Failed to delete task.', 'error');
+                }
+            } catch (error) {
+                console.error('Error deleting task:', error);
+                showNotification('An error occurred while deleting the task.', 'error');
             }
         }
     };
 
     // Update overview statistics
-    function updateOverviewStats() {
-        const totalTasks = tasksData.tasks.length;
-        const pendingTasks = tasksData.tasks.filter(t => t.status !== 'completed').length;
-        const completedToday = tasksData.tasks.filter(t => {
-            const today = new Date().toISOString().split('T')[0];
-            return t.status === 'completed' && t.dueDate === today;
-        }).length;
-
-        document.getElementById('totalTasks').textContent = totalTasks;
-        document.getElementById('pendingTasks').textContent = pendingTasks;
-        document.getElementById('completedToday').textContent = completedToday;
+    async function updateOverviewStats() {
+        const overview = await fetch('/api/tasks/overview/').then(res => res.json());
+        document.getElementById('totalTasks').textContent = overview.total_tasks;
+        document.getElementById('pendingTasks').textContent = overview.pending_tasks;
+        document.getElementById('completedToday').textContent = overview.completed_today;
     }
 
     // Show notification
@@ -685,19 +529,19 @@ document.addEventListener('DOMContentLoaded', function() {
         taskModal.classList.add('active');
     });
 
-    exportBtn.addEventListener('click', function() {
-        const csvContent = generateCSV();
+    exportBtn.addEventListener('click', async function() {
+        const filteredTasks = await filterTasks();
+        const csvContent = generateCSV(filteredTasks);
         downloadCSV(csvContent, 'tasks.csv');
         showNotification('Tasks exported successfully!', 'success');
     });
 
     // Generate CSV content
-    function generateCSV() {
+    function generateCSV(tasks) {
         let csv = 'Title,Description,Assignee,Priority,Due Date,Status,Progress,Tags,Created Date\n';
         
-        const filteredTasks = filterTasks();
-        filteredTasks.forEach(task => {
-            csv += `"${task.title}","${task.description}","${task.assignee}","${task.priority}","${task.dueDate}","${task.status}","${task.progress}%","${task.tags.join(', ')}","${task.createdDate}"\n`;
+        tasks.forEach(task => {
+            csv += `"${task.title}","${task.description}","${task.assignee}","${task.priority}","${task.due_date}","${task.status}","${task.progress}%","${task.tags.join(', ')}","${task.created_date}"\n`;
         });
         
         return csv;
@@ -763,7 +607,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Form submission
-    taskForm.addEventListener('submit', function(e) {
+    taskForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
         const formData = {
@@ -771,48 +615,61 @@ document.addEventListener('DOMContentLoaded', function() {
             description: taskDescription.value,
             assignee: taskAssignee.value,
             priority: taskPriority.value,
-            dueDate: taskDueDate.value,
+            due_date: taskDueDate.value,
             status: taskStatus.value,
             progress: parseInt(taskProgress.value),
             tags: taskTags.value ? taskTags.value.split(',').map(tag => tag.trim()) : [],
-            createdDate: new Date().toISOString().split('T')[0]
         };
 
-        if (currentEditId) {
-            // Edit existing task
-            const index = tasksData.tasks.findIndex(t => t.id === currentEditId);
-            if (index !== -1) {
-                tasksData.tasks[index] = { ...tasksData.tasks[index], ...formData };
-                showNotification('Task updated successfully!', 'success');
+        try {
+            let response;
+            if (currentEditId) {
+                // Edit existing task
+                response = await fetch(`/api/tasks/${currentEditId}/`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData),
+                });
+            } else {
+                // Add new task
+                response = await fetch('/api/tasks/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData),
+                });
             }
-        } else {
-            // Add new task
-            const newTask = {
-                id: Date.now(),
-                ...formData
-            };
-            tasksData.tasks.unshift(newTask);
-            showNotification('Task added successfully!', 'success');
-        }
 
-        taskModal.classList.remove('active');
-        loadTasks();
-        updateOverviewStats();
-        loadTeamStats();
+            if (response.ok) {
+                showNotification(currentEditId ? 'Task updated successfully!' : 'Task added successfully!', 'success');
+                taskModal.classList.remove('active');
+                await loadTasks();
+                await updateOverviewStats();
+                await loadTeamStats();
+            } else {
+                showNotification('Failed to save task.', 'error');
+            }
+        } catch (error) {
+            console.error('Error saving task:', error);
+            showNotification('An error occurred while saving the task.', 'error');
+        }
     });
 
     // Quick actions in details modal
-    markCompleteBtn.addEventListener('click', function() {
+    markCompleteBtn.addEventListener('click', async function() {
         if (currentDetailsId) {
-            const index = tasksData.tasks.findIndex(t => t.id === currentDetailsId);
-            if (index !== -1) {
-                tasksData.tasks[index].status = 'completed';
-                tasksData.tasks[index].progress = 100;
-                
-                detailsModal.classList.remove('active');
-                loadTasks();
-                updateOverviewStats();
-                showNotification('Task marked as completed!', 'success');
+            try {
+                const response = await fetch(`/api/tasks/${currentDetailsId}/complete/`, { method: 'POST' });
+                if (response.ok) {
+                    detailsModal.classList.remove('active');
+                    await loadTasks();
+                    await updateOverviewStats();
+                    showNotification('Task marked as completed!', 'success');
+                } else {
+                    showNotification('Failed to mark task as complete.', 'error');
+                }
+            } catch (error) {
+                console.error('Error completing task:', error);
+                showNotification('An error occurred while completing the task.', 'error');
             }
         }
     });
@@ -865,4 +722,3 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize the page
     initPage();
 });
-

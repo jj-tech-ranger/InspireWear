@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InspireWear | Customer Management</title>
+    <link rel="stylesheet" href="../css/customers.css">
+    <link rel="stylesheet" href="../css/finance.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <link rel="icon" href="../img/favicon.png" type="image/x-icon">
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="morph-overlay" id="morphOverlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p class="loading-text">Loading Customer Data...</p>
+        </div>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="logo-container">
+            <img src="../img/logo.png" alt="InspireWear Logo" class="logo">
+            <h1 class="logo-text">InspireWear</h1>
+        </div>
+
+        <a href="../templates/index.html" class="home-button">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+
+        <div class="module-heading">
+            <span class="star">✧</span>
+            <h1>CUSTOMER CRM</h1>
+            <span class="star">✧</span>
+        </div>
+
+        <nav class="finance-nav">
+            <ul>
+                <li><a href="../templates/customer_dasboard.html"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                <li class="active"><a href="../templates/customers.html"><i class="fas fa-users"></i> Customers</a></li>
+                <li><a href="../templates/loyalty.html"><i class="fas fa-star"></i> Loyalty Program</a></li>
+                <li><a href="../templates/campaigns.html"><i class="fas fa-envelope"></i> Email Campaigns</a></li>
+                <li><a href="../templates/feedback.html"><i class="fas fa-comment-alt"></i> Feedback</a></li>
+                <li><a href="../templates/customer_reports.html"><i class="fas fa-chart-pie"></i> Reports</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <header class="finance-header">
+            <h2>Customer Management</h2>
+            <div class="header-actions">
+                <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon theme-icon"></i>
+                </button>
+                <div class="profile-container">
+                    <button class="profile-btn" id="profileBtn" aria-label="User profile" aria-expanded="false">
+                        <img src="../img/user.png" alt="Profile" class="profile-img">
+                        <span>CRM Manager</span>
+                    </button>
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <a href="../templates/index.html" class="dropdown-item">
+                            <i class="fas fa-home"></i> Back to Home
+                        </a>
+                        <a href="../templates/login.html" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Customer Filters -->
+        <div class="customer-filters">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="customerSearch" placeholder="Search customers...">
+            </div>
+            <div class="filter-group">
+                <label for="statusFilter">Status:</label>
+                <select id="statusFilter">
+                    <option value="all">All</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                    <option value="pending">Pending</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="locationFilter">Location:</label>
+                <select id="locationFilter">
+                    <option value="all">All Locations</option>
+                    <option value="Nairobi">Nairobi</option>
+                    <option value="Mombasa">Mombasa</option>
+                    <option value="Kisumu">Kisumu</option>
+                    <option value="Nakuru">Nakuru</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <button id="addCustomerBtn" class="btn-primary"><i class="fas fa-plus"></i> Add Customer</button>
+        </div>
+
+        <!-- Customers Table -->
+        <div class="customer-table-container">
+            <table class="customer-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Contact</th>
+                        <th>Location</th>
+                        <th>Total Spent (KES)</th>
+                        <th>Last Purchase</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="customersTable">
+                    <!-- Customers will be loaded by JavaScript -->
+                </tbody>
+            </table>
+            <div class="pagination">
+                <button id="prevPage" class="pagination-btn" disabled><i class="fas fa-chevron-left"></i></button>
+                <span id="pageInfo">Page 1 of 5</span>
+                <button id="nextPage" class="pagination-btn"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="finance-footer">
+            <div class="footer-content">
+                <p class="footer-text">© 2025 InspireWear. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#" class="footer-link">Terms</a>
+                    <a href="#" class="footer-link">Privacy</a>
+                    <a href="#" class="footer-link">Contact</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Add Customer Modal -->
+    <div class="modal-overlay" id="addCustomerModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Add New Customer</h3>
+                <button class="modal-close" id="modalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="addCustomerForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="customerFirstName">First Name</label>
+                            <input type="text" id="customerFirstName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customerLastName">Last Name</label>
+                            <input type="text" id="customerLastName" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="customerEmail">Email</label>
+                        <input type="email" id="customerEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="customerPhone">Phone (+254)</label>
+                        <input type="tel" id="customerPhone" pattern="[0-9]{9}" placeholder="7XXXXXXXX" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="customerLocation">Location</label>
+                        <select id="customerLocation" required>
+                            <option value="">Select Location</option>
+                            <option value="Nairobi">Nairobi</option>
+                            <option value="Mombasa">Mombasa</option>
+                            <option value="Kisumu">Kisumu</option>
+                            <option value="Nakuru">Nakuru</option>
+                            <option value="Eldoret">Eldoret</option>
+                            <option value="Thika">Thika</option>
+                            <option value="Malindi">Malindi</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="customerType">Customer Type</label>
+                        <select id="customerType" required>
+                            <option value="regular">Regular</option>
+                            <option value="loyalty">Loyalty Member</option>
+                            <option value="wholesale">Wholesale</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="cancelAddCustomer">Cancel</button>
+                        <button type="submit" class="btn-primary">Save Customer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Customer Modal -->
+    <div class="modal-overlay" id="editCustomerModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Edit Customer</h3>
+                <button class="modal-close" id="editModalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editCustomerForm">
+                    <input type="hidden" id="editCustomerId">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editFirstName">First Name</label>
+                            <input type="text" id="editFirstName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editLastName">Last Name</label>
+                            <input type="text" id="editLastName" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="editEmail">Email</label>
+                        <input type="email" id="editEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editPhone">Phone (+254)</label>
+                        <input type="tel" id="editPhone" pattern="[0-9]{9}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editLocation">Location</label>
+                        <select id="editLocation" required>
+                            <option value="Nairobi">Nairobi</option>
+                            <option value="Mombasa">Mombasa</option>
+                            <option value="Kisumu">Kisumu</option>
+                            <option value="Nakuru">Nakuru</option>
+                            <option value="Eldoret">Eldoret</option>
+                            <option value="Thika">Thika</option>
+                            <option value="Malindi">Malindi</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editStatus">Status</label>
+                        <select id="editStatus" required>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="pending">Pending</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="cancelEditCustomer">Cancel</button>
+                        <button type="submit" class="btn-primary">Update Customer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/customers.js"></script>
+</body>
+</html>

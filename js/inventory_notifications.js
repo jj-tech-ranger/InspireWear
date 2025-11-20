@@ -26,250 +26,35 @@ document.addEventListener('DOMContentLoaded', function() {
     const pageNumbers = document.getElementById('pageNumbers');
     const paginationInfo = document.getElementById('paginationInfo');
 
-    // Sample notifications data with cross-module context
-    const notificationsData = {
-        totalNotifications: 47,
-        unreadNotifications: 8,
-        urgentNotifications: 3,
-        systemAlerts: 5,
-        notifications: [
-            {
-                id: 1,
-                title: 'Low Stock Alert: Kitenge Print Dress',
-                message: 'Stock level for Kitenge Print Dress has fallen below minimum threshold (5 units). Current stock: 3 units. Please reorder immediately.',
-                module: 'inventory',
-                type: 'alert',
-                priority: 'urgent',
-                isRead: false,
-                timestamp: '2025-01-21 14:30:00',
-                sender: 'Inventory System',
-                recipient: 'Inventory Manager',
-                relatedData: {
-                    productId: 'KPD-001',
-                    currentStock: 3,
-                    minimumThreshold: 5
-                }
-            },
-            {
-                id: 2,
-                title: 'Payment Overdue: Supplier Invoice #INV-2025-045',
-                message: 'Payment for Nairobi Textile Mills invoice #INV-2025-045 (KSh 207,640) is overdue by 5 days. Please process payment to maintain good supplier relationship.',
-                module: 'finance',
-                type: 'warning',
-                priority: 'high',
-                isRead: false,
-                timestamp: '2025-01-21 13:15:00',
-                sender: 'Finance System',
-                recipient: 'Finance Manager',
-                relatedData: {
-                    invoiceId: 'INV-2025-045',
-                    amount: 207640,
-                    daysOverdue: 5,
-                    supplier: 'Nairobi Textile Mills'
-                }
-            },
-            {
-                id: 3,
-                title: 'New Customer Registration',
-                message: 'A new customer "Amara Boutique" from Westlands, Nairobi has registered on the online shop. Customer ID: CUST-2025-156. Please review and approve.',
-                module: 'crm',
-                type: 'info',
-                priority: 'medium',
-                isRead: false,
-                timestamp: '2025-01-21 12:45:00',
-                sender: 'CRM System',
-                recipient: 'Customer Service',
-                relatedData: {
-                    customerId: 'CUST-2025-156',
-                    customerName: 'Amara Boutique',
-                    location: 'Westlands, Nairobi'
-                }
-            },
-            {
-                id: 4,
-                title: 'Production Schedule Update',
-                message: 'Production schedule for Week 4 has been updated. New delivery date for Order #ORD-2025-001 moved to January 28th due to fabric delay.',
-                module: 'operations',
-                type: 'update',
-                priority: 'medium',
-                isRead: true,
-                timestamp: '2025-01-21 11:20:00',
-                sender: 'Operations Manager',
-                recipient: 'All Departments',
-                relatedData: {
-                    orderId: 'ORD-2025-001',
-                    newDeliveryDate: '2025-01-28',
-                    reason: 'Fabric delay'
-                }
-            },
-            {
-                id: 5,
-                title: 'System Maintenance Scheduled',
-                message: 'Scheduled system maintenance on January 25th from 2:00 AM to 4:00 AM EAT. All modules will be temporarily unavailable during this period.',
-                module: 'system',
-                type: 'info',
-                priority: 'medium',
-                isRead: true,
-                timestamp: '2025-01-21 10:00:00',
-                sender: 'System Administrator',
-                recipient: 'All Users',
-                relatedData: {
-                    maintenanceDate: '2025-01-25',
-                    startTime: '02:00',
-                    endTime: '04:00',
-                    timezone: 'EAT'
-                }
-            },
-            {
-                id: 6,
-                title: 'High Order Volume Alert',
-                message: 'Online shop experiencing 300% increase in orders today. Current orders: 45. Consider increasing production capacity and inventory levels.',
-                module: 'shop',
-                type: 'alert',
-                priority: 'urgent',
-                isRead: false,
-                timestamp: '2025-01-21 09:30:00',
-                sender: 'Shop Analytics',
-                recipient: 'Operations Team',
-                relatedData: {
-                    todayOrders: 45,
-                    percentageIncrease: 300,
-                    averageDailyOrders: 15
-                }
-            },
-            {
-                id: 7,
-                title: 'Quality Control Issue',
-                message: 'Quality control has flagged 12 units of Safari Cargo Pants from Batch #SCB-2025-003 due to stitching defects. Please review and take corrective action.',
-                module: 'operations',
-                type: 'warning',
-                priority: 'high',
-                isRead: false,
-                timestamp: '2025-01-21 08:45:00',
-                sender: 'Quality Control',
-                recipient: 'Production Manager',
-                relatedData: {
-                    productName: 'Safari Cargo Pants',
-                    batchId: 'SCB-2025-003',
-                    defectiveUnits: 12,
-                    issueType: 'Stitching defects'
-                }
-            },
-            {
-                id: 8,
-                title: 'Monthly Sales Report Ready',
-                message: 'December 2024 sales report has been generated and is ready for review. Total sales: KSh 2,845,600. Download from Finance module.',
-                module: 'finance',
-                type: 'info',
-                priority: 'low',
-                isRead: true,
-                timestamp: '2025-01-21 08:00:00',
-                sender: 'Finance System',
-                recipient: 'Management Team',
-                relatedData: {
-                    reportPeriod: 'December 2024',
-                    totalSales: 2845600,
-                    reportType: 'Monthly Sales'
-                }
-            },
-            {
-                id: 9,
-                title: 'Supplier Delivery Confirmation',
-                message: 'Mombasa Leather Works has confirmed delivery of Order #ORD-2025-002 scheduled for January 23rd. 25 units of Leather Sandals.',
-                module: 'inventory',
-                type: 'update',
-                priority: 'low',
-                isRead: true,
-                timestamp: '2025-01-21 07:15:00',
-                sender: 'Supplier Portal',
-                recipient: 'Inventory Team',
-                relatedData: {
-                    orderId: 'ORD-2025-002',
-                    supplier: 'Mombasa Leather Works',
-                    deliveryDate: '2025-01-23',
-                    quantity: 25,
-                    product: 'Leather Sandals'
-                }
-            },
-            {
-                id: 10,
-                title: 'Customer Feedback Alert',
-                message: 'Customer "Jane Wanjiku" left a 5-star review for Maasai Beaded Necklace: "Beautiful craftsmanship and authentic design. Highly recommended!"',
-                module: 'crm',
-                type: 'info',
-                priority: 'low',
-                isRead: true,
-                timestamp: '2025-01-20 18:30:00',
-                sender: 'Review System',
-                recipient: 'Customer Service',
-                relatedData: {
-                    customerName: 'Jane Wanjiku',
-                    productName: 'Maasai Beaded Necklace',
-                    rating: 5,
-                    reviewText: 'Beautiful craftsmanship and authentic design. Highly recommended!'
-                }
-            },
-            {
-                id: 11,
-                title: 'Inventory Reorder Reminder',
-                message: 'Reminder: 5 products are approaching reorder point. Review inventory levels and place orders with suppliers to avoid stockouts.',
-                module: 'inventory',
-                type: 'reminder',
-                priority: 'medium',
-                isRead: false,
-                timestamp: '2025-01-20 16:00:00',
-                sender: 'Inventory System',
-                recipient: 'Inventory Manager',
-                relatedData: {
-                    productsCount: 5,
-                    action: 'Review and reorder'
-                }
-            },
-            {
-                id: 12,
-                title: 'Database Backup Completed',
-                message: 'Daily database backup completed successfully at 3:00 AM EAT. Backup size: 2.4 GB. All data is secure and recoverable.',
-                module: 'system',
-                type: 'info',
-                priority: 'low',
-                isRead: true,
-                timestamp: '2025-01-20 03:00:00',
-                sender: 'Backup System',
-                recipient: 'System Administrator',
-                relatedData: {
-                    backupTime: '03:00 EAT',
-                    backupSize: '2.4 GB',
-                    status: 'Successful'
-                }
-            }
-        ]
-    };
-
     // Pagination variables
     let currentPage = 1;
     const itemsPerPage = 10;
-    let filteredNotifications = [...notificationsData.notifications];
+    let filteredNotifications = [];
     let currentTab = 'all';
     let currentNotificationForModal = null;
 
     // Initialize the page
-    function initPage() {
-        // Set overview numbers
-        document.getElementById('totalNotifications').textContent = formatNumber(notificationsData.totalNotifications);
-        document.getElementById('unreadNotifications').textContent = formatNumber(notificationsData.unreadNotifications);
-        document.getElementById('urgentNotifications').textContent = formatNumber(notificationsData.urgentNotifications);
-        document.getElementById('systemAlerts').textContent = formatNumber(notificationsData.systemAlerts);
+    async function initPage() {
+        try {
+            await updateSummaryNumbers();
+            // Update badge counts
+            await updateBadgeCounts();
 
-        // Update badge counts
-        updateBadgeCounts();
+            // Load notifications
+            await loadNotifications();
 
-        // Load notifications
-        loadNotifications();
-
-        // Hide loading overlay after a short delay
-        setTimeout(() => {
-            morphOverlay.classList.remove('active');
-        }, 1000);
+            // Set minimum date for schedule
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            document.getElementById('startSchedule').min = tomorrow.toISOString().split('T')[0];
+        } catch (error) {
+            console.error('Error initializing page:', error);
+        } finally {
+            // Hide loading overlay after a short delay
+            setTimeout(() => {
+                morphOverlay.classList.remove('active');
+            }, 1000);
+        }
     }
 
     // Format numbers
@@ -278,57 +63,35 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Update badge counts in tabs
-    function updateBadgeCounts() {
-        const unreadCount = notificationsData.notifications.filter(n => !n.isRead).length;
-        const urgentCount = notificationsData.notifications.filter(n => n.priority === 'urgent' && !n.isRead).length;
-
-        document.querySelector('[data-tab="unread"] .badge').textContent = unreadCount;
-        document.querySelector('[data-tab="urgent"] .badge').textContent = urgentCount;
-
-        // Update overview cards
-        notificationsData.unreadNotifications = unreadCount;
-        notificationsData.urgentNotifications = urgentCount;
-        document.getElementById('unreadNotifications').textContent = formatNumber(unreadCount);
-        document.getElementById('urgentNotifications').textContent = formatNumber(urgentCount);
+    async function updateBadgeCounts() {
+        const counts = await fetch('/api/notifications/counts/').then(res => res.json());
+        document.querySelector('[data-tab="unread"] .badge').textContent = counts.unread;
+        document.querySelector('[data-tab="urgent"] .badge').textContent = counts.urgent;
     }
 
     // Load notifications based on current tab and filters
-    function loadNotifications() {
-        let notifications = [...notificationsData.notifications];
+    async function loadNotifications() {
+        const params = new URLSearchParams({
+            tab: currentTab,
+            module: moduleFilter.value,
+            type: typeFilter.value,
+            date: dateFilter.value,
+        });
 
-        // Apply tab filter
-        if (currentTab === 'unread') {
-            notifications = notifications.filter(n => !n.isRead);
-        } else if (currentTab === 'urgent') {
-            notifications = notifications.filter(n => n.priority === 'urgent');
-        }
+        try {
+            const notifications = await fetch(`/api/notifications/?${params.toString()}`).then(res => res.json());
+            filteredNotifications = notifications;
+            currentPage = 1;
 
-        // Apply additional filters
-        const moduleValue = moduleFilter.value;
-        const typeValue = typeFilter.value;
-        const dateValue = dateFilter.value;
-
-        if (moduleValue) {
-            notifications = notifications.filter(n => n.module === moduleValue);
-        }
-
-        if (typeValue) {
-            notifications = notifications.filter(n => n.type === typeValue);
-        }
-
-        if (dateValue) {
-            notifications = notifications.filter(n => n.timestamp.startsWith(dateValue));
-        }
-
-        filteredNotifications = notifications;
-        currentPage = 1;
-
-        if (currentTab === 'all') {
-            renderNotificationsList(notificationsList);
-        } else if (currentTab === 'unread') {
-            renderNotificationsList(unreadNotificationsList);
-        } else if (currentTab === 'urgent') {
-            renderNotificationsList(urgentNotificationsList);
+            if (currentTab === 'all') {
+                renderNotificationsList(notificationsList);
+            } else if (currentTab === 'unread') {
+                renderNotificationsList(unreadNotificationsList);
+            } else if (currentTab === 'urgent') {
+                renderNotificationsList(urgentNotificationsList);
+            }
+        } catch (error) {
+            console.error('Error loading notifications:', error);
         }
     }
 
@@ -353,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         pageNotifications.forEach(notification => {
             const timeAgo = getTimeAgo(notification.timestamp);
-            const unreadClass = !notification.isRead ? 'unread' : '';
+            const unreadClass = !notification.is_read ? 'unread' : '';
             const urgentClass = notification.priority === 'urgent' ? 'urgent' : '';
             
             html += `
@@ -369,8 +132,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                         <div class="notification-actions">
                             <input type="checkbox" class="notification-checkbox" data-id="${notification.id}">
-                            <button class="notification-action-btn mark-read-btn" data-id="${notification.id}" title="${notification.isRead ? 'Mark as Unread' : 'Mark as Read'}">
-                                <i class="fas ${notification.isRead ? 'fa-envelope' : 'fa-envelope-open'}"></i>
+                            <button class="notification-action-btn mark-read-btn" data-id="${notification.id}" title="${notification.is_read ? 'Mark as Unread' : 'Mark as Read'}">
+                                <i class="fas ${notification.is_read ? 'fa-envelope' : 'fa-envelope-open'}"></i>
                             </button>
                             <button class="notification-action-btn delete delete-btn" data-id="${notification.id}" title="Delete">
                                 <i class="fas fa-trash"></i>
@@ -442,8 +205,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // View notification details in modal
-    function viewNotificationDetails(notificationId) {
-        const notification = notificationsData.notifications.find(n => n.id === notificationId);
+    async function viewNotificationDetails(notificationId) {
+        const notification = await fetch(`/api/notifications/${notificationId}/`).then(res => res.json());
         if (!notification) return;
 
         currentNotificationForModal = notification;
@@ -470,7 +233,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                         <div class="details-item">
                             <label>Status:</label>
-                            <span>${notification.isRead ? 'Read' : 'Unread'}</span>
+                            <span>${notification.is_read ? 'Read' : 'Unread'}</span>
                         </div>
                         <div class="details-item">
                             <label>Sender:</label>
@@ -491,11 +254,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                 </div>
                 
-                ${notification.relatedData ? `
+                ${notification.related_data ? `
                 <div class="details-section">
                     <h4>Related Data</h4>
                     <div class="details-grid">
-                        ${Object.entries(notification.relatedData).map(([key, value]) => `
+                        ${Object.entries(notification.related_data).map(([key, value]) => `
                             <div class="details-item">
                                 <label>${formatKey(key)}:</label>
                                 <span>${value}</span>
@@ -508,14 +271,14 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
 
         // Update mark as read button
-        markAsReadBtn.textContent = notification.isRead ? 'Mark as Unread' : 'Mark as Read';
-        markAsReadBtn.innerHTML = `<i class="fas ${notification.isRead ? 'fa-envelope' : 'fa-envelope-open'}"></i> ${notification.isRead ? 'Mark as Unread' : 'Mark as Read'}`;
+        markAsReadBtn.textContent = notification.is_read ? 'Mark as Unread' : 'Mark as Read';
+        markAsReadBtn.innerHTML = `<i class="fas ${notification.is_read ? 'fa-envelope' : 'fa-envelope-open'}"></i> ${notification.is_read ? 'Mark as Unread' : 'Mark as Read'}`;
 
         notificationModal.classList.add('active');
 
         // Mark as read when viewing (if not already read)
-        if (!notification.isRead) {
-            toggleReadStatus(notificationId);
+        if (!notification.is_read) {
+            await toggleReadStatus(notificationId);
         }
     }
 
@@ -539,28 +302,41 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Toggle read status
-    function toggleReadStatus(notificationId) {
-        const notification = notificationsData.notifications.find(n => n.id === notificationId);
-        if (!notification) return;
-
-        notification.isRead = !notification.isRead;
-        updateBadgeCounts();
-        loadNotifications();
+    async function toggleReadStatus(notificationId) {
+        try {
+            const response = await fetch(`/api/notifications/${notificationId}/toggle-read/`, { method: 'POST' });
+            if (response.ok) {
+                await updateBadgeCounts();
+                await loadNotifications();
+            }
+        } catch (error) {
+            console.error('Error toggling read status:', error);
+        }
     }
 
     // Delete notification
-    function deleteNotification(notificationId) {
+    async function deleteNotification(notificationId) {
         if (confirm('Are you sure you want to delete this notification?')) {
-            const index = notificationsData.notifications.findIndex(n => n.id === notificationId);
-            if (index !== -1) {
-                notificationsData.notifications.splice(index, 1);
-                notificationsData.totalNotifications--;
-                
-                document.getElementById('totalNotifications').textContent = formatNumber(notificationsData.totalNotifications);
-                updateBadgeCounts();
-                loadNotifications();
+            try {
+                const response = await fetch(`/api/notifications/${notificationId}/`, { method: 'DELETE' });
+                if (response.ok) {
+                    await updateSummaryNumbers();
+                    await updateBadgeCounts();
+                    await loadNotifications();
+                }
+            } catch (error) {
+                console.error('Error deleting notification:', error);
             }
         }
+    }
+
+    // Update summary numbers
+    async function updateSummaryNumbers() {
+        const summary = await fetch('/api/notifications/summary/').then(res => res.json());
+        document.getElementById('totalNotifications').textContent = formatNumber(summary.total_notifications);
+        document.getElementById('unreadNotifications').textContent = formatNumber(summary.unread_notifications);
+        document.getElementById('urgentNotifications').textContent = formatNumber(summary.urgent_notifications);
+        document.getElementById('systemAlerts').textContent = formatNumber(summary.system_alerts);
     }
 
     // Update pagination
@@ -670,16 +446,22 @@ document.addEventListener('DOMContentLoaded', function() {
     dateFilter.addEventListener('change', loadNotifications);
 
     // Mark all as read
-    markAllReadBtn.addEventListener('click', function() {
+    markAllReadBtn.addEventListener('click', async function() {
         if (confirm('Mark all notifications as read?')) {
-            notificationsData.notifications.forEach(n => n.isRead = true);
-            updateBadgeCounts();
-            loadNotifications();
+            try {
+                const response = await fetch('/api/notifications/mark-all-read/', { method: 'POST' });
+                if (response.ok) {
+                    await updateBadgeCounts();
+                    await loadNotifications();
+                }
+            } catch (error) {
+                console.error('Error marking all as read:', error);
+            }
         }
     });
 
     // Delete selected notifications
-    deleteSelectedBtn.addEventListener('click', function() {
+    deleteSelectedBtn.addEventListener('click', async function() {
         const selectedCheckboxes = document.querySelectorAll('.notification-checkbox:checked');
         if (selectedCheckboxes.length === 0) {
             alert('Please select notifications to delete.');
@@ -687,32 +469,34 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         if (confirm(`Delete ${selectedCheckboxes.length} selected notification(s)?`)) {
-            selectedCheckboxes.forEach(checkbox => {
-                const notificationId = parseInt(checkbox.dataset.id);
-                const index = notificationsData.notifications.findIndex(n => n.id === notificationId);
-                if (index !== -1) {
-                    notificationsData.notifications.splice(index, 1);
-                    notificationsData.totalNotifications--;
+            const ids = Array.from(selectedCheckboxes).map(cb => cb.dataset.id);
+            try {
+                const response = await fetch('/api/notifications/delete-selected/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ids }),
+                });
+                if (response.ok) {
+                    await updateSummaryNumbers();
+                    await updateBadgeCounts();
+                    await loadNotifications();
                 }
-            });
-            
-            document.getElementById('totalNotifications').textContent = formatNumber(notificationsData.totalNotifications);
-            updateBadgeCounts();
-            loadNotifications();
+            } catch (error) {
+                console.error('Error deleting selected:', error);
+            }
         }
     });
 
     // Refresh notifications
-    refreshBtn.addEventListener('click', function() {
+    refreshBtn.addEventListener('click', async function() {
         // Simulate refresh with loading state
         refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Refreshing...';
         refreshBtn.disabled = true;
         
-        setTimeout(() => {
-            loadNotifications();
-            refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Refresh';
-            refreshBtn.disabled = false;
-        }, 1000);
+        await loadNotifications();
+        
+        refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Refresh';
+        refreshBtn.disabled = false;
     });
 
     // Pagination event listeners
@@ -740,61 +524,46 @@ document.addEventListener('DOMContentLoaded', function() {
         notificationModal.classList.remove('active');
     });
 
-    markAsReadBtn.addEventListener('click', function() {
+    markAsReadBtn.addEventListener('click', async function() {
         if (currentNotificationForModal) {
-            toggleReadStatus(currentNotificationForModal.id);
+            await toggleReadStatus(currentNotificationForModal.id);
             notificationModal.classList.remove('active');
         }
     });
 
     // Compose form submission
-    composeForm.addEventListener('submit', function(e) {
+    composeForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
-        const newNotification = {
-            id: Date.now(),
-            title: document.getElementById('notificationTitle').value,
-            message: document.getElementById('notificationMessage').value,
-            module: document.getElementById('recipientModule').value,
-            type: document.getElementById('notificationType').value,
-            priority: document.getElementById('priority').value,
-            isRead: false,
-            timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19),
-            sender: 'Current User',
-            recipient: document.getElementById('recipientModule').value === 'all' ? 'All Modules' : document.getElementById('recipientModule').value,
-            relatedData: null
-        };
+        const formData = new FormData(composeForm);
+        const newNotification = Object.fromEntries(formData.entries());
 
-        const scheduleDate = document.getElementById('scheduleDate').value;
-        if (scheduleDate) {
-            newNotification.timestamp = scheduleDate.replace('T', ' ');
+        try {
+            const response = await fetch('/api/notifications/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newNotification),
+            });
+            if (response.ok) {
+                await updateSummaryNumbers();
+                await updateBadgeCounts();
+                
+                // Switch to all notifications tab and reload
+                tabBtns.forEach(b => b.classList.remove('active'));
+                document.querySelector('[data-tab="all"]').classList.add('active');
+                tabContents.forEach(content => content.classList.remove('active'));
+                document.getElementById('allTab').classList.add('active');
+                currentTab = 'all';
+                
+                await loadNotifications();
+                this.reset();
+                alert('Notification sent successfully!');
+            } else {
+                alert('Failed to send notification.');
+            }
+        } catch (error) {
+            console.error('Error sending notification:', error);
         }
-
-        notificationsData.notifications.unshift(newNotification);
-        notificationsData.totalNotifications++;
-        
-        if (!newNotification.isRead) {
-            notificationsData.unreadNotifications++;
-        }
-        
-        if (newNotification.priority === 'urgent') {
-            notificationsData.urgentNotifications++;
-        }
-        
-        // Update overview numbers
-        document.getElementById('totalNotifications').textContent = formatNumber(notificationsData.totalNotifications);
-        updateBadgeCounts();
-        
-        // Switch to all notifications tab and reload
-        tabBtns.forEach(b => b.classList.remove('active'));
-        document.querySelector('[data-tab="all"]').classList.add('active');
-        tabContents.forEach(content => content.classList.remove('active'));
-        document.getElementById('allTab').classList.add('active');
-        currentTab = 'all';
-        
-        loadNotifications();
-        this.reset();
-        alert('Notification sent successfully!');
     });
 
     // Save draft functionality
@@ -856,4 +625,3 @@ document.addEventListener('DOMContentLoaded', function() {
     initPage();
     loadDraft();
 });
-

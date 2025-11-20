@@ -11,77 +11,59 @@ document.addEventListener('DOMContentLoaded', function() {
     const cancelAddActivity = document.getElementById('cancelAddActivity');
     const addActivityForm = document.getElementById('addActivityForm');
 
-    // Sample operations data for Kenyan clothing store
-    const operationsData = {
-        staffOnDuty: 18,
-        pendingReturns: 7,
-        completedTasks: 42,
-        storeTraffic: [
-            { day: 'Mon', customers: 320 },
-            { day: 'Tue', customers: 280 },
-            { day: 'Wed', customers: 350 },
-            { day: 'Thu', customers: 410 },
-            { day: 'Fri', customers: 520 },
-            { day: 'Sat', customers: 680 },
-            { day: 'Sun', customers: 450 }
-        ],
-        staffDistribution: [
-            { location: 'Nairobi', staff: 12, color: '#3498db' },
-            { location: 'Mombasa', staff: 8, color: '#2ecc71' },
-            { location: 'Kisumu', staff: 6, color: '#f1c40f' },
-            { location: 'Nakuru', staff: 4, color: '#e74c3c' }
-        ],
-        recentActivities: [
-            { time: '2025-01-15T09:30', activity: 'Morning Inventory Check', location: 'Nairobi', staff: 'John Mwangi', status: 'completed', priority: 'high' },
-            { time: '2025-01-15T11:15', activity: 'Customer Return Processed', location: 'Mombasa', staff: 'Susan Akinyi', status: 'completed', priority: 'medium' },
-            { time: '2025-01-15T14:00', activity: 'New Stock Arrival', location: 'Nairobi', staff: 'David Omondi', status: 'in-progress', priority: 'high' },
-            { time: '2025-01-15T15:45', activity: 'Staff Training Session', location: 'Kisumu', staff: 'Grace Wambui', status: 'pending', priority: 'low' },
-            { time: '2025-01-15T16:30', activity: 'End-of-Day Sales Report', location: 'Nairobi', staff: 'Peter Kamau', status: 'pending', priority: 'medium' }
-        ]
-    };
-
     // Initialize the page
-    function initPage() {
-        // Set overview numbers
-        document.getElementById('staffOnDuty').textContent = operationsData.staffOnDuty;
-        document.getElementById('pendingReturns').textContent = operationsData.pendingReturns;
-        document.getElementById('completedTasks').textContent = operationsData.completedTasks;
+    async function initPage() {
+        try {
+            const operationsData = await fetch('/api/operations/summary/').then(res => res.json());
+            // Set overview numbers
+            document.getElementById('staffOnDuty').textContent = operationsData.staff_on_duty;
+            document.getElementById('pendingReturns').textContent = operationsData.pending_returns;
+            document.getElementById('completedTasks').textContent = operationsData.completed_tasks;
 
-        // Load activities table
-        loadActivities();
+            // Load activities table
+            await loadActivities();
 
-        // Initialize charts
-        initCharts();
-
-        // Hide loading overlay after a short delay
-        setTimeout(() => {
-            morphOverlay.classList.remove('active');
-        }, 1000);
+            // Initialize charts
+            await initCharts();
+        } catch (error) {
+            console.error('Error initializing page:', error);
+        } finally {
+            // Hide loading overlay after a short delay
+            setTimeout(() => {
+                morphOverlay.classList.remove('active');
+            }, 1000);
+        }
     }
 
     // Load activities into the table
-    function loadActivities() {
-        let html = '';
+    async function loadActivities() {
+        try {
+            const recentActivities = await fetch('/api/operations/activities/').then(res => res.json());
+            let html = '';
 
-        operationsData.recentActivities.forEach(activity => {
-            html += `
-                <tr>
-                    <td>${formatTime(activity.time)}</td>
-                    <td>${activity.activity}</td>
-                    <td>${activity.location}</td>
-                    <td>${activity.staff}</td>
-                    <td><span class="status ${activity.status}">${activity.status.replace('-', ' ')}</span></td>
-                    <td><span class="priority ${activity.priority}">${activity.priority}</span></td>
-                    <td>
-                        <button class="action-btn" title="View Details"><i class="fas fa-eye"></i></button>
-                        <button class="action-btn" title="Edit"><i class="fas fa-edit"></i></button>
-                        <button class="action-btn" title="Delete"><i class="fas fa-trash"></i></button>
-                    </td>
-                </tr>
-            `;
-        });
+            recentActivities.forEach(activity => {
+                html += `
+                    <tr>
+                        <td>${formatTime(activity.time)}</td>
+                        <td>${activity.activity}</td>
+                        <td>${activity.location}</td>
+                        <td>${activity.staff}</td>
+                        <td><span class="status ${activity.status}">${activity.status.replace('-', ' ')}</span></td>
+                        <td><span class="priority ${activity.priority}">${activity.priority}</span></td>
+                        <td>
+                            <button class="action-btn" title="View Details"><i class="fas fa-eye"></i></button>
+                            <button class="action-btn" title="Edit"><i class="fas fa-edit"></i></button>
+                            <button class="action-btn" title="Delete"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
 
-        activitiesTable.innerHTML = html;
+            activitiesTable.innerHTML = html;
+        } catch (error) {
+            console.error('Error loading activities:', error);
+            activitiesTable.innerHTML = '<tr><td colspan="7">Error loading activities.</td></tr>';
+        }
     }
 
     // Format time to HH:MM AM/PM
@@ -91,56 +73,61 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Initialize charts
-    function initCharts() {
-        // Store Traffic Chart
-        const trafficCtx = document.getElementById('storeTrafficCanvas').getContext('2d');
-        new Chart(trafficCtx, {
-            type: 'line',
-            data: {
-                labels: operationsData.storeTraffic.map(item => item.day),
-                datasets: [{
-                    label: 'Customer Traffic',
-                    data: operationsData.storeTraffic.map(item => item.customers),
-                    backgroundColor: 'rgba(52, 152, 219, 0.2)',
-                    borderColor: 'rgba(52, 152, 219, 1)',
-                    borderWidth: 2,
-                    tension: 0.4,
-                    fill: true
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true
+    async function initCharts() {
+        try {
+            const chartData = await fetch('/api/operations/charts/').then(res => res.json());
+            // Store Traffic Chart
+            const trafficCtx = document.getElementById('storeTrafficCanvas').getContext('2d');
+            new Chart(trafficCtx, {
+                type: 'line',
+                data: {
+                    labels: chartData.store_traffic.map(item => item.day),
+                    datasets: [{
+                        label: 'Customer Traffic',
+                        data: chartData.store_traffic.map(item => item.customers),
+                        backgroundColor: 'rgba(52, 152, 219, 0.2)',
+                        borderColor: 'rgba(52, 152, 219, 1)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
                     }
                 }
-            }
-        });
+            });
 
-        // Staff Distribution Chart
-        const staffCtx = document.getElementById('staffDistributionCanvas').getContext('2d');
-        new Chart(staffCtx, {
-            type: 'pie',
-            data: {
-                labels: operationsData.staffDistribution.map(item => item.location),
-                datasets: [{
-                    data: operationsData.staffDistribution.map(item => item.staff),
-                    backgroundColor: operationsData.staffDistribution.map(item => item.color),
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'right',
+            // Staff Distribution Chart
+            const staffCtx = document.getElementById('staffDistributionCanvas').getContext('2d');
+            new Chart(staffCtx, {
+                type: 'pie',
+                data: {
+                    labels: chartData.staff_distribution.map(item => item.location),
+                    datasets: [{
+                        data: chartData.staff_distribution.map(item => item.staff),
+                        backgroundColor: chartData.staff_distribution.map(item => item.color),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                        }
                     }
                 }
-            }
-        });
+            });
+        } catch (error) {
+            console.error('Error initializing charts:', error);
+        }
     }
 
     // Theme Toggle (same as finance.js)
@@ -189,12 +176,29 @@ document.addEventListener('DOMContentLoaded', function() {
         addActivityModal.classList.remove('active');
     });
 
-    addActivityForm.addEventListener('submit', function(e) {
+    addActivityForm.addEventListener('submit', async function(e) {
         e.preventDefault();
-        // Here you would typically send the form data to your backend
-        alert('Activity added successfully!');
-        addActivityModal.classList.remove('active');
-        this.reset();
+        const formData = new FormData(addActivityForm);
+        const newActivity = Object.fromEntries(formData.entries());
+
+        try {
+            const response = await fetch('/api/operations/activities/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newActivity),
+            });
+            if (response.ok) {
+                alert('Activity added successfully!');
+                addActivityModal.classList.remove('active');
+                this.reset();
+                await initPage(); // Refresh data
+            } else {
+                alert('Failed to add activity.');
+            }
+        } catch (error) {
+            console.error('Error adding activity:', error);
+            alert('An error occurred while adding the activity.');
+        }
     });
 
     // Close modal when clicking outside

@@ -25,169 +25,48 @@ document.addEventListener('DOMContentLoaded', function() {
     const invoiceItemsList = document.getElementById('invoiceItemsList');
     const saveDraftBtn = document.getElementById('saveDraftBtn');
 
-    // Sample invoices data for Kenyan clothing store
-    const invoicesData = {
-        summary: {
-            totalInvoices: 156,
-            paidAmount: 2847500,
-            pendingAmount: 485200,
-            overdueAmount: 125800
-        },
-        invoices: [
-            { 
-                id: 1, 
-                number: 'INV-2025-001', 
-                customer: 'Westgate Boutique', 
-                email: 'orders@westgateboutique.co.ke',
-                phone: '+254 712 345 678',
-                location: 'Nairobi',
-                address: 'Westgate Shopping Mall, Nairobi',
-                date: '2025-01-20', 
-                dueDate: '2025-02-19', 
-                amount: 285000, 
-                status: 'sent',
-                items: [
-                    { description: 'Cotton T-Shirts (Assorted)', quantity: 50, unitPrice: 1200, total: 60000 },
-                    { description: 'Denim Jeans (Various Sizes)', quantity: 30, unitPrice: 2500, total: 75000 },
-                    { description: 'Summer Dresses', quantity: 25, unitPrice: 3200, total: 80000 }
-                ],
-                notes: 'Bulk order for new season collection'
-            },
-            { 
-                id: 2, 
-                number: 'INV-2025-002', 
-                customer: 'Sarit Centre Store', 
-                email: 'purchasing@saritcentre.co.ke',
-                phone: '+254 722 456 789',
-                location: 'Nairobi',
-                address: 'Sarit Centre, Westlands, Nairobi',
-                date: '2025-01-18', 
-                dueDate: '2025-02-17', 
-                amount: 156000, 
-                status: 'paid',
-                items: [
-                    { description: 'Polo Shirts (Corporate)', quantity: 40, unitPrice: 1800, total: 72000 },
-                    { description: 'Khaki Trousers', quantity: 20, unitPrice: 2200, total: 44000 },
-                    { description: 'Blazers (Formal)', quantity: 10, unitPrice: 4000, total: 40000 }
-                ],
-                notes: 'Corporate wear collection'
-            },
-            { 
-                id: 3, 
-                number: 'INV-2025-003', 
-                customer: 'Nakumatt Holdings', 
-                email: 'procurement@nakumatt.net',
-                phone: '+254 733 567 890',
-                location: 'Mombasa',
-                address: 'Nyali Centre, Mombasa',
-                date: '2025-01-15', 
-                dueDate: '2025-01-30', 
-                amount: 98000, 
-                status: 'overdue',
-                items: [
-                    { description: 'Beach Wear Collection', quantity: 35, unitPrice: 1500, total: 52500 },
-                    { description: 'Sandals (Assorted)', quantity: 25, unitPrice: 800, total: 20000 },
-                    { description: 'Sun Hats', quantity: 30, unitPrice: 600, total: 18000 }
-                ],
-                notes: 'Coastal collection for tourist season'
-            },
-            { 
-                id: 4, 
-                number: 'INV-2025-004', 
-                customer: 'Tuskys Supermarket', 
-                email: 'buyers@tuskys.co.ke',
-                phone: '+254 744 678 901',
-                location: 'Kisumu',
-                address: 'Mega Plaza, Kisumu',
-                date: '2025-01-12', 
-                dueDate: '2025-02-11', 
-                amount: 142000, 
-                status: 'sent',
-                items: [
-                    { description: 'School Uniforms (Primary)', quantity: 60, unitPrice: 1200, total: 72000 },
-                    { description: 'School Shoes', quantity: 40, unitPrice: 1000, total: 40000 },
-                    { description: 'Sports Wear', quantity: 20, unitPrice: 1500, total: 30000 }
-                ],
-                notes: 'Back to school collection'
-            },
-            { 
-                id: 5, 
-                number: 'INV-2025-005', 
-                customer: 'Online Customer', 
-                email: 'customer@email.com',
-                phone: '+254 755 789 012',
-                location: 'Nakuru',
-                address: 'P.O. Box 1234, Nakuru',
-                date: '2025-01-10', 
-                dueDate: '2025-02-09', 
-                amount: 75000, 
-                status: 'draft',
-                items: [
-                    { description: 'Casual Wear Bundle', quantity: 15, unitPrice: 2000, total: 30000 },
-                    { description: 'Accessories Set', quantity: 10, unitPrice: 1500, total: 15000 },
-                    { description: 'Footwear Collection', quantity: 12, unitPrice: 2500, total: 30000 }
-                ],
-                notes: 'Online order - custom bundle'
-            },
-            { 
-                id: 6, 
-                number: 'INV-2025-006', 
-                customer: 'Eldoret Fashion Hub', 
-                email: 'orders@eldoretfashion.co.ke',
-                phone: '+254 766 890 123',
-                location: 'Eldoret',
-                address: 'Zion Mall, Eldoret',
-                date: '2025-01-08', 
-                dueDate: '2025-02-07', 
-                amount: 198000, 
-                status: 'paid',
-                items: [
-                    { description: 'Designer Dresses', quantity: 20, unitPrice: 4500, total: 90000 },
-                    { description: 'Formal Suits', quantity: 15, unitPrice: 6000, total: 90000 },
-                    { description: 'Accessories', quantity: 40, unitPrice: 450, total: 18000 }
-                ],
-                notes: 'Premium collection for fashion week'
-            }
-        ]
-    };
-
     // Pagination variables
     let currentPage = 1;
     const itemsPerPage = 10;
-    let filteredInvoices = [...invoicesData.invoices];
+    let filteredInvoices = [];
     let sortColumn = '';
     let sortDirection = 'asc';
     let invoiceItemCount = 0;
 
     // Initialize the page
-    function initPage() {
-        // Set summary numbers
-        document.getElementById('totalInvoices').textContent = invoicesData.summary.totalInvoices;
-        document.getElementById('paidAmount').textContent = formatCurrency(invoicesData.summary.paidAmount);
-        document.getElementById('pendingAmount').textContent = formatCurrency(invoicesData.summary.pendingAmount);
-        document.getElementById('overdueAmount').textContent = formatCurrency(invoicesData.summary.overdueAmount);
+    async function initPage() {
+        try {
+            const summary = await fetch('/api/invoices/summary/').then(res => res.json());
+            // Set summary numbers
+            document.getElementById('totalInvoices').textContent = summary.total_invoices;
+            document.getElementById('paidAmount').textContent = formatCurrency(summary.paid_amount);
+            document.getElementById('pendingAmount').textContent = formatCurrency(summary.pending_amount);
+            document.getElementById('overdueAmount').textContent = formatCurrency(summary.overdue_amount);
 
-        // Set default dates
-        const today = new Date();
-        const thirtyDaysAgo = new Date(today.getTime() - (30 * 24 * 60 * 60 * 1000));
-        filterDateTo.value = today.toISOString().split('T')[0];
-        filterDateFrom.value = thirtyDaysAgo.toISOString().split('T')[0];
+            // Set default dates
+            const today = new Date();
+            const thirtyDaysAgo = new Date(today.getTime() - (30 * 24 * 60 * 60 * 1000));
+            filterDateTo.value = today.toISOString().split('T')[0];
+            filterDateFrom.value = thirtyDaysAgo.toISOString().split('T')[0];
 
-        // Set default invoice date
-        document.getElementById('invoiceDate').value = today.toISOString().split('T')[0];
-        const dueDate = new Date(today.getTime() + (30 * 24 * 60 * 60 * 1000));
-        document.getElementById('dueDate').value = dueDate.toISOString().split('T')[0];
+            // Set default invoice date
+            document.getElementById('invoiceDate').value = today.toISOString().split('T')[0];
+            const dueDate = new Date(today.getTime() + (30 * 24 * 60 * 60 * 1000));
+            document.getElementById('dueDate').value = dueDate.toISOString().split('T')[0];
 
-        // Load invoices
-        applyFilters();
+            // Load invoices
+            await applyFilters();
 
-        // Add initial invoice item
-        addInvoiceItem();
-
-        // Hide loading overlay
-        setTimeout(() => {
-            morphOverlay.classList.remove('active');
-        }, 1000);
+            // Add initial invoice item
+            addInvoiceItem();
+        } catch (error) {
+            console.error('Error initializing page:', error);
+        } finally {
+            // Hide loading overlay
+            setTimeout(() => {
+                morphOverlay.classList.remove('active');
+            }, 1000);
+        }
     }
 
     // Format currency for KES
@@ -220,58 +99,32 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Apply filters and search
-    function applyFilters() {
+    async function applyFilters() {
         const searchTerm = searchInvoices.value.toLowerCase();
         const statusFilter = filterStatus.value;
         const customerFilter = filterCustomer.value;
         const dateFromFilter = filterDateFrom.value;
         const dateToFilter = filterDateTo.value;
 
-        filteredInvoices = invoicesData.invoices.filter(invoice => {
-            const matchesSearch = invoice.number.toLowerCase().includes(searchTerm) ||
-                                invoice.customer.toLowerCase().includes(searchTerm) ||
-                                invoice.location.toLowerCase().includes(searchTerm);
-            
-            const matchesStatus = !statusFilter || invoice.status === statusFilter;
-            const matchesCustomer = !customerFilter || invoice.customer === customerFilter;
-            
-            let matchesDateRange = true;
-            if (dateFromFilter && dateToFilter) {
-                const invoiceDate = new Date(invoice.date);
-                const fromDate = new Date(dateFromFilter);
-                const toDate = new Date(dateToFilter);
-                matchesDateRange = invoiceDate >= fromDate && invoiceDate <= toDate;
-            }
-
-            return matchesSearch && matchesStatus && matchesCustomer && matchesDateRange;
+        const params = new URLSearchParams({
+            search: searchTerm,
+            status: statusFilter,
+            customer: customerFilter,
+            date_from: dateFromFilter,
+            date_to: dateToFilter,
+            sort_by: sortColumn,
+            sort_dir: sortDirection,
         });
 
-        // Apply sorting
-        if (sortColumn) {
-            filteredInvoices.sort((a, b) => {
-                let aValue = a[sortColumn];
-                let bValue = b[sortColumn];
-
-                if (sortColumn === 'date') {
-                    aValue = new Date(aValue);
-                    bValue = new Date(bValue);
-                } else if (sortColumn === 'amount') {
-                    aValue = parseFloat(aValue);
-                    bValue = parseFloat(bValue);
-                } else if (sortColumn === 'number') {
-                    aValue = aValue.toLowerCase();
-                    bValue = bValue.toLowerCase();
-                }
-
-                if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
-                if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
-                return 0;
-            });
+        try {
+            const invoices = await fetch(`/api/invoices/?${params.toString()}`).then(res => res.json());
+            filteredInvoices = invoices;
+            currentPage = 1;
+            renderInvoices();
+            renderPagination();
+        } catch (error) {
+            console.error('Error applying filters:', error);
         }
-
-        currentPage = 1;
-        renderInvoices();
-        renderPagination();
     }
 
     // Render invoices table
@@ -282,8 +135,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         let html = '';
         pageInvoices.forEach(invoice => {
-            const dueDateClass = isOverdue(invoice.dueDate) ? 'overdue' : 
-                               isDueSoon(invoice.dueDate) ? 'due-soon' : '';
+            const dueDateClass = isOverdue(invoice.due_date) ? 'overdue' : 
+                               isDueSoon(invoice.due_date) ? 'due-soon' : '';
             
             html += `
                 <tr>
@@ -301,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </td>
                     <td>${formatDate(invoice.date)}</td>
                     <td>
-                        <span class="due-date ${dueDateClass}">${formatDate(invoice.dueDate)}</span>
+                        <span class="due-date ${dueDateClass}">${formatDate(invoice.due_date)}</span>
                     </td>
                     <td class="amount-cell">KSh ${formatCurrency(invoice.amount)}</td>
                     <td>
@@ -443,15 +296,15 @@ document.addEventListener('DOMContentLoaded', function() {
         renderPagination();
     };
 
-    window.viewInvoice = function(id) {
-        const invoice = invoicesData.invoices.find(inv => inv.id === id);
+    window.viewInvoice = async function(id) {
+        const invoice = await fetch(`/api/invoices/${id}/`).then(res => res.json());
         if (invoice) {
             showInvoicePreview(invoice);
         }
     };
 
-    window.editInvoice = function(id) {
-        const invoice = invoicesData.invoices.find(inv => inv.id === id);
+    window.editInvoice = async function(id) {
+        const invoice = await fetch(`/api/invoices/${id}/`).then(res => res.json());
         if (invoice) {
             populateInvoiceForm(invoice);
             createInvoiceModal.classList.add('active');
@@ -459,19 +312,23 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     window.downloadInvoice = function(id) {
-        const invoice = invoicesData.invoices.find(inv => inv.id === id);
-        if (invoice) {
-            alert(`Downloading invoice ${invoice.number} as PDF...`);
-        }
+        alert(`Downloading invoice PDF...`);
+        window.open(`/api/invoices/${id}/download/`, '_blank');
     };
 
-    window.deleteInvoice = function(id) {
+    window.deleteInvoice = async function(id) {
         if (confirm('Are you sure you want to delete this invoice?')) {
-            const index = invoicesData.invoices.findIndex(inv => inv.id === id);
-            if (index !== -1) {
-                invoicesData.invoices.splice(index, 1);
-                applyFilters();
-                alert('Invoice deleted successfully!');
+            try {
+                const response = await fetch(`/api/invoices/${id}/`, { method: 'DELETE' });
+                if (response.ok) {
+                    await applyFilters();
+                    alert('Invoice deleted successfully!');
+                } else {
+                    alert('Failed to delete invoice.');
+                }
+            } catch (error) {
+                console.error('Error deleting invoice:', error);
+                alert('An error occurred while deleting the invoice.');
             }
         }
     };
@@ -509,7 +366,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="invoice-info">
                     <h3>Invoice Details:</h3>
                     <p><strong>Invoice Date:</strong> ${formatDate(invoice.date)}</p>
-                    <p><strong>Due Date:</strong> ${formatDate(invoice.dueDate)}</p>
+                    <p><strong>Due Date:</strong> ${formatDate(invoice.due_date)}</p>
                     <p><strong>Status:</strong> ${invoice.status.toUpperCase()}</p>
                 </div>
             </div>
@@ -528,7 +385,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <tr>
                             <td>${item.description}</td>
                             <td>${item.quantity}</td>
-                            <td>${formatCurrency(item.unitPrice)}</td>
+                            <td>${formatCurrency(item.unit_price)}</td>
                             <td>${formatCurrency(item.total)}</td>
                         </tr>
                     `).join('')}
@@ -568,7 +425,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('customerLocation').value = invoice.location;
         document.getElementById('customerAddress').value = invoice.address;
         document.getElementById('invoiceDate').value = invoice.date;
-        document.getElementById('dueDate').value = invoice.dueDate;
+        document.getElementById('dueDate').value = invoice.due_date;
         document.getElementById('invoiceNotes').value = invoice.notes || '';
 
         // Clear existing items
@@ -581,7 +438,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const currentItem = document.querySelector(`[data-item="${invoiceItemCount}"]`);
             currentItem.querySelector('.item-description').value = item.description;
             currentItem.querySelector('.item-quantity').value = item.quantity;
-            currentItem.querySelector('.item-price').value = item.unitPrice;
+            currentItem.querySelector('.item-price').value = item.unit_price;
         });
 
         calculateInvoiceTotals();
@@ -666,7 +523,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 invoice.number,
                 `"${invoice.customer}"`,
                 invoice.date,
-                invoice.dueDate,
+                invoice.due_date,
                 invoice.amount,
                 invoice.status,
                 invoice.location
@@ -741,15 +598,55 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Save as draft
-    saveDraftBtn.addEventListener('click', function() {
-        alert('Invoice saved as draft!');
-        createInvoiceModal.classList.remove('active');
+    saveDraftBtn.addEventListener('click', async function() {
+        const invoiceData = getInvoiceFormData();
+        invoiceData.status = 'draft';
+
+        try {
+            const response = await fetch('/api/invoices/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(invoiceData),
+            });
+            if (response.ok) {
+                alert('Invoice saved as draft!');
+                createInvoiceModal.classList.remove('active');
+                await applyFilters();
+            } else {
+                alert('Failed to save draft.');
+            }
+        } catch (error) {
+            console.error('Error saving draft:', error);
+            alert('An error occurred while saving the draft.');
+        }
     });
 
-    createInvoiceForm.addEventListener('submit', function(e) {
+    createInvoiceForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
-        // Collect form data
+        const invoiceData = getInvoiceFormData();
+        invoiceData.status = 'sent';
+
+        try {
+            const response = await fetch('/api/invoices/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(invoiceData),
+            });
+            if (response.ok) {
+                await applyFilters();
+                createInvoiceModal.classList.remove('active');
+                alert('Invoice created and sent successfully!');
+            } else {
+                alert('Failed to create invoice.');
+            }
+        } catch (error) {
+            console.error('Error creating invoice:', error);
+            alert('An error occurred while creating the invoice.');
+        }
+    });
+
+    function getInvoiceFormData() {
         const items = [];
         document.querySelectorAll('.invoice-item').forEach(item => {
             const description = item.querySelector('.item-description').value;
@@ -760,38 +657,28 @@ document.addEventListener('DOMContentLoaded', function() {
                 items.push({
                     description,
                     quantity,
-                    unitPrice,
+                    unit_price: unitPrice,
                     total: quantity * unitPrice
                 });
             }
         });
 
-        if (items.length === 0) {
-            alert('Please add at least one item to the invoice.');
-            return;
-        }
+        const subtotal = items.reduce((sum, item) => sum + item.total, 0);
+        const amount = subtotal * 1.16; // Including VAT
 
-        const newInvoice = {
-            id: Math.max(...invoicesData.invoices.map(inv => inv.id)) + 1,
-            number: `INV-2025-${String(invoicesData.invoices.length + 1).padStart(3, '0')}`,
+        return {
             customer: document.getElementById('customerName').value,
             email: document.getElementById('customerEmail').value,
             phone: document.getElementById('customerPhone').value,
             location: document.getElementById('customerLocation').value,
             address: document.getElementById('customerAddress').value,
             date: document.getElementById('invoiceDate').value,
-            dueDate: document.getElementById('dueDate').value,
-            amount: items.reduce((sum, item) => sum + item.total, 0) * 1.16, // Including VAT
-            status: 'sent',
-            items: items,
+            due_date: document.getElementById('dueDate').value,
+            amount,
+            items,
             notes: document.getElementById('invoiceNotes').value
         };
-
-        invoicesData.invoices.unshift(newInvoice);
-        applyFilters();
-        createInvoiceModal.classList.remove('active');
-        alert('Invoice created and sent successfully!');
-    });
+    }
 
     // Close modals when clicking outside
     createInvoiceModal.addEventListener('click', function(e) {
@@ -830,4 +717,3 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize the page
     initPage();
 });
-

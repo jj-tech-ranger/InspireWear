@@ -26,129 +26,35 @@ document.addEventListener('DOMContentLoaded', function() {
     let revenueExpensesChart = null;
     let expenseBreakdownChart = null;
 
-    // Sample financial data for Kenyan clothing store
-    const financialData = {
-        summary: {
-            totalRevenue: 2450000,
-            totalExpenses: 1892300,
-            netProfit: 557700,
-            profitMargin: 22.8
-        },
-        monthlyData: {
-            revenue: [1850000, 2100000, 1950000, 2200000, 2350000, 2450000],
-            expenses: [1650000, 1750000, 1680000, 1820000, 1890000, 1892300],
-            months: ['Aug 2024', 'Sep 2024', 'Oct 2024', 'Nov 2024', 'Dec 2024', 'Jan 2025']
-        },
-        expenseBreakdown: {
-            labels: ['Salaries & Wages', 'Raw Materials', 'Utilities', 'Rent', 'Marketing', 'Transport', 'Other'],
-            amounts: [850000, 425000, 180000, 150000, 125000, 95000, 67300],
-            colors: ['#3498db', '#e74c3c', '#f39c12', '#9b59b6', '#2ecc71', '#34495e', '#95a5a6']
-        },
-        profitLoss: {
-            revenue: {
-                sales: 2450000,
-                otherIncome: 25000,
-                total: 2475000
-            },
-            expenses: {
-                costOfGoodsSold: 980000,
-                salariesWages: 850000,
-                rent: 150000,
-                utilities: 180000,
-                marketing: 125000,
-                transport: 95000,
-                depreciation: 45000,
-                other: 67300,
-                total: 2492300
-            },
-            netIncome: -17300
-        },
-        balanceSheet: {
-            assets: {
-                currentAssets: {
-                    cash: 450000,
-                    accountsReceivable: 320000,
-                    inventory: 680000,
-                    prepaidExpenses: 45000,
-                    total: 1495000
-                },
-                fixedAssets: {
-                    equipment: 850000,
-                    furniture: 120000,
-                    vehicles: 450000,
-                    accumulatedDepreciation: -180000,
-                    total: 1240000
-                },
-                totalAssets: 2735000
-            },
-            liabilities: {
-                currentLiabilities: {
-                    accountsPayable: 280000,
-                    shortTermLoans: 150000,
-                    accruedExpenses: 85000,
-                    total: 515000
-                },
-                longTermLiabilities: {
-                    longTermLoans: 650000,
-                    total: 650000
-                },
-                totalLiabilities: 1165000
-            },
-            equity: {
-                shareCapital: 1000000,
-                retainedEarnings: 570000,
-                total: 1570000
-            }
-        },
-        cashFlow: {
-            operating: {
-                netIncome: -17300,
-                depreciation: 45000,
-                accountsReceivableChange: -25000,
-                inventoryChange: -45000,
-                accountsPayableChange: 35000,
-                total: -7300
-            },
-            investing: {
-                equipmentPurchase: -120000,
-                total: -120000
-            },
-            financing: {
-                loanProceeds: 200000,
-                loanRepayments: -85000,
-                dividendsPaid: -50000,
-                total: 65000
-            },
-            netCashFlow: -62300,
-            beginningCash: 512300,
-            endingCash: 450000
-        }
-    };
-
     // Initialize the page
-    function initPage() {
-        // Set summary numbers
-        document.getElementById('totalRevenue').textContent = formatCurrency(financialData.summary.totalRevenue);
-        document.getElementById('totalExpenses').textContent = formatCurrency(financialData.summary.totalExpenses);
-        document.getElementById('netProfit').textContent = formatCurrency(financialData.summary.netProfit);
-        document.getElementById('profitMargin').textContent = financialData.summary.profitMargin;
+    async function initPage() {
+        try {
+            const summary = await fetch('/api/reports/summary/').then(res => res.json());
+            // Set summary numbers
+            document.getElementById('totalRevenue').textContent = formatCurrency(summary.total_revenue);
+            document.getElementById('totalExpenses').textContent = formatCurrency(summary.total_expenses);
+            document.getElementById('netProfit').textContent = formatCurrency(summary.net_profit);
+            document.getElementById('profitMargin').textContent = summary.profit_margin;
 
-        // Set default dates
-        const today = new Date();
-        const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-        dateTo.value = today.toISOString().split('T')[0];
-        dateFrom.value = firstDayOfMonth.toISOString().split('T')[0];
+            // Set default dates
+            const today = new Date();
+            const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+            dateTo.value = today.toISOString().split('T')[0];
+            dateFrom.value = firstDayOfMonth.toISOString().split('T')[0];
 
-        // Initialize charts
-        initializeCharts();
+            // Initialize charts
+            await initializeCharts();
 
-        // Generate default report
-        generateReportContent();
-
-        // Hide loading overlay
-        setTimeout(() => {
-            morphOverlay.classList.remove('active');
-        }, 1000);
+            // Generate default report
+            await generateReportContent();
+        } catch (error) {
+            console.error('Error initializing page:', error);
+        } finally {
+            // Hide loading overlay
+            setTimeout(() => {
+                morphOverlay.classList.remove('active');
+            }, 1000);
+        }
     }
 
     // Format currency for KES
@@ -165,129 +71,148 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Initialize charts
-    function initializeCharts() {
-        // Revenue vs Expenses Chart
-        const revenueCtx = document.getElementById('revenueExpensesChart').getContext('2d');
-        revenueExpensesChart = new Chart(revenueCtx, {
-            type: 'line',
-            data: {
-                labels: financialData.monthlyData.months,
-                datasets: [{
-                    label: 'Revenue',
-                    data: financialData.monthlyData.revenue,
-                    borderColor: '#2ecc71',
-                    backgroundColor: 'rgba(46, 204, 113, 0.1)',
-                    tension: 0.4,
-                    fill: true
-                }, {
-                    label: 'Expenses',
-                    data: financialData.monthlyData.expenses,
-                    borderColor: '#e74c3c',
-                    backgroundColor: 'rgba(231, 76, 60, 0.1)',
-                    tension: 0.4,
-                    fill: true
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return context.dataset.label + ': KSh ' + formatCurrency(context.parsed.y);
-                            }
-                        }
-                    }
+    async function initializeCharts() {
+        try {
+            const chartData = await fetch('/api/reports/charts/').then(res => res.json());
+            // Revenue vs Expenses Chart
+            const revenueCtx = document.getElementById('revenueExpensesChart').getContext('2d');
+            revenueExpensesChart = new Chart(revenueCtx, {
+                type: 'line',
+                data: {
+                    labels: chartData.monthly_data.months,
+                    datasets: [{
+                        label: 'Revenue',
+                        data: chartData.monthly_data.revenue,
+                        borderColor: '#2ecc71',
+                        backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }, {
+                        label: 'Expenses',
+                        data: chartData.monthly_data.expenses,
+                        borderColor: '#e74c3c',
+                        backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
                 },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                return 'KSh ' + formatCurrency(value);
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': KSh ' + formatCurrency(context.parsed.y);
+                                }
                             }
                         }
-                    }
-                }
-            }
-        });
-
-        // Expense Breakdown Chart
-        const expenseCtx = document.getElementById('expenseBreakdownChart').getContext('2d');
-        expenseBreakdownChart = new Chart(expenseCtx, {
-            type: 'doughnut',
-            data: {
-                labels: financialData.expenseBreakdown.labels,
-                datasets: [{
-                    data: financialData.expenseBreakdown.amounts,
-                    backgroundColor: financialData.expenseBreakdown.colors,
-                    borderWidth: 2,
-                    borderColor: '#ffffff'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
                     },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                const percentage = ((context.parsed / total) * 100).toFixed(1);
-                                return context.label + ': KSh ' + formatCurrency(context.parsed) + ' (' + percentage + '%)';
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'KSh ' + formatCurrency(value);
+                                }
                             }
                         }
                     }
                 }
-            }
-        });
+            });
+
+            // Expense Breakdown Chart
+            const expenseCtx = document.getElementById('expenseBreakdownChart').getContext('2d');
+            expenseBreakdownChart = new Chart(expenseCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: chartData.expense_breakdown.labels,
+                    datasets: [{
+                        data: chartData.expense_breakdown.amounts,
+                        backgroundColor: chartData.expense_breakdown.colors,
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((context.parsed / total) * 100).toFixed(1);
+                                    return context.label + ': KSh ' + formatCurrency(context.parsed) + ' (' + percentage + '%)';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        } catch (error) {
+            console.error('Error initializing charts:', error);
+        }
     }
 
     // Generate report content based on selected type
-    function generateReportContent() {
+    async function generateReportContent() {
         const type = reportType.value;
         const period = reportPeriod.value;
-        
-        let content = '';
-        
-        switch (type) {
-            case 'profit_loss':
-                content = generateProfitLossReport();
-                break;
-            case 'balance_sheet':
-                content = generateBalanceSheetReport();
-                break;
-            case 'cash_flow':
-                content = generateCashFlowReport();
-                break;
-            case 'expense_report':
-                content = generateExpenseReport();
-                break;
-            case 'revenue_analysis':
-                content = generateRevenueAnalysisReport();
-                break;
-            case 'budget_variance':
-                content = generateBudgetVarianceReport();
-                break;
-            default:
-                content = generateProfitLossReport();
+        const from = dateFrom.value;
+        const to = dateTo.value;
+
+        const params = new URLSearchParams({
+            type,
+            period,
+            from,
+            to,
+        });
+
+        try {
+            const reportData = await fetch(`/api/reports/generate/?${params.toString()}`).then(res => res.json());
+            let content = '';
+            
+            switch (type) {
+                case 'profit_loss':
+                    content = generateProfitLossReport(reportData);
+                    break;
+                case 'balance_sheet':
+                    content = generateBalanceSheetReport(reportData);
+                    break;
+                case 'cash_flow':
+                    content = generateCashFlowReport(reportData);
+                    break;
+                case 'expense_report':
+                    content = generateExpenseReport(reportData);
+                    break;
+                case 'revenue_analysis':
+                    content = generateRevenueAnalysisReport(reportData);
+                    break;
+                case 'budget_variance':
+                    content = generateBudgetVarianceReport(reportData);
+                    break;
+                default:
+                    content = generateProfitLossReport(reportData);
+            }
+            
+            reportContent.innerHTML = content;
+        } catch (error) {
+            console.error('Error generating report content:', error);
+            reportContent.innerHTML = '<p>Error generating report.</p>';
         }
-        
-        reportContent.innerHTML = content;
     }
 
     // Generate Profit & Loss Statement
-    function generateProfitLossReport() {
-        const data = financialData.profitLoss;
-        const grossProfit = data.revenue.total - data.expenses.costOfGoodsSold;
-        const operatingExpenses = data.expenses.total - data.expenses.costOfGoodsSold;
+    function generateProfitLossReport(data) {
+        const grossProfit = data.revenue.total - data.expenses.cost_of_goods_sold;
+        const operatingExpenses = data.expenses.total - data.expenses.cost_of_goods_sold;
         const operatingIncome = grossProfit - operatingExpenses;
         
         return `
@@ -316,7 +241,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </tr>
                         <tr>
                             <td class="indent-1">Other Income</td>
-                            <td data-label="Amount">${formatCurrency(data.revenue.otherIncome)}</td>
+                            <td data-label="Amount">${formatCurrency(data.revenue.other_income)}</td>
                         </tr>
                         <tr class="section-total">
                             <td><strong>Total Revenue</strong></td>
@@ -329,7 +254,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </tr>
                         <tr>
                             <td class="indent-1">Raw Materials & Direct Labor</td>
-                            <td data-label="Amount">${formatCurrency(data.expenses.costOfGoodsSold)}</td>
+                            <td data-label="Amount">${formatCurrency(data.expenses.cost_of_goods_sold)}</td>
                         </tr>
                         <tr class="section-total">
                             <td><strong>Gross Profit</strong></td>
@@ -342,7 +267,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </tr>
                         <tr>
                             <td class="indent-1">Salaries & Wages</td>
-                            <td data-label="Amount">${formatCurrency(data.expenses.salariesWages)}</td>
+                            <td data-label="Amount">${formatCurrency(data.expenses.salaries_wages)}</td>
                         </tr>
                         <tr>
                             <td class="indent-1">Rent</td>
@@ -375,7 +300,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         
                         <tr class="grand-total">
                             <td><strong>NET INCOME</strong></td>
-                            <td data-label="Amount"><strong class="${data.netIncome >= 0 ? 'amount-positive' : 'amount-negative'}">${formatCurrency(data.netIncome)}</strong></td>
+                            <td data-label="Amount"><strong class="${data.net_income >= 0 ? 'amount-positive' : 'amount-negative'}">${formatCurrency(data.net_income)}</strong></td>
                         </tr>
                     </tbody>
                 </table>
@@ -392,16 +317,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <div class="metric-card">
                     <h5>Net Profit Margin</h5>
-                    <div class="metric-value">${formatPercentage((data.netIncome / data.revenue.total) * 100)}</div>
+                    <div class="metric-value">${formatPercentage((data.net_income / data.revenue.total) * 100)}</div>
                 </div>
             </div>
         `;
     }
 
     // Generate Balance Sheet Report
-    function generateBalanceSheetReport() {
-        const data = financialData.balanceSheet;
-        
+    function generateBalanceSheetReport(data) {
         return `
             <div class="report-header">
                 <div class="company-name">InspireWear</div>
@@ -425,23 +348,23 @@ document.addEventListener('DOMContentLoaded', function() {
                         </tr>
                         <tr>
                             <td class="indent-1">Cash and Cash Equivalents</td>
-                            <td data-label="Amount">${formatCurrency(data.assets.currentAssets.cash)}</td>
+                            <td data-label="Amount">${formatCurrency(data.assets.current_assets.cash)}</td>
                         </tr>
                         <tr>
                             <td class="indent-1">Accounts Receivable</td>
-                            <td data-label="Amount">${formatCurrency(data.assets.currentAssets.accountsReceivable)}</td>
+                            <td data-label="Amount">${formatCurrency(data.assets.current_assets.accounts_receivable)}</td>
                         </tr>
                         <tr>
                             <td class="indent-1">Inventory</td>
-                            <td data-label="Amount">${formatCurrency(data.assets.currentAssets.inventory)}</td>
+                            <td data-label="Amount">${formatCurrency(data.assets.current_assets.inventory)}</td>
                         </tr>
                         <tr>
                             <td class="indent-1">Prepaid Expenses</td>
-                            <td data-label="Amount">${formatCurrency(data.assets.currentAssets.prepaidExpenses)}</td>
+                            <td data-label="Amount">${formatCurrency(data.assets.current_assets.prepaid_expenses)}</td>
                         </tr>
                         <tr class="section-total">
                             <td><strong>Total Current Assets</strong></td>
-                            <td data-label="Amount"><strong>${formatCurrency(data.assets.currentAssets.total)}</strong></td>
+                            <td data-label="Amount"><strong>${formatCurrency(data.assets.current_assets.total)}</strong></td>
                         </tr>
                         
                         <tr class="section-header">
@@ -450,28 +373,28 @@ document.addEventListener('DOMContentLoaded', function() {
                         </tr>
                         <tr>
                             <td class="indent-1">Equipment</td>
-                            <td data-label="Amount">${formatCurrency(data.assets.fixedAssets.equipment)}</td>
+                            <td data-label="Amount">${formatCurrency(data.assets.fixed_assets.equipment)}</td>
                         </tr>
                         <tr>
                             <td class="indent-1">Furniture & Fixtures</td>
-                            <td data-label="Amount">${formatCurrency(data.assets.fixedAssets.furniture)}</td>
+                            <td data-label="Amount">${formatCurrency(data.assets.fixed_assets.furniture)}</td>
                         </tr>
                         <tr>
                             <td class="indent-1">Vehicles</td>
-                            <td data-label="Amount">${formatCurrency(data.assets.fixedAssets.vehicles)}</td>
+                            <td data-label="Amount">${formatCurrency(data.assets.fixed_assets.vehicles)}</td>
                         </tr>
                         <tr>
                             <td class="indent-1">Less: Accumulated Depreciation</td>
-                            <td data-label="Amount" class="amount-negative">(${formatCurrency(Math.abs(data.assets.fixedAssets.accumulatedDepreciation))})</td>
+                            <td data-label="Amount" class="amount-negative">(${formatCurrency(Math.abs(data.assets.fixed_assets.accumulated_depreciation))})</td>
                         </tr>
                         <tr class="section-total">
                             <td><strong>Total Fixed Assets</strong></td>
-                            <td data-label="Amount"><strong>${formatCurrency(data.assets.fixedAssets.total)}</strong></td>
+                            <td data-label="Amount"><strong>${formatCurrency(data.assets.fixed_assets.total)}</strong></td>
                         </tr>
                         
                         <tr class="grand-total">
                             <td><strong>TOTAL ASSETS</strong></td>
-                            <td data-label="Amount"><strong>${formatCurrency(data.assets.totalAssets)}</strong></td>
+                            <td data-label="Amount"><strong>${formatCurrency(data.assets.total_assets)}</strong></td>
                         </tr>
                     </tbody>
                 </table>
@@ -493,19 +416,19 @@ document.addEventListener('DOMContentLoaded', function() {
                         </tr>
                         <tr>
                             <td class="indent-1">Accounts Payable</td>
-                            <td data-label="Amount">${formatCurrency(data.liabilities.currentLiabilities.accountsPayable)}</td>
+                            <td data-label="Amount">${formatCurrency(data.liabilities.current_liabilities.accounts_payable)}</td>
                         </tr>
                         <tr>
                             <td class="indent-1">Short-term Loans</td>
-                            <td data-label="Amount">${formatCurrency(data.liabilities.currentLiabilities.shortTermLoans)}</td>
+                            <td data-label="Amount">${formatCurrency(data.liabilities.current_liabilities.short_term_loans)}</td>
                         </tr>
                         <tr>
                             <td class="indent-1">Accrued Expenses</td>
-                            <td data-label="Amount">${formatCurrency(data.liabilities.currentLiabilities.accruedExpenses)}</td>
+                            <td data-label="Amount">${formatCurrency(data.liabilities.current_liabilities.accrued_expenses)}</td>
                         </tr>
                         <tr class="section-total">
                             <td><strong>Total Current Liabilities</strong></td>
-                            <td data-label="Amount"><strong>${formatCurrency(data.liabilities.currentLiabilities.total)}</strong></td>
+                            <td data-label="Amount"><strong>${formatCurrency(data.liabilities.current_liabilities.total)}</strong></td>
                         </tr>
                         
                         <tr class="section-header">
@@ -514,16 +437,16 @@ document.addEventListener('DOMContentLoaded', function() {
                         </tr>
                         <tr>
                             <td class="indent-1">Long-term Loans</td>
-                            <td data-label="Amount">${formatCurrency(data.liabilities.longTermLiabilities.longTermLoans)}</td>
+                            <td data-label="Amount">${formatCurrency(data.liabilities.long_term_liabilities.long_term_loans)}</td>
                         </tr>
                         <tr class="section-total">
                             <td><strong>Total Long-term Liabilities</strong></td>
-                            <td data-label="Amount"><strong>${formatCurrency(data.liabilities.longTermLiabilities.total)}</strong></td>
+                            <td data-label="Amount"><strong>${formatCurrency(data.liabilities.long_term_liabilities.total)}</strong></td>
                         </tr>
                         
                         <tr class="section-total">
                             <td><strong>Total Liabilities</strong></td>
-                            <td data-label="Amount"><strong>${formatCurrency(data.liabilities.totalLiabilities)}</strong></td>
+                            <td data-label="Amount"><strong>${formatCurrency(data.liabilities.total_liabilities)}</strong></td>
                         </tr>
                         
                         <tr class="section-header">
@@ -532,11 +455,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         </tr>
                         <tr>
                             <td class="indent-1">Share Capital</td>
-                            <td data-label="Amount">${formatCurrency(data.equity.shareCapital)}</td>
+                            <td data-label="Amount">${formatCurrency(data.equity.share_capital)}</td>
                         </tr>
                         <tr>
                             <td class="indent-1">Retained Earnings</td>
-                            <td data-label="Amount">${formatCurrency(data.equity.retainedEarnings)}</td>
+                            <td data-label="Amount">${formatCurrency(data.equity.retained_earnings)}</td>
                         </tr>
                         <tr class="section-total">
                             <td><strong>Total Equity</strong></td>
@@ -545,7 +468,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         
                         <tr class="grand-total">
                             <td><strong>TOTAL LIABILITIES & EQUITY</strong></td>
-                            <td data-label="Amount"><strong>${formatCurrency(data.liabilities.totalLiabilities + data.equity.total)}</strong></td>
+                            <td data-label="Amount"><strong>${formatCurrency(data.liabilities.total_liabilities + data.equity.total)}</strong></td>
                         </tr>
                     </tbody>
                 </table>
@@ -553,30 +476,28 @@ document.addEventListener('DOMContentLoaded', function() {
             
             <div class="balance-equation">
                 Assets = Liabilities + Equity<br>
-                KSh ${formatCurrency(data.assets.totalAssets)} = KSh ${formatCurrency(data.liabilities.totalLiabilities)} + KSh ${formatCurrency(data.equity.total)}
+                KSh ${formatCurrency(data.assets.total_assets)} = KSh ${formatCurrency(data.liabilities.total_liabilities)} + KSh ${formatCurrency(data.equity.total)}
             </div>
             
             <div class="key-metrics">
                 <div class="metric-card">
                     <h5>Current Ratio</h5>
-                    <div class="metric-value">${(data.assets.currentAssets.total / data.liabilities.currentLiabilities.total).toFixed(2)}</div>
+                    <div class="metric-value">${(data.assets.current_assets.total / data.liabilities.current_liabilities.total).toFixed(2)}</div>
                 </div>
                 <div class="metric-card">
                     <h5>Debt-to-Equity Ratio</h5>
-                    <div class="metric-value">${(data.liabilities.totalLiabilities / data.equity.total).toFixed(2)}</div>
+                    <div class="metric-value">${(data.liabilities.total_liabilities / data.equity.total).toFixed(2)}</div>
                 </div>
                 <div class="metric-card">
                     <h5>Return on Equity</h5>
-                    <div class="metric-value">${formatPercentage((financialData.profitLoss.netIncome / data.equity.total) * 100)}</div>
+                    <div class="metric-value">${formatPercentage((data.net_income / data.equity.total) * 100)}</div>
                 </div>
             </div>
         `;
     }
 
     // Generate Cash Flow Statement
-    function generateCashFlowReport() {
-        const data = financialData.cashFlow;
-        
+    function generateCashFlowReport(data) {
         return `
             <div class="report-header">
                 <div class="company-name">InspireWear</div>
@@ -596,7 +517,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <tbody>
                         <tr>
                             <td>Net Income</td>
-                            <td data-label="Amount" class="${data.operating.netIncome >= 0 ? 'amount-positive' : 'amount-negative'}">${formatCurrency(data.operating.netIncome)}</td>
+                            <td data-label="Amount" class="${data.operating.net_income >= 0 ? 'amount-positive' : 'amount-negative'}">${formatCurrency(data.operating.net_income)}</td>
                         </tr>
                         <tr>
                             <td>Adjustments for:</td>
@@ -612,15 +533,15 @@ document.addEventListener('DOMContentLoaded', function() {
                         </tr>
                         <tr>
                             <td class="indent-1">Accounts Receivable</td>
-                            <td data-label="Amount" class="${data.operating.accountsReceivableChange >= 0 ? 'amount-positive' : 'amount-negative'}">${formatCurrency(data.operating.accountsReceivableChange)}</td>
+                            <td data-label="Amount" class="${data.operating.accounts_receivable_change >= 0 ? 'amount-positive' : 'amount-negative'}">${formatCurrency(data.operating.accounts_receivable_change)}</td>
                         </tr>
                         <tr>
                             <td class="indent-1">Inventory</td>
-                            <td data-label="Amount" class="${data.operating.inventoryChange >= 0 ? 'amount-positive' : 'amount-negative'}">${formatCurrency(data.operating.inventoryChange)}</td>
+                            <td data-label="Amount" class="${data.operating.inventory_change >= 0 ? 'amount-positive' : 'amount-negative'}">${formatCurrency(data.operating.inventory_change)}</td>
                         </tr>
                         <tr>
                             <td class="indent-1">Accounts Payable</td>
-                            <td data-label="Amount" class="${data.operating.accountsPayableChange >= 0 ? 'amount-positive' : 'amount-negative'}">${formatCurrency(data.operating.accountsPayableChange)}</td>
+                            <td data-label="Amount" class="${data.operating.accounts_payable_change >= 0 ? 'amount-positive' : 'amount-negative'}">${formatCurrency(data.operating.accounts_payable_change)}</td>
                         </tr>
                         <tr class="section-total">
                             <td><strong>Net Cash from Operating Activities</strong></td>
@@ -642,7 +563,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <tbody>
                         <tr>
                             <td>Purchase of Equipment</td>
-                            <td data-label="Amount" class="amount-negative">(${formatCurrency(Math.abs(data.investing.equipmentPurchase))})</td>
+                            <td data-label="Amount" class="amount-negative">(${formatCurrency(Math.abs(data.investing.equipment_purchase))})</td>
                         </tr>
                         <tr class="section-total">
                             <td><strong>Net Cash from Investing Activities</strong></td>
@@ -664,15 +585,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     <tbody>
                         <tr>
                             <td>Loan Proceeds</td>
-                            <td data-label="Amount" class="amount-positive">${formatCurrency(data.financing.loanProceeds)}</td>
+                            <td data-label="Amount" class="amount-positive">${formatCurrency(data.financing.loan_proceeds)}</td>
                         </tr>
                         <tr>
                             <td>Loan Repayments</td>
-                            <td data-label="Amount" class="amount-negative">(${formatCurrency(Math.abs(data.financing.loanRepayments))})</td>
+                            <td data-label="Amount" class="amount-negative">(${formatCurrency(Math.abs(data.financing.loan_repayments))})</td>
                         </tr>
                         <tr>
                             <td>Dividends Paid</td>
-                            <td data-label="Amount" class="amount-negative">(${formatCurrency(Math.abs(data.financing.dividendsPaid))})</td>
+                            <td data-label="Amount" class="amount-negative">(${formatCurrency(Math.abs(data.financing.dividends_paid))})</td>
                         </tr>
                         <tr class="section-total">
                             <td><strong>Net Cash from Financing Activities</strong></td>
@@ -688,15 +609,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     <tbody>
                         <tr>
                             <td><strong>Net Increase (Decrease) in Cash</strong></td>
-                            <td data-label="Amount"><strong class="${data.netCashFlow >= 0 ? 'amount-positive' : 'amount-negative'}">${formatCurrency(data.netCashFlow)}</strong></td>
+                            <td data-label="Amount"><strong class="${data.net_cash_flow >= 0 ? 'amount-positive' : 'amount-negative'}">${formatCurrency(data.net_cash_flow)}</strong></td>
                         </tr>
                         <tr>
                             <td>Cash at Beginning of Period</td>
-                            <td data-label="Amount">${formatCurrency(data.beginningCash)}</td>
+                            <td data-label="Amount">${formatCurrency(data.beginning_cash)}</td>
                         </tr>
                         <tr class="grand-total">
                             <td><strong>Cash at End of Period</strong></td>
-                            <td data-label="Amount"><strong>${formatCurrency(data.endingCash)}</strong></td>
+                            <td data-label="Amount"><strong>${formatCurrency(data.ending_cash)}</strong></td>
                         </tr>
                     </tbody>
                 </table>
@@ -705,8 +626,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Generate Expense Report
-    function generateExpenseReport() {
-        const data = financialData.expenseBreakdown;
+    function generateExpenseReport(data) {
         const total = data.amounts.reduce((a, b) => a + b, 0);
         
         return `
@@ -767,8 +687,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Generate Revenue Analysis Report
-    function generateRevenueAnalysisReport() {
-        const monthlyRevenue = financialData.monthlyData.revenue;
+    function generateRevenueAnalysisReport(data) {
+        const monthlyRevenue = data.monthly_revenue;
         const currentMonth = monthlyRevenue[monthlyRevenue.length - 1];
         const previousMonth = monthlyRevenue[monthlyRevenue.length - 2];
         const growth = ((currentMonth - previousMonth) / previousMonth * 100).toFixed(1);
@@ -791,7 +711,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </tr>
                     </thead>
                     <tbody>
-                        ${financialData.monthlyData.months.map((month, index) => {
+                        ${data.months.map((month, index) => {
                             const revenue = monthlyRevenue[index];
                             const prevRevenue = index > 0 ? monthlyRevenue[index - 1] : revenue;
                             const monthGrowth = index > 0 ? ((revenue - prevRevenue) / prevRevenue * 100).toFixed(1) : '0.0';
@@ -863,17 +783,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Generate Budget Variance Report
-    function generateBudgetVarianceReport() {
-        const budgetData = [
-            { category: 'Revenue', budget: 2300000, actual: 2450000 },
-            { category: 'Salaries & Wages', budget: 800000, actual: 850000 },
-            { category: 'Raw Materials', budget: 400000, actual: 425000 },
-            { category: 'Utilities', budget: 160000, actual: 180000 },
-            { category: 'Rent', budget: 150000, actual: 150000 },
-            { category: 'Marketing', budget: 100000, actual: 125000 },
-            { category: 'Transport', budget: 80000, actual: 95000 }
-        ];
-        
+    function generateBudgetVarianceReport(data) {
         return `
             <div class="report-header">
                 <div class="company-name">InspireWear</div>
@@ -894,7 +804,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </tr>
                     </thead>
                     <tbody>
-                        ${budgetData.map(item => {
+                        ${data.map(item => {
                             const variance = item.actual - item.budget;
                             const variancePercent = ((variance / item.budget) * 100).toFixed(1);
                             const isRevenue = item.category === 'Revenue';
@@ -943,8 +853,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    generateReport.addEventListener('click', function() {
-        generateReportContent();
+    generateReport.addEventListener('click', async function() {
+        await generateReportContent();
         alert('Report generated successfully!');
     });
 
@@ -970,12 +880,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Chart period buttons
     document.querySelectorAll('.chart-period-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', async function() {
             document.querySelectorAll('.chart-period-btn').forEach(b => b.classList.remove('active'));
             this.classList.add('active');
             
             // Update chart data based on period
-            // This would typically fetch new data from the server
+            await initializeCharts();
             alert(`Chart updated for ${this.dataset.period} period`);
         });
     });
@@ -1020,16 +930,29 @@ document.addEventListener('DOMContentLoaded', function() {
         scheduleReportModal.classList.remove('active');
     });
 
-    scheduleReportForm.addEventListener('submit', function(e) {
+    scheduleReportForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
         const formData = new FormData(this);
         const scheduleData = Object.fromEntries(formData);
         
-        console.log('Schedule Data:', scheduleData);
-        
-        scheduleReportModal.classList.remove('active');
-        alert('Report scheduled successfully!');
+        try {
+            const response = await fetch('/api/reports/schedule/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(scheduleData),
+            });
+
+            if (response.ok) {
+                scheduleReportModal.classList.remove('active');
+                alert('Report scheduled successfully!');
+            } else {
+                alert('Failed to schedule report.');
+            }
+        } catch (error) {
+            console.error('Error scheduling report:', error);
+            alert('An error occurred while scheduling the report.');
+        }
     });
 
     // Close modal when clicking outside
@@ -1059,4 +982,3 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize the page
     initPage();
 });
-

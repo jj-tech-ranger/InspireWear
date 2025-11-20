@@ -27,253 +27,32 @@ document.addEventListener('DOMContentLoaded', function() {
     const pageNumbers = document.getElementById('pageNumbers');
     const paginationInfo = document.getElementById('paginationInfo');
 
-    // Sample suppliers data with Kenyan context
-    const suppliersData = {
-        totalSuppliers: 47,
-        activeSuppliers: 42,
-        pendingOrders: 23,
-        monthlyValue: 2456800,
-        suppliers: [
-            {
-                id: 1,
-                name: 'Nairobi Textile Mills',
-                code: 'NTM-001',
-                contactPerson: 'James Mwangi',
-                category: 'Fabric Suppliers',
-                phone: '+254 722 123 456',
-                email: 'james@nairotextiles.co.ke',
-                address: 'Industrial Area, Nairobi\nP.O. Box 12345-00100',
-                location: 'Nairobi',
-                paymentTerms: 30,
-                status: 'active',
-                notes: 'Reliable supplier for cotton and polyester fabrics',
-                joinDate: '2023-03-15',
-                lastOrder: '2025-01-10',
-                totalOrders: 45,
-                rating: 4.8
-            },
-            {
-                id: 2,
-                name: 'Mombasa Leather Works',
-                code: 'MLW-002',
-                contactPerson: 'Fatima Hassan',
-                category: 'Leather Goods',
-                phone: '+254 733 234 567',
-                email: 'fatima@mombasaleather.com',
-                address: 'Old Town, Mombasa\nP.O. Box 5678-80100',
-                location: 'Mombasa',
-                paymentTerms: 45,
-                status: 'active',
-                notes: 'Premium leather supplier, excellent quality',
-                joinDate: '2022-11-20',
-                lastOrder: '2025-01-08',
-                totalOrders: 67,
-                rating: 4.9
-            },
-            {
-                id: 3,
-                name: 'Kisumu Beads & Crafts',
-                code: 'KBC-003',
-                contactPerson: 'Mary Otieno',
-                category: 'Accessories',
-                phone: '+254 744 345 678',
-                email: 'mary@kisumubeads.co.ke',
-                address: 'Kondele Market, Kisumu\nP.O. Box 9876-40100',
-                location: 'Kisumu',
-                paymentTerms: 21,
-                status: 'active',
-                notes: 'Traditional beadwork and accessories',
-                joinDate: '2023-07-10',
-                lastOrder: '2025-01-05',
-                totalOrders: 23,
-                rating: 4.6
-            },
-            {
-                id: 4,
-                name: 'Eldoret Packaging Solutions',
-                code: 'EPS-004',
-                contactPerson: 'David Kiprop',
-                category: 'Packaging',
-                phone: '+254 755 456 789',
-                email: 'david@eldoretpack.com',
-                address: 'Langas Road, Eldoret\nP.O. Box 3456-30100',
-                location: 'Eldoret',
-                paymentTerms: 14,
-                status: 'active',
-                notes: 'Eco-friendly packaging materials',
-                joinDate: '2023-01-25',
-                lastOrder: '2025-01-12',
-                totalOrders: 89,
-                rating: 4.7
-            },
-            {
-                id: 5,
-                name: 'Nakuru Equipment Suppliers',
-                code: 'NES-005',
-                contactPerson: 'Grace Wanjiku',
-                category: 'Equipment',
-                phone: '+254 766 567 890',
-                email: 'grace@nakuruequip.co.ke',
-                address: 'Kenyatta Avenue, Nakuru\nP.O. Box 7890-20100',
-                location: 'Nakuru',
-                paymentTerms: 60,
-                status: 'active',
-                notes: 'Industrial sewing machines and equipment',
-                joinDate: '2022-09-12',
-                lastOrder: '2024-12-28',
-                totalOrders: 34,
-                rating: 4.5
-            },
-            {
-                id: 6,
-                name: 'Thika Cotton Weavers',
-                code: 'TCW-006',
-                contactPerson: 'Peter Kamau',
-                category: 'Fabric Suppliers',
-                phone: '+254 777 678 901',
-                email: 'peter@thikacotton.com',
-                address: 'Blue Post Area, Thika\nP.O. Box 2345-01000',
-                location: 'Thika',
-                paymentTerms: 30,
-                status: 'active',
-                notes: 'Organic cotton specialist',
-                joinDate: '2023-05-18',
-                lastOrder: '2025-01-07',
-                totalOrders: 28,
-                rating: 4.4
-            },
-            {
-                id: 7,
-                name: 'Machakos Dye Works',
-                code: 'MDW-007',
-                contactPerson: 'Susan Mutua',
-                category: 'Fabric Suppliers',
-                phone: '+254 788 789 012',
-                email: 'susan@machakosdy.co.ke',
-                address: 'Machakos Town, Machakos\nP.O. Box 4567-90100',
-                location: 'Machakos',
-                paymentTerms: 21,
-                status: 'pending',
-                notes: 'Fabric dyeing and printing services',
-                joinDate: '2024-11-30',
-                lastOrder: 'N/A',
-                totalOrders: 0,
-                rating: 0
-            },
-            {
-                id: 8,
-                name: 'Coastal Accessories Ltd',
-                code: 'CAL-008',
-                contactPerson: 'Ahmed Ali',
-                category: 'Accessories',
-                phone: '+254 799 890 123',
-                email: 'ahmed@coastalacc.com',
-                address: 'Nyali, Mombasa\nP.O. Box 6789-80100',
-                location: 'Mombasa',
-                paymentTerms: 30,
-                status: 'active',
-                notes: 'Beach and coastal themed accessories',
-                joinDate: '2023-02-14',
-                lastOrder: '2025-01-09',
-                totalOrders: 52,
-                rating: 4.3
-            },
-            {
-                id: 9,
-                name: 'Highland Wool Suppliers',
-                code: 'HWS-009',
-                contactPerson: 'John Kiptoo',
-                category: 'Fabric Suppliers',
-                phone: '+254 710 901 234',
-                email: 'john@highlandwool.co.ke',
-                address: 'Kapsabet Road, Eldoret\nP.O. Box 8901-30100',
-                location: 'Eldoret',
-                paymentTerms: 45,
-                status: 'active',
-                notes: 'High-quality wool and warm fabrics',
-                joinDate: '2022-12-05',
-                lastOrder: '2025-01-11',
-                totalOrders: 41,
-                rating: 4.6
-            },
-            {
-                id: 10,
-                name: 'Urban Packaging Co.',
-                code: 'UPC-010',
-                contactPerson: 'Lucy Njeri',
-                category: 'Packaging',
-                phone: '+254 721 012 345',
-                email: 'lucy@urbanpack.co.ke',
-                address: 'Westlands, Nairobi\nP.O. Box 1234-00600',
-                location: 'Nairobi',
-                paymentTerms: 21,
-                status: 'active',
-                notes: 'Modern packaging solutions and branding',
-                joinDate: '2023-08-22',
-                lastOrder: '2025-01-13',
-                totalOrders: 36,
-                rating: 4.7
-            },
-            {
-                id: 11,
-                name: 'Safari Leather Crafts',
-                code: 'SLC-011',
-                contactPerson: 'Michael Ochieng',
-                category: 'Leather Goods',
-                phone: '+254 732 123 456',
-                email: 'michael@safarileather.com',
-                address: 'Kondele, Kisumu\nP.O. Box 5432-40100',
-                location: 'Kisumu',
-                paymentTerms: 30,
-                status: 'inactive',
-                notes: 'Traditional leather crafts, currently on hold',
-                joinDate: '2023-04-10',
-                lastOrder: '2024-10-15',
-                totalOrders: 18,
-                rating: 4.2
-            },
-            {
-                id: 12,
-                name: 'Rift Valley Textiles',
-                code: 'RVT-012',
-                contactPerson: 'Elizabeth Chebet',
-                category: 'Fabric Suppliers',
-                phone: '+254 743 234 567',
-                email: 'elizabeth@riftvalley.co.ke',
-                address: 'Nakuru Industrial Area\nP.O. Box 6543-20100',
-                location: 'Nakuru',
-                paymentTerms: 30,
-                status: 'active',
-                notes: 'Wide range of textile materials',
-                joinDate: '2022-06-30',
-                lastOrder: '2025-01-06',
-                totalOrders: 73,
-                rating: 4.8
-            }
-        ]
-    };
-
     // Pagination variables
     let currentPage = 1;
     const itemsPerPage = 12;
-    let filteredSuppliers = [...suppliersData.suppliers];
+    let filteredSuppliers = [];
     let currentSupplierForEdit = null;
 
     // Initialize the page
-    function initPage() {
-        // Set overview numbers
-        document.getElementById('totalSuppliers').textContent = formatNumber(suppliersData.totalSuppliers);
-        document.getElementById('activeSuppliers').textContent = formatNumber(suppliersData.activeSuppliers);
-        document.getElementById('pendingOrders').textContent = formatNumber(suppliersData.pendingOrders);
-        document.getElementById('monthlyValue').textContent = formatCurrency(suppliersData.monthlyValue);
+    async function initPage() {
+        try {
+            const summary = await fetch('/api/suppliers/summary/').then(res => res.json());
+            // Set overview numbers
+            document.getElementById('totalSuppliers').textContent = formatNumber(summary.total_suppliers);
+            document.getElementById('activeSuppliers').textContent = formatNumber(summary.active_suppliers);
+            document.getElementById('pendingOrders').textContent = formatNumber(summary.pending_orders);
+            document.getElementById('monthlyValue').textContent = formatCurrency(summary.monthly_value);
 
-        // Load suppliers grid
-        loadSuppliersGrid();
-
-        // Hide loading overlay after a short delay
-        setTimeout(() => {
-            morphOverlay.classList.remove('active');
-        }, 1000);
+            // Load suppliers grid
+            await loadSuppliersGrid();
+        } catch (error) {
+            console.error('Error initializing page:', error);
+        } finally {
+            // Hide loading overlay after a short delay
+            setTimeout(() => {
+                morphOverlay.classList.remove('active');
+            }, 1000);
+        }
     }
 
     // Format numbers
@@ -290,7 +69,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Load suppliers into the grid
-    function loadSuppliersGrid() {
+    async function loadSuppliersGrid() {
+        await applyFilters();
         const startIndex = (currentPage - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
         const pageSuppliers = filteredSuppliers.slice(startIndex, endIndex);
@@ -306,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="supplier-header">
                         <div class="supplier-info">
                             <h4>${supplier.name}</h4>
-                            <p>${supplier.code} • ${supplier.contactPerson}</p>
+                            <p>${supplier.code} • ${supplier.contact_person}</p>
                         </div>
                         <span class="supplier-status ${statusClass}">${supplier.status}</span>
                     </div>
@@ -335,11 +115,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                         <div class="detail-row">
                             <span class="detail-label">Payment Terms:</span>
-                            <span class="detail-value payment-terms">${supplier.paymentTerms} days</span>
+                            <span class="detail-value payment-terms">${supplier.payment_terms} days</span>
                         </div>
                         <div class="detail-row">
                             <span class="detail-label">Total Orders:</span>
-                            <span class="detail-value">${supplier.totalOrders}</span>
+                            <span class="detail-value">${supplier.total_orders}</span>
                         </div>
                         <div class="detail-row">
                             <span class="detail-label">Rating:</span>
@@ -476,17 +256,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Contact supplier
-    function contactSupplier(supplierId) {
-        const supplier = suppliersData.suppliers.find(s => s.id === supplierId);
+    async function contactSupplier(supplierId) {
+        const supplier = await fetch(`/api/suppliers/${supplierId}/`).then(res => res.json());
         if (!supplier) return;
 
-        const message = `Contact ${supplier.name}:\n\nPhone: ${supplier.phone}\nEmail: ${supplier.email}\nContact Person: ${supplier.contactPerson}`;
+        const message = `Contact ${supplier.name}:\n\nPhone: ${supplier.phone}\nEmail: ${supplier.email}\nContact Person: ${supplier.contact_person}`;
         alert(message);
     }
 
     // View supplier details
-    function viewSupplierDetails(supplierId) {
-        const supplier = suppliersData.suppliers.find(s => s.id === supplierId);
+    async function viewSupplierDetails(supplierId) {
+        const supplier = await fetch(`/api/suppliers/${supplierId}/`).then(res => res.json());
         if (!supplier) return;
 
         currentSupplierForEdit = supplier;
@@ -509,7 +289,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                         <div class="details-item">
                             <label>Contact Person:</label>
-                            <span>${supplier.contactPerson}</span>
+                            <span>${supplier.contact_person}</span>
                         </div>
                         <div class="details-item">
                             <label>Category:</label>
@@ -553,19 +333,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="details-grid">
                         <div class="details-item">
                             <label>Payment Terms:</label>
-                            <span class="payment-terms">${supplier.paymentTerms} days</span>
+                            <span class="payment-terms">${supplier.payment_terms} days</span>
                         </div>
                         <div class="details-item">
                             <label>Join Date:</label>
-                            <span>${formatDate(supplier.joinDate)}</span>
+                            <span>${formatDate(supplier.join_date)}</span>
                         </div>
                         <div class="details-item">
                             <label>Last Order:</label>
-                            <span>${supplier.lastOrder !== 'N/A' ? formatDate(supplier.lastOrder) : 'N/A'}</span>
+                            <span>${supplier.last_order !== 'N/A' ? formatDate(supplier.last_order) : 'N/A'}</span>
                         </div>
                         <div class="details-item">
                             <label>Total Orders:</label>
-                            <span>${supplier.totalOrders}</span>
+                            <span>${supplier.total_orders}</span>
                         </div>
                         <div class="details-item full-width">
                             <label>Notes:</label>
@@ -580,68 +360,65 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Open edit modal
-    function openEditModal(supplierId) {
-        const supplier = suppliersData.suppliers.find(s => s.id === supplierId);
+    async function openEditModal(supplierId) {
+        const supplier = await fetch(`/api/suppliers/${supplierId}/`).then(res => res.json());
         if (!supplier) return;
 
         document.getElementById('editSupplierId').value = supplier.id;
         document.getElementById('editSupplierName').value = supplier.name;
         document.getElementById('editSupplierCode').value = supplier.code;
-        document.getElementById('editContactPerson').value = supplier.contactPerson;
+        document.getElementById('editContactPerson').value = supplier.contact_person;
         document.getElementById('editSupplierCategory').value = supplier.category;
         document.getElementById('editSupplierPhone').value = supplier.phone;
         document.getElementById('editSupplierEmail').value = supplier.email;
         document.getElementById('editSupplierAddress').value = supplier.address;
         document.getElementById('editSupplierLocation').value = supplier.location;
-        document.getElementById('editPaymentTerms').value = supplier.paymentTerms;
+        document.getElementById('editPaymentTerms').value = supplier.payment_terms;
         document.getElementById('editSupplierNotes').value = supplier.notes;
 
         editSupplierModal.classList.add('active');
     }
 
     // Delete supplier
-    function deleteSupplier(supplierId) {
+    async function deleteSupplier(supplierId) {
         if (confirm('Are you sure you want to delete this supplier?')) {
-            const index = suppliersData.suppliers.findIndex(s => s.id === supplierId);
-            if (index !== -1) {
-                suppliersData.suppliers.splice(index, 1);
-                suppliersData.totalSuppliers--;
-                if (suppliersData.suppliers[index]?.status === 'active') {
-                    suppliersData.activeSuppliers--;
+            try {
+                const response = await fetch(`/api/suppliers/${supplierId}/`, { method: 'DELETE' });
+                if (response.ok) {
+                    await initPage();
+                    alert('Supplier deleted successfully!');
+                } else {
+                    alert('Failed to delete supplier.');
                 }
-                
-                // Update overview numbers
-                document.getElementById('totalSuppliers').textContent = formatNumber(suppliersData.totalSuppliers);
-                document.getElementById('activeSuppliers').textContent = formatNumber(suppliersData.activeSuppliers);
-                
-                applyFilters();
-                alert('Supplier deleted successfully!');
+            } catch (error) {
+                console.error('Error deleting supplier:', error);
+                alert('An error occurred while deleting the supplier.');
             }
         }
     }
 
     // Apply filters
-    function applyFilters() {
+    async function applyFilters() {
         const searchTerm = supplierSearch.value.toLowerCase();
         const statusValue = statusFilter.value;
         const locationValue = locationFilter.value;
         const categoryValue = categoryFilter.value;
 
-        filteredSuppliers = suppliersData.suppliers.filter(supplier => {
-            const matchesSearch = supplier.name.toLowerCase().includes(searchTerm) ||
-                                supplier.code.toLowerCase().includes(searchTerm) ||
-                                supplier.contactPerson.toLowerCase().includes(searchTerm) ||
-                                supplier.email.toLowerCase().includes(searchTerm) ||
-                                supplier.notes.toLowerCase().includes(searchTerm);
-            const matchesStatus = !statusValue || supplier.status === statusValue;
-            const matchesLocation = !locationValue || supplier.location === locationValue;
-            const matchesCategory = !categoryValue || supplier.category === categoryValue;
-
-            return matchesSearch && matchesStatus && matchesLocation && matchesCategory;
+        const params = new URLSearchParams({
+            search: searchTerm,
+            status: statusValue,
+            location: locationValue,
+            category: categoryValue,
         });
 
-        currentPage = 1;
-        loadSuppliersGrid();
+        try {
+            const suppliers = await fetch(`/api/suppliers/?${params.toString()}`).then(res => res.json());
+            filteredSuppliers = suppliers;
+            currentPage = 1;
+            loadSuppliersGrid();
+        } catch (error) {
+            console.error('Error applying filters:', error);
+        }
     }
 
     // Format date
@@ -746,67 +523,56 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Add supplier form submission
-    addSupplierForm.addEventListener('submit', function(e) {
+    addSupplierForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
-        const newSupplier = {
-            id: Date.now(),
-            name: document.getElementById('supplierName').value,
-            code: document.getElementById('supplierCode').value,
-            contactPerson: document.getElementById('contactPerson').value,
-            category: document.getElementById('supplierCategory').value,
-            phone: document.getElementById('supplierPhone').value,
-            email: document.getElementById('supplierEmail').value,
-            address: document.getElementById('supplierAddress').value,
-            location: document.getElementById('supplierLocation').value,
-            paymentTerms: parseInt(document.getElementById('paymentTerms').value),
-            status: 'active',
-            notes: document.getElementById('supplierNotes').value,
-            joinDate: new Date().toISOString().split('T')[0],
-            lastOrder: 'N/A',
-            totalOrders: 0,
-            rating: 0
-        };
+        const formData = new FormData(addSupplierForm);
+        const newSupplier = Object.fromEntries(formData.entries());
 
-        suppliersData.suppliers.unshift(newSupplier);
-        suppliersData.totalSuppliers++;
-        suppliersData.activeSuppliers++;
-        
-        // Update overview numbers
-        document.getElementById('totalSuppliers').textContent = formatNumber(suppliersData.totalSuppliers);
-        document.getElementById('activeSuppliers').textContent = formatNumber(suppliersData.activeSuppliers);
-        
-        applyFilters();
-        addSupplierModal.classList.remove('active');
-        this.reset();
-        alert('Supplier added successfully!');
+        try {
+            const response = await fetch('/api/suppliers/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newSupplier),
+            });
+            if (response.ok) {
+                await initPage();
+                addSupplierModal.classList.remove('active');
+                this.reset();
+                alert('Supplier added successfully!');
+            } else {
+                alert('Failed to add supplier.');
+            }
+        } catch (error) {
+            console.error('Error adding supplier:', error);
+            alert('An error occurred while adding the supplier.');
+        }
     });
 
     // Edit supplier form submission
-    editSupplierForm.addEventListener('submit', function(e) {
+    editSupplierForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
-        const supplierId = parseInt(document.getElementById('editSupplierId').value);
-        const supplierIndex = suppliersData.suppliers.findIndex(s => s.id === supplierId);
+        const formData = new FormData(editSupplierForm);
+        const updatedSupplier = Object.fromEntries(formData.entries());
+        const supplierId = updatedSupplier.id;
         
-        if (supplierIndex !== -1) {
-            suppliersData.suppliers[supplierIndex] = {
-                ...suppliersData.suppliers[supplierIndex],
-                name: document.getElementById('editSupplierName').value,
-                code: document.getElementById('editSupplierCode').value,
-                contactPerson: document.getElementById('editContactPerson').value,
-                category: document.getElementById('editSupplierCategory').value,
-                phone: document.getElementById('editSupplierPhone').value,
-                email: document.getElementById('editSupplierEmail').value,
-                address: document.getElementById('editSupplierAddress').value,
-                location: document.getElementById('editSupplierLocation').value,
-                paymentTerms: parseInt(document.getElementById('editPaymentTerms').value),
-                notes: document.getElementById('editSupplierNotes').value
-            };
-            
-            applyFilters();
-            editSupplierModal.classList.remove('active');
-            alert('Supplier updated successfully!');
+        try {
+            const response = await fetch(`/api/suppliers/${supplierId}/`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedSupplier),
+            });
+            if (response.ok) {
+                await initPage();
+                editSupplierModal.classList.remove('active');
+                alert('Supplier updated successfully!');
+            } else {
+                alert('Failed to update supplier.');
+            }
+        } catch (error) {
+            console.error('Error updating supplier:', error);
+            alert('An error occurred while updating the supplier.');
         }
     });
 
@@ -860,4 +626,3 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize the page
     initPage();
 });
-

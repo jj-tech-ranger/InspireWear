@@ -26,49 +26,35 @@ document.addEventListener('DOMContentLoaded', function() {
     const reportModal = document.getElementById('campaignReportModal');
     const reportModalClose = document.getElementById('reportModalClose');
 
-    // Sample email campaign data
-    const campaignData = {
-        totalCampaigns: 24,
-        openRate: 32.5,
-        clickRate: 8.7,
-        conversionRate: 3.2,
-        campaigns: [
-            { id: 1, name: 'Summer Sale 2025', recipients: 2450, status: 'sent', date: '2025-06-15', openRate: 32.5, clickRate: 8.7, type: 'promotional' },
-            { id: 2, name: 'New Arrivals - June', recipients: 2450, status: 'sent', date: '2025-06-10', openRate: 28.7, clickRate: 7.2, type: 'promotional' },
-            { id: 3, name: 'Loyalty Rewards Update', recipients: 1240, status: 'sent', date: '2025-06-05', openRate: 35.2, clickRate: 9.5, type: 'loyalty' },
-            { id: 4, name: 'Monthly Newsletter', recipients: 2450, status: 'sent', date: '2025-06-01', openRate: 25.8, clickRate: 6.3, type: 'newsletter' },
-            { id: 5, name: 'Abandoned Cart Reminder', recipients: 320, status: 'sent', date: '2025-05-28', openRate: 38.4, clickRate: 12.1, type: 'transactional' },
-            { id: 6, name: 'Eid Special Offers', recipients: 2450, status: 'scheduled', date: '2025-06-25', openRate: null, clickRate: null, type: 'promotional' },
-            { id: 7, name: 'Winter Collection Preview', recipients: 0, status: 'draft', date: null, openRate: null, clickRate: null, type: 'promotional' }
-        ],
-        templates: [
-            { id: 1, name: 'Summer Sale', category: 'promotional', type: 'discount', preview: 'summer_sale.jpg' },
-            { id: 2, name: 'New Arrivals', category: 'promotional', type: 'product_showcase', preview: 'new_arrivals.jpg' },
-            { id: 3, name: 'Loyalty Rewards', category: 'loyalty', type: 'basic', preview: 'loyalty.jpg' },
-            { id: 4, name: 'Newsletter', category: 'newsletter', type: 'basic', preview: 'newsletter.jpg' },
-            { id: 5, name: 'Abandoned Cart', category: 'transactional', type: 'basic', preview: 'abandoned_cart.jpg' },
-            { id: 6, name: 'Birthday Special', category: 'loyalty', type: 'discount', preview: 'birthday.jpg' }
-        ]
-    };
-
     // Initialize the page
-    function initPage() {
-        // Set overview numbers
-        document.getElementById('totalCampaigns').textContent = campaignData.totalCampaigns;
-        document.getElementById('openRate').textContent = campaignData.openRate;
-        document.getElementById('clickRate').textContent = campaignData.clickRate;
-        document.getElementById('conversionRate').textContent = campaignData.conversionRate;
+    async function initPage() {
+        try {
+            const response = await fetch('/api/campaigns/overview/');
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const overviewData = await response.json();
 
-        // Load campaigns table
-        loadCampaigns();
+            // Set overview numbers
+            document.getElementById('totalCampaigns').textContent = overviewData.totalCampaigns;
+            document.getElementById('openRate').textContent = overviewData.openRate;
+            document.getElementById('clickRate').textContent = overviewData.clickRate;
+            document.getElementById('conversionRate').textContent = overviewData.conversionRate;
 
-        // Load templates grid
-        loadTemplates();
+            // Load campaigns table
+            loadCampaigns();
 
-        // Hide loading overlay after a short delay
-        setTimeout(() => {
-            morphOverlay.classList.remove('active');
-        }, 800);
+            // Load templates grid
+            loadTemplates();
+        } catch (error) {
+            console.error('Error initializing page:', error);
+            // Optionally, display an error message to the user
+        } finally {
+            // Hide loading overlay after a short delay
+            setTimeout(() => {
+                morphOverlay.classList.remove('active');
+            }, 800);
+        }
     }
 
     // Format date
@@ -79,77 +65,97 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Load campaigns into the table
-    function loadCampaigns() {
+    async function loadCampaigns() {
         const statusFilter = campaignStatus.value;
         const typeFilter = campaignType.value;
         const searchTerm = campaignSearch.value.toLowerCase();
 
-        let filteredCampaigns = campaignData.campaigns.filter(campaign => {
-            const matchesStatus = statusFilter === 'all' || campaign.status === statusFilter;
-            const matchesType = typeFilter === 'all' || campaign.type === typeFilter;
-            const matchesSearch = campaign.name.toLowerCase().includes(searchTerm);
-            return matchesStatus && matchesType && matchesSearch;
-        });
+        const url = new URL('/api/campaigns/', window.location.origin);
+        url.searchParams.append('status', statusFilter);
+        url.searchParams.append('type', typeFilter);
+        url.searchParams.append('search', searchTerm);
 
-        let html = '';
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const filteredCampaigns = await response.json();
 
-        if (filteredCampaigns.length === 0) {
-            html = `<tr><td colspan="7" class="no-results">No campaigns found matching your criteria</td></tr>`;
-        } else {
-            filteredCampaigns.forEach(campaign => {
-                html += `
-                    <tr>
-                        <td>${campaign.name}</td>
-                        <td>${formatNumber(campaign.recipients)}</td>
-                        <td><span class="status-badge ${campaign.status}">${campaign.status}</span></td>
-                        <td>${formatDate(campaign.date)}</td>
-                        <td>${campaign.openRate ? `${campaign.openRate}%` : '-'}</td>
-                        <td>${campaign.clickRate ? `${campaign.clickRate}%` : '-'}</td>
-                        <td>
-                            <button class="action-btn view-btn" data-id="${campaign.id}" title="View Report"><i class="fas fa-chart-bar"></i></button>
-                            <button class="action-btn edit-btn" data-id="${campaign.id}" title="Edit"><i class="fas fa-edit"></i></button>
-                            <button class="action-btn duplicate-btn" data-id="${campaign.id}" title="Duplicate"><i class="fas fa-copy"></i></button>
-                            ${campaign.status === 'draft' ? '<button class="action-btn delete-btn" data-id="' + campaign.id + '" title="Delete"><i class="fas fa-trash"></i></button>' : ''}
-                        </td>
-                    </tr>
-                `;
+            let html = '';
+
+            if (filteredCampaigns.length === 0) {
+                html = `<tr><td colspan="7" class="no-results">No campaigns found matching your criteria</td></tr>`;
+            } else {
+                filteredCampaigns.forEach(campaign => {
+                    html += `
+                        <tr>
+                            <td>${campaign.name}</td>
+                            <td>${formatNumber(campaign.recipients)}</td>
+                            <td><span class="status-badge ${campaign.status}">${campaign.status}</span></td>
+                            <td>${formatDate(campaign.date)}</td>
+                            <td>${campaign.open_rate ? `${campaign.open_rate}%` : '-'}</td>
+                            <td>${campaign.click_rate ? `${campaign.click_rate}%` : '-'}</td>
+                            <td>
+                                <button class="action-btn view-btn" data-id="${campaign.id}" title="View Report"><i class="fas fa-chart-bar"></i></button>
+                                <button class="action-btn edit-btn" data-id="${campaign.id}" title="Edit"><i class="fas fa-edit"></i></button>
+                                <button class="action-btn duplicate-btn" data-id="${campaign.id}" title="Duplicate"><i class="fas fa-copy"></i></button>
+                                ${campaign.status === 'draft' ? '<button class="action-btn delete-btn" data-id="' + campaign.id + '" title="Delete"><i class="fas fa-trash"></i></button>' : ''}
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+
+            campaignsTable.innerHTML = html;
+
+            // Add event listeners to action buttons
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const campaignId = parseInt(this.getAttribute('data-id'));
+                    openCampaignReport(campaignId);
+                });
             });
+        } catch (error) {
+            console.error('Error loading campaigns:', error);
+            campaignsTable.innerHTML = `<tr><td colspan="7" class="no-results">Error loading campaigns. Please try again later.</td></tr>`;
         }
-
-        campaignsTable.innerHTML = html;
-
-        // Add event listeners to action buttons
-        document.querySelectorAll('.view-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const campaignId = parseInt(this.getAttribute('data-id'));
-                openCampaignReport(campaignId);
-            });
-        });
     }
 
     // Load templates into the grid
-    function loadTemplates() {
-        let html = '';
+    async function loadTemplates() {
+        try {
+            const response = await fetch('/api/templates/');
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const templates = await response.json();
 
-        campaignData.templates.forEach(template => {
-            html += `
-                <div class="template-card">
-                    <div class="template-image">
-                        <img src="../img/templates/${template.preview}" alt="${template.name}">
-                    </div>
-                    <div class="template-details">
-                        <h4 class="template-name">${template.name}</h4>
-                        <p class="template-category">${template.category} • ${template.type}</p>
-                        <div class="template-actions">
-                            <button class="btn-secondary" data-id="${template.id}"><i class="fas fa-edit"></i> Edit</button>
-                            <button class="btn-primary" data-id="${template.id}"><i class="fas fa-envelope"></i> Use</button>
+            let html = '';
+
+            templates.forEach(template => {
+                html += `
+                    <div class="template-card">
+                        <div class="template-image">
+                            <img src="${template.preview_url}" alt="${template.name}">
+                        </div>
+                        <div class="template-details">
+                            <h4 class="template-name">${template.name}</h4>
+                            <p class="template-category">${template.category} • ${template.type}</p>
+                            <div class="template-actions">
+                                <button class="btn-secondary" data-id="${template.id}"><i class="fas fa-edit"></i> Edit</button>
+                                <button class="btn-primary" data-id="${template.id}"><i class="fas fa-envelope"></i> Use</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            `;
-        });
+                `;
+            });
 
-        templatesGrid.innerHTML = html;
+            templatesGrid.innerHTML = html;
+        } catch (error) {
+            console.error('Error loading templates:', error);
+            templatesGrid.innerHTML = `<p class="no-results">Error loading templates. Please try again later.</p>`;
+        }
     }
 
     // Format numbers
@@ -158,34 +164,42 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Open campaign report
-    function openCampaignReport(campaignId) {
-        const campaign = campaignData.campaigns.find(c => c.id === campaignId);
-        if (!campaign) return;
+    async function openCampaignReport(campaignId) {
+        try {
+            const response = await fetch(`/api/campaigns/${campaignId}/report/`);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const campaign = await response.json();
 
-        // Set report data
-        document.getElementById('reportCampaignName').textContent = campaign.name;
-        document.getElementById('reportSentDate').textContent = formatDate(campaign.date);
-        document.getElementById('reportRecipients').textContent = formatNumber(campaign.recipients);
+            // Set report data
+            document.getElementById('reportCampaignName').textContent = campaign.name;
+            document.getElementById('reportSentDate').textContent = formatDate(campaign.date);
+            document.getElementById('reportRecipients').textContent = formatNumber(campaign.recipients);
 
-        // Show modal
-        reportModal.classList.add('active');
+            // Show modal
+            reportModal.classList.add('active');
 
-        // Initialize charts
-        initReportCharts();
+            // Initialize charts with fetched data
+            initReportCharts(campaign.report_data);
+        } catch (error) {
+            console.error(`Error opening campaign report for campaign ID ${campaignId}:`, error);
+            // Optionally, show an error to the user
+        }
     }
 
     // Initialize report charts
-    function initReportCharts() {
+    function initReportCharts(reportData) {
         // Performance Chart
         const performanceCtx = document.getElementById('performanceChart').getContext('2d');
         new Chart(performanceCtx, {
             type: 'line',
             data: {
-                labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7'],
+                labels: reportData.performance.labels, //['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7'],
                 datasets: [
                     {
                         label: 'Opens',
-                        data: [120, 190, 170, 220, 180, 150, 100],
+                        data: reportData.performance.opens, //[120, 190, 170, 220, 180, 150, 100],
                         backgroundColor: 'rgba(52, 152, 219, 0.2)',
                         borderColor: 'rgba(52, 152, 219, 1)',
                         borderWidth: 2,
@@ -193,7 +207,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     },
                     {
                         label: 'Clicks',
-                        data: [30, 50, 45, 60, 50, 40, 25],
+                        data: reportData.performance.clicks, //[30, 50, 45, 60, 50, 40, 25],
                         backgroundColor: 'rgba(46, 204, 113, 0.2)',
                         borderColor: 'rgba(46, 204, 113, 1)',
                         borderWidth: 2,
@@ -217,9 +231,9 @@ document.addEventListener('DOMContentLoaded', function() {
         new Chart(deviceCtx, {
             type: 'doughnut',
             data: {
-                labels: ['Mobile', 'Desktop', 'Tablet', 'Other'],
+                labels: reportData.devices.labels, //['Mobile', 'Desktop', 'Tablet', 'Other'],
                 datasets: [{
-                    data: [65, 25, 8, 2],
+                    data: reportData.devices.data, //[65, 25, 8, 2],
                     backgroundColor: [
                         'rgba(52, 152, 219, 0.8)',
                         'rgba(155, 89, 182, 0.8)',
@@ -287,31 +301,42 @@ document.addEventListener('DOMContentLoaded', function() {
         createCampaignModal.classList.remove('active');
     });
 
-    createCampaignForm.addEventListener('submit', function(e) {
+    createCampaignForm.addEventListener('submit', async function(e) {
         e.preventDefault();
 
         const campaignName = document.getElementById('campaignName').value;
         const campaignSubject = document.getElementById('campaignSubject').value;
+        const campaignType = document.getElementById('campaignTypeSelect').value;
 
         if (campaignName && campaignSubject) {
-            alert(`Campaign "${campaignName}" created successfully!`);
-            createCampaignModal.classList.remove('active');
-            this.reset();
+            try {
+                const response = await fetch('/api/campaigns/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Include CSRF token if needed by Django
+                        // 'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify({
+                        name: campaignName,
+                        subject: campaignSubject,
+                        type: campaignType,
+                        status: 'draft'
+                    })
+                });
 
-            // Add to campaigns array and reload
-            const newId = campaignData.campaigns.length > 0 ? Math.max(...campaignData.campaigns.map(c => c.id)) + 1 : 1;
-            campaignData.campaigns.push({
-                id: newId,
-                name: campaignName,
-                recipients: 0,
-                status: 'draft',
-                date: null,
-                openRate: null,
-                clickRate: null,
-                type: document.getElementById('campaignTypeSelect').value
-            });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
 
-            loadCampaigns();
+                alert(`Campaign "${campaignName}" created successfully!`);
+                createCampaignModal.classList.remove('active');
+                this.reset();
+                loadCampaigns(); // Reload campaigns to show the new one
+            } catch (error) {
+                console.error('Error creating campaign:', error);
+                alert('Error creating campaign. Please try again.');
+            }
         }
     });
 
@@ -327,28 +352,42 @@ document.addEventListener('DOMContentLoaded', function() {
         createTemplateModal.classList.remove('active');
     });
 
-    createTemplateForm.addEventListener('submit', function(e) {
+    createTemplateForm.addEventListener('submit', async function(e) {
         e.preventDefault();
 
         const templateName = document.getElementById('templateName').value;
         const templateSubject = document.getElementById('templateSubject').value;
+        const templateCategory = document.getElementById('templateCategory').value;
+        const templateType = document.getElementById('templateType').value;
 
         if (templateName && templateSubject) {
-            alert(`Template "${templateName}" created successfully!`);
-            createTemplateModal.classList.remove('active');
-            this.reset();
+            try {
+                const response = await fetch('/api/templates/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // 'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify({
+                        name: templateName,
+                        subject: templateSubject,
+                        category: templateCategory,
+                        type: templateType
+                    })
+                });
 
-            // Add to templates array and reload
-            const newId = campaignData.templates.length > 0 ? Math.max(...campaignData.templates.map(t => t.id)) + 1 : 1;
-            campaignData.templates.push({
-                id: newId,
-                name: templateName,
-                category: document.getElementById('templateCategory').value,
-                type: document.getElementById('templateType').value,
-                preview: 'default.jpg'
-            });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
 
-            loadTemplates();
+                alert(`Template "${templateName}" created successfully!`);
+                createTemplateModal.classList.remove('active');
+                this.reset();
+                loadTemplates(); // Reload templates
+            } catch (error) {
+                console.error('Error creating template:', error);
+                alert('Error creating template. Please try again.');
+            }
         }
     });
 
@@ -395,7 +434,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             icon.classList.remove('fa-moon');
             icon.classList.add('fa-sun');
-        }
+        .
     }
 
     // Show loading overlay initially

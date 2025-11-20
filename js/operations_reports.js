@@ -17,115 +17,43 @@ document.addEventListener('DOMContentLoaded', function() {
     const refreshDataBtn = document.getElementById('refreshDataBtn');
     const exportTableBtn = document.getElementById('exportTableBtn');
 
-    // Report data with Kenyan context
-    const reportsData = {
-        summary: {
-            totalRevenue: 2450000,
-            totalTransactions: 1847,
-            avgTransaction: 1327,
-            topLocation: 'Nairobi'
-        },
-        salesByLocation: [
-            { location: 'Nairobi', revenue: 980000, transactions: 742, color: '#3498db' },
-            { location: 'Mombasa', revenue: 650000, transactions: 489, color: '#2ecc71' },
-            { location: 'Kisumu', revenue: 420000, transactions: 318, color: '#f1c40f' },
-            { location: 'Nakuru', revenue: 280000, transactions: 212, color: '#e74c3c' },
-            { location: 'Eldoret', revenue: 120000, transactions: 86, color: '#9b59b6' }
-        ],
-        revenueTrends: [
-            { date: '2025-01-01', revenue: 75000 },
-            { date: '2025-01-02', revenue: 82000 },
-            { date: '2025-01-03', revenue: 78000 },
-            { date: '2025-01-04', revenue: 91000 },
-            { date: '2025-01-05', revenue: 88000 },
-            { date: '2025-01-06', revenue: 95000 },
-            { date: '2025-01-07', revenue: 102000 },
-            { date: '2025-01-08', revenue: 89000 },
-            { date: '2025-01-09', revenue: 97000 },
-            { date: '2025-01-10', revenue: 105000 },
-            { date: '2025-01-11', revenue: 112000 },
-            { date: '2025-01-12', revenue: 98000 },
-            { date: '2025-01-13', revenue: 108000 },
-            { date: '2025-01-14', revenue: 115000 },
-            { date: '2025-01-15', revenue: 125000 },
-            { date: '2025-01-16', revenue: 118000 },
-            { date: '2025-01-17', revenue: 132000 },
-            { date: '2025-01-18', revenue: 128000 },
-            { date: '2025-01-19', revenue: 135000 },
-            { date: '2025-01-20', revenue: 142000 },
-            { date: '2025-01-21', revenue: 138000 }
-        ],
-        staffPerformance: [
-            { name: 'John Mwangi', sales: 185000, location: 'Nairobi', color: '#3498db' },
-            { name: 'Susan Akinyi', sales: 142000, location: 'Mombasa', color: '#2ecc71' },
-            { name: 'David Omondi', sales: 128000, location: 'Nairobi', color: '#f1c40f' },
-            { name: 'Grace Wambui', sales: 115000, location: 'Kisumu', color: '#e74c3c' },
-            { name: 'Peter Kamau', sales: 98000, location: 'Nakuru', color: '#9b59b6' },
-            { name: 'Mary Njeri', sales: 87000, location: 'Eldoret', color: '#34495e' }
-        ],
-        productCategories: [
-            { category: 'Casual Wear', sales: 890000, color: '#3498db' },
-            { category: 'Formal Wear', sales: 650000, color: '#2ecc71' },
-            { category: 'Sportswear', sales: 480000, color: '#f1c40f' },
-            { category: 'Accessories', sales: 280000, color: '#e74c3c' },
-            { category: 'Footwear', sales: 150000, color: '#9b59b6' }
-        ],
-        detailedReports: [
-            { date: '2025-01-21', location: 'Nairobi', revenue: 138000, transactions: 104, staff: 12, performance: 'excellent' },
-            { date: '2025-01-21', location: 'Mombasa', revenue: 95000, transactions: 71, staff: 8, performance: 'good' },
-            { date: '2025-01-21', location: 'Kisumu', revenue: 62000, transactions: 47, staff: 6, performance: 'good' },
-            { date: '2025-01-21', location: 'Nakuru', revenue: 41000, transactions: 31, staff: 4, performance: 'average' },
-            { date: '2025-01-21', location: 'Eldoret', revenue: 18000, transactions: 13, staff: 3, performance: 'average' },
-            { date: '2025-01-20', location: 'Nairobi', revenue: 142000, transactions: 107, staff: 12, performance: 'excellent' },
-            { date: '2025-01-20', location: 'Mombasa', revenue: 98000, transactions: 74, staff: 8, performance: 'excellent' },
-            { date: '2025-01-20', location: 'Kisumu', revenue: 65000, transactions: 49, staff: 6, performance: 'good' },
-            { date: '2025-01-20', location: 'Nakuru', revenue: 43000, transactions: 32, staff: 4, performance: 'good' },
-            { date: '2025-01-20', location: 'Eldoret', revenue: 19000, transactions: 14, staff: 3, performance: 'average' },
-            { date: '2025-01-19', location: 'Nairobi', revenue: 135000, transactions: 102, staff: 12, performance: 'excellent' },
-            { date: '2025-01-19', location: 'Mombasa', revenue: 92000, transactions: 69, staff: 8, performance: 'good' },
-            { date: '2025-01-19', location: 'Kisumu', revenue: 61000, transactions: 46, staff: 6, performance: 'good' },
-            { date: '2025-01-19', location: 'Nakuru', revenue: 40000, transactions: 30, staff: 4, performance: 'average' },
-            { date: '2025-01-19', location: 'Eldoret', revenue: 17000, transactions: 13, staff: 3, performance: 'poor' },
-            { date: '2025-01-18', location: 'Nairobi', revenue: 128000, transactions: 96, staff: 12, performance: 'excellent' },
-            { date: '2025-01-18', location: 'Mombasa', revenue: 87000, transactions: 66, staff: 8, performance: 'good' },
-            { date: '2025-01-18', location: 'Kisumu', revenue: 58000, transactions: 44, staff: 6, performance: 'average' },
-            { date: '2025-01-18', location: 'Nakuru', revenue: 38000, transactions: 29, staff: 4, performance: 'average' },
-            { date: '2025-01-18', location: 'Eldoret', revenue: 16000, transactions: 12, staff: 3, performance: 'poor' }
-        ]
-    };
-
     // Pagination state
     let currentPage = 1;
     const itemsPerPage = 10;
-    let filteredData = [...reportsData.detailedReports];
+    let filteredData = [];
     let sortColumn = null;
     let sortDirection = 'asc';
     let selectedExportFormat = null;
 
     // Initialize the page
-    function initPage() {
-        // Set summary numbers
-        document.getElementById('totalRevenue').textContent = formatCurrency(reportsData.summary.totalRevenue);
-        document.getElementById('totalTransactions').textContent = formatNumber(reportsData.summary.totalTransactions);
-        document.getElementById('avgTransaction').textContent = formatCurrency(reportsData.summary.avgTransaction);
-        document.getElementById('topLocation').textContent = reportsData.summary.topLocation;
+    async function initPage() {
+        try {
+            const summary = await fetch('/api/reports/operations/summary/').then(res => res.json());
+            // Set summary numbers
+            document.getElementById('totalRevenue').textContent = formatCurrency(summary.total_revenue);
+            document.getElementById('totalTransactions').textContent = formatNumber(summary.total_transactions);
+            document.getElementById('avgTransaction').textContent = formatCurrency(summary.avg_transaction);
+            document.getElementById('topLocation').textContent = summary.top_location;
 
-        // Initialize charts
-        initCharts();
+            // Initialize charts
+            await initCharts();
 
-        // Load reports table
-        loadReportsTable();
+            // Load reports table
+            await loadReportsTable();
 
-        // Set default dates
-        const today = new Date();
-        const thirtyDaysAgo = new Date(today.getTime() - (30 * 24 * 60 * 60 * 1000));
-        document.getElementById('dateTo').value = today.toISOString().split('T')[0];
-        document.getElementById('dateFrom').value = thirtyDaysAgo.toISOString().split('T')[0];
-
-        // Hide loading overlay
-        setTimeout(() => {
-            morphOverlay.classList.remove('active');
-        }, 1000);
+            // Set default dates
+            const today = new Date();
+            const thirtyDaysAgo = new Date(today.getTime() - (30 * 24 * 60 * 60 * 1000));
+            document.getElementById('dateTo').value = today.toISOString().split('T')[0];
+            document.getElementById('dateFrom').value = thirtyDaysAgo.toISOString().split('T')[0];
+        } catch (error) {
+            console.error('Error initializing page:', error);
+        } finally {
+            // Hide loading overlay
+            setTimeout(() => {
+                morphOverlay.classList.remove('active');
+            }, 1000);
+        }
     }
 
     // Format currency in Kenyan Shillings
@@ -153,151 +81,157 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Initialize charts
-    function initCharts() {
-        // Sales by Location Chart
-        const salesCtx = document.getElementById('salesByLocationCanvas').getContext('2d');
-        new Chart(salesCtx, {
-            type: 'bar',
-            data: {
-                labels: reportsData.salesByLocation.map(item => item.location),
-                datasets: [{
-                    label: 'Revenue (KES)',
-                    data: reportsData.salesByLocation.map(item => item.revenue),
-                    backgroundColor: reportsData.salesByLocation.map(item => item.color),
-                    borderColor: reportsData.salesByLocation.map(item => item.color),
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return `Revenue: KES ${formatCurrency(context.parsed.y)}`;
-                            }
-                        }
-                    }
+    async function initCharts() {
+        try {
+            const chartData = await fetch('/api/reports/operations/charts/').then(res => res.json());
+            // Sales by Location Chart
+            const salesCtx = document.getElementById('salesByLocationCanvas').getContext('2d');
+            new Chart(salesCtx, {
+                type: 'bar',
+                data: {
+                    labels: chartData.sales_by_location.map(item => item.location),
+                    datasets: [{
+                        label: 'Revenue (KES)',
+                        data: chartData.sales_by_location.map(item => item.revenue),
+                        backgroundColor: chartData.sales_by_location.map(item => item.color),
+                        borderColor: chartData.sales_by_location.map(item => item.color),
+                        borderWidth: 1
+                    }]
                 },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                return 'KES ' + formatCurrency(value);
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `Revenue: KES ${formatCurrency(context.parsed.y)}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'KES ' + formatCurrency(value);
+                                }
                             }
                         }
                     }
                 }
-            }
-        });
+            });
 
-        // Revenue Trends Chart
-        const trendsCtx = document.getElementById('revenueTrendsCanvas').getContext('2d');
-        new Chart(trendsCtx, {
-            type: 'line',
-            data: {
-                labels: reportsData.revenueTrends.map(item => formatDate(item.date)),
-                datasets: [{
-                    label: 'Daily Revenue (KES)',
-                    data: reportsData.revenueTrends.map(item => item.revenue),
-                    backgroundColor: 'rgba(52, 152, 219, 0.2)',
-                    borderColor: 'rgba(52, 152, 219, 1)',
-                    borderWidth: 2,
-                    tension: 0.4,
-                    fill: true
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return `Revenue: KES ${formatCurrency(context.parsed.y)}`;
-                            }
-                        }
-                    }
+            // Revenue Trends Chart
+            const trendsCtx = document.getElementById('revenueTrendsCanvas').getContext('2d');
+            new Chart(trendsCtx, {
+                type: 'line',
+                data: {
+                    labels: chartData.revenue_trends.map(item => formatDate(item.date)),
+                    datasets: [{
+                        label: 'Daily Revenue (KES)',
+                        data: chartData.revenue_trends.map(item => item.revenue),
+                        backgroundColor: 'rgba(52, 152, 219, 0.2)',
+                        borderColor: 'rgba(52, 152, 219, 1)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true
+                    }]
                 },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                return 'KES ' + formatCurrency(value);
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `Revenue: KES ${formatCurrency(context.parsed.y)}`;
+                                }
                             }
                         }
-                    }
-                }
-            }
-        });
-
-        // Staff Performance Chart
-        const staffCtx = document.getElementById('staffPerformanceCanvas').getContext('2d');
-        new Chart(staffCtx, {
-            type: 'doughnut',
-            data: {
-                labels: reportsData.staffPerformance.map(item => item.name),
-                datasets: [{
-                    data: reportsData.staffPerformance.map(item => item.sales),
-                    backgroundColor: reportsData.staffPerformance.map(item => item.color),
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'right',
                     },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                const staff = reportsData.staffPerformance[context.dataIndex];
-                                return `${staff.name}: KES ${formatCurrency(context.parsed)} (${staff.location})`;
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'KES ' + formatCurrency(value);
+                                }
                             }
                         }
                     }
                 }
-            }
-        });
+            });
 
-        // Product Categories Chart
-        const categoriesCtx = document.getElementById('productCategoriesCanvas').getContext('2d');
-        new Chart(categoriesCtx, {
-            type: 'pie',
-            data: {
-                labels: reportsData.productCategories.map(item => item.category),
-                datasets: [{
-                    data: reportsData.productCategories.map(item => item.sales),
-                    backgroundColor: reportsData.productCategories.map(item => item.color),
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'right',
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return `${context.label}: KES ${formatCurrency(context.parsed)}`;
+            // Staff Performance Chart
+            const staffCtx = document.getElementById('staffPerformanceCanvas').getContext('2d');
+            new Chart(staffCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: chartData.staff_performance.map(item => item.name),
+                    datasets: [{
+                        data: chartData.staff_performance.map(item => item.sales),
+                        backgroundColor: chartData.staff_performance.map(item => item.color),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const staff = chartData.staff_performance[context.dataIndex];
+                                    return `${staff.name}: KES ${formatCurrency(context.parsed)} (${staff.location})`;
+                                }
                             }
                         }
                     }
                 }
-            }
-        });
+            });
+
+            // Product Categories Chart
+            const categoriesCtx = document.getElementById('productCategoriesCanvas').getContext('2d');
+            new Chart(categoriesCtx, {
+                type: 'pie',
+                data: {
+                    labels: chartData.product_categories.map(item => item.category),
+                    datasets: [{
+                        data: chartData.product_categories.map(item => item.sales),
+                        backgroundColor: chartData.product_categories.map(item => item.color),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: KES ${formatCurrency(context.parsed)}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        } catch (error) {
+            console.error('Error initializing charts:', error);
+        }
     }
 
     // Load reports table
-    function loadReportsTable() {
+    async function loadReportsTable() {
+        await filterReports();
         const startIndex = (currentPage - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
         const pageData = filteredData.slice(startIndex, endIndex);
@@ -414,30 +348,29 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Filter reports
-    function filterReports() {
+    async function filterReports() {
         const dateFrom = document.getElementById('dateFrom').value;
         const dateTo = document.getElementById('dateTo').value;
         const location = document.getElementById('locationFilter').value;
 
-        filteredData = reportsData.detailedReports.filter(report => {
-            const reportDate = new Date(report.date);
-            const fromDate = dateFrom ? new Date(dateFrom) : null;
-            const toDate = dateTo ? new Date(dateTo) : null;
-
-            const dateMatch = (!fromDate || reportDate >= fromDate) &&
-                            (!toDate || reportDate <= toDate);
-            const locationMatch = location === 'all' || report.location === location;
-
-            return dateMatch && locationMatch;
+        const params = new URLSearchParams({
+            date_from: dateFrom,
+            date_to: dateTo,
+            location: location,
         });
 
-        currentPage = 1;
-        loadReportsTable();
+        try {
+            const data = await fetch(`/api/reports/operations/detailed/?${params.toString()}`).then(res => res.json());
+            filteredData = data;
+            currentPage = 1;
+        } catch (error) {
+            console.error('Error filtering reports:', error);
+        }
     }
 
     // Report action functions
-    window.viewReportDetails = function(date, location) {
-        const report = reportsData.detailedReports.find(r => r.date === date && r.location === location);
+    window.viewReportDetails = async function(date, location) {
+        const report = await fetch(`/api/reports/operations/detailed-report/?date=${date}&location=${location}`).then(res => res.json());
         if (report) {
             const content = `
                 <div class="report-details">
@@ -479,29 +412,34 @@ document.addEventListener('DOMContentLoaded', function() {
         alert(`Edit functionality for ${location} on ${formatDate(date)} would be implemented here.`);
     };
 
-    window.deleteReport = function(date, location) {
+    window.deleteReport = async function(date, location) {
         if (confirm(`Are you sure you want to delete the report for ${location} on ${formatDate(date)}?`)) {
-            alert('Report deleted successfully!');
+            try {
+                const response = await fetch(`/api/reports/operations/detailed-report/?date=${date}&location=${location}`, { method: 'DELETE' });
+                if (response.ok) {
+                    await loadReportsTable();
+                    alert('Report deleted successfully!');
+                } else {
+                    alert('Failed to delete report.');
+                }
+            } catch (error) {
+                console.error('Error deleting report:', error);
+                alert('An error occurred while deleting the report.');
+            }
         }
     };
 
     // Event Listeners
-    generateReportBtn.addEventListener('click', function() {
+    generateReportBtn.addEventListener('click', async function() {
         morphOverlay.classList.add('active');
-        setTimeout(() => {
-            filterReports();
-            morphOverlay.classList.remove('active');
-        }, 1000);
+        await loadReportsTable();
+        morphOverlay.classList.remove('active');
     });
 
-    refreshDataBtn.addEventListener('click', function() {
+    refreshDataBtn.addEventListener('click', async function() {
         morphOverlay.classList.add('active');
-        setTimeout(() => {
-            filteredData = [...reportsData.detailedReports];
-            currentPage = 1;
-            loadReportsTable();
-            morphOverlay.classList.remove('active');
-        }, 500);
+        await initPage();
+        morphOverlay.classList.remove('active');
     });
 
     exportReportBtn.addEventListener('click', function() {

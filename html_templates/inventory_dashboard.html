@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InspireWear | Inventory Dashboard</title>
+    <link rel="stylesheet" href="../css/inventory.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <link rel="icon" href="../img/favicon.png" type="image/x-icon">
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="morph-overlay" id="morphOverlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p class="loading-text">Loading Inventory Module...</p>
+        </div>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="logo-container">
+            <img src="../img/logo.png" alt="InspireWear Logo" class="logo">
+            <h1 class="logo-text">InspireWear</h1>
+        </div>
+
+        <a href="../templates/index.html" class="home-button">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+
+        <div class="module-heading">
+            <span class="star">✧</span>
+            <h1>INVENTORY</h1>
+            <span class="star">✧</span>
+        </div>
+
+        <nav class="inventory-nav">
+            <ul>
+                <li class="active"><a href="../templates/inventory_dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                <li><a href="../templates/products.html"><i class="fas fa-tshirt"></i> Products</a></li>
+                <li><a href="../templates/variants.html"><i class="fas fa-palette"></i> Variants</a></li>
+                <li><a href="../templates/suppliers.html"><i class="fas fa-truck"></i> Suppliers</a></li>
+                <li><a href="../templates/orders.html"><i class="fas fa-boxes"></i> Orders</a></li>
+                <li><a href="../templates/inventory_notifications.html"><i class="fas fa-bell"></i>Notifications</a></li>
+                <li><a href="../templates/inventory_reports.html"><i class="fas fa-chart-bar"></i> Reports</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <header class="inventory-header">
+            <h2>Inventory Dashboard</h2>
+            <div class="header-actions">
+                <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon theme-icon"></i>
+                </button>
+                <div class="profile-container">
+                    <button class="profile-btn" id="profileBtn" aria-label="User profile" aria-expanded="false">
+                        <img src="../img/user.png" alt="Profile" class="profile-img">
+                        <span>Inventory Manager</span>
+                    </button>
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <a href="../templates/index.html" class="dropdown-item">
+                            <i class="fas fa-home"></i> Back to Home
+                        </a>
+                        <a href="../templates/login.html" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Overview Cards -->
+        <div class="overview-cards">
+            <div class="card total-items">
+                <div class="card-icon">
+                    <i class="fas fa-boxes"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Total Products</h3>
+                    <p class="amount"><span id="totalItems">1,842</span></p>
+                    <p class="change positive"><i class="fas fa-arrow-up"></i> 12% from last month</p>
+                </div>
+            </div>
+
+            <div class="card low-stock">
+                <div class="card-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Low Stock Items</h3>
+                    <p class="amount"><span id="lowStockItems">68</span></p>
+                    <p class="change negative"><i class="fas fa-arrow-up"></i> 8% from last month</p>
+                </div>
+            </div>
+
+            <div class="card inventory-value">
+                <div class="card-icon">
+                    <i class="fas fa-coins"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Inventory Value</h3>
+                    <p class="amount">Ksh<span id="inventoryValue">148,765</span></p>
+                    <p class="change positive"><i class="fas fa-arrow-up"></i> 15% from last month</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="charts-section">
+            <div class="chart-container">
+                <h3>Inventory Movement (Last 6 Months)</h3>
+                <div class="chart" id="inventoryMovementChart">
+                    <canvas id="inventoryMovementCanvas"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h3>Inventory by Category</h3>
+                <div class="chart" id="inventoryCategoryChart">
+                    <canvas id="inventoryCategoryCanvas"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Stock Alerts -->
+        <div class="recent-alerts">
+            <div class="section-header">
+                <h3>Recent Stock Alerts</h3>
+                <button id="addItemBtn" class="btn-primary"><i class="fas fa-plus"></i> Add Product</button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Category</th>
+                        <th>Size/Variant</th>
+                        <th>Current Stock</th>
+                        <th>Reorder Level</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="alertsTable">
+                    <!-- Alerts will be loaded by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Footer -->
+        <footer class="inventory-footer">
+            <div class="footer-content">
+                <p class="footer-text">© 2025 InspireWear. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#" class="footer-link">Terms</a>
+                    <a href="#" class="footer-link">Privacy</a>
+                    <a href="#" class="footer-link">Contact</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div class="modal-overlay" id="addItemModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Add New Product</h3>
+                <button class="modal-close" id="modalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="addItemForm">
+                    <div class="form-group">
+                        <label for="itemName">Product Name</label>
+                        <input type="text" id="itemName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="itemCategory">Category</label>
+                        <select id="itemCategory" required>
+                            <option value="">Select Category</option>
+                            <option value="Tops">Tops</option>
+                            <option value="Bottoms">Bottoms</option>
+                            <option value="Outerwear">Outerwear</option>
+                            <option value="Activewear">Activewear</option>
+                            <option value="Accessories">Accessories</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="itemSize">Size</label>
+                            <select id="itemSize" required>
+                                <option value="">Select Size</option>
+                                <option value="XS">XS</option>
+                                <option value="S">S</option>
+                                <option value="M">M</option>
+                                <option value="L">L</option>
+                                <option value="XL">XL</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="itemColor">Color</label>
+                            <input type="text" id="itemColor" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="currentStock">Current Stock</label>
+                            <input type="number" id="currentStock" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="reorderLevel">Reorder Level</label>
+                            <input type="number" id="reorderLevel" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="itemValue">Unit Value ($)</label>
+                        <input type="number" id="itemValue" step="0.01" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="cancelAddItem">Cancel</button>
+                        <button type="submit" class="btn-primary">Save Product</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/inventory.js"></script>
+</body>
+</html>

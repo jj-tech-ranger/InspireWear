@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InspireWear | Orders</title>
+    <link rel="stylesheet" href="../css/inventory.css">
+    <link rel="stylesheet" href="../css/orders.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <link rel="icon" href="../img/favicon.png" type="image/x-icon">
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="morph-overlay" id="morphOverlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p class="loading-text">Loading Orders...</p>
+        </div>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="logo-container">
+            <img src="../img/logo.png" alt="InspireWear Logo" class="logo">
+            <h1 class="logo-text">InspireWear</h1>
+        </div>
+
+        <a href="../templates/index.html" class="home-button">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+
+        <div class="module-heading">
+            <span class="star">✧</span>
+            <h1>INVENTORY</h1>
+            <span class="star">✧</span>
+        </div>
+
+        <nav class="inventory-nav">
+            <ul>
+                <li><a href="../templates/inventory_dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                <li><a href="../templates/products.html"><i class="fas fa-tshirt"></i> Products</a></li>
+                <li><a href="../templates/variants.html"><i class="fas fa-palette"></i> Variants</a></li>
+                <li><a href="../templates/suppliers.html"><i class="fas fa-truck"></i> Suppliers</a></li>
+                <li class="active"><a href="../templates/orders.html"><i class="fas fa-boxes"></i> Orders</a></li>
+                <li><a href="../templates/inventory_notifications.html"><i class="fas fa-bell"></i> Notifications</a></li>
+                <li><a href="../templates/inventory_reports.html"><i class="fas fa-chart-bar"></i> Reports</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <header class="inventory-header">
+            <h2>Orders Management</h2>
+            <div class="header-actions">
+                <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon theme-icon"></i>
+                </button>
+                <div class="profile-container">
+                    <button class="profile-btn" id="profileBtn" aria-label="User profile" aria-expanded="false">
+                        <img src="../img/user.png" alt="Profile" class="profile-img">
+                        <span>Inventory Manager</span>
+                    </button>
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <a href="../templates/index.html" class="dropdown-item">
+                            <i class="fas fa-home"></i> Back to Home
+                        </a>
+                        <a href="../templates/login.html" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Orders Overview Cards -->
+        <div class="overview-cards">
+            <div class="card total-orders">
+                <div class="card-icon">
+                    <i class="fas fa-boxes"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Total Orders</h3>
+                    <p class="amount"><span id="totalOrders">156</span></p>
+                    <p class="change positive"><i class="fas fa-arrow-up"></i> 8% from last month</p>
+                </div>
+            </div>
+
+            <div class="card pending-orders">
+                <div class="card-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Pending Orders</h3>
+                    <p class="amount"><span id="pendingOrders">23</span></p>
+                    <p class="change negative"><i class="fas fa-arrow-up"></i> 12% from last month</p>
+                </div>
+            </div>
+
+            <div class="card delivered-orders">
+                <div class="card-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Delivered Orders</h3>
+                    <p class="amount"><span id="deliveredOrders">118</span></p>
+                    <p class="change positive"><i class="fas fa-arrow-up"></i> 15% from last month</p>
+                </div>
+            </div>
+
+            <div class="card orders-value">
+                <div class="card-icon">
+                    <i class="fas fa-coins"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Orders Value</h3>
+                    <p class="amount">KSh <span id="ordersValue">3,245,600</span></p>
+                    <p class="change positive"><i class="fas fa-arrow-up"></i> 22% from last month</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Orders Filter and Search -->
+        <div class="orders-controls">
+            <div class="search-filter-section">
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="orderSearch" placeholder="Search orders..." class="search-input">
+                </div>
+                <div class="filter-container">
+                    <select id="statusFilter" class="filter-select">
+                        <option value="">All Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="confirmed">Confirmed</option>
+                        <option value="shipped">Shipped</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                    <select id="supplierFilter" class="filter-select">
+                        <option value="">All Suppliers</option>
+                        <option value="Nairobi Textile Mills">Nairobi Textile Mills</option>
+                        <option value="Mombasa Leather Works">Mombasa Leather Works</option>
+                        <option value="Kisumu Beads & Crafts">Kisumu Beads & Crafts</option>
+                        <option value="Eldoret Packaging Solutions">Eldoret Packaging Solutions</option>
+                        <option value="Nakuru Equipment Suppliers">Nakuru Equipment Suppliers</option>
+                    </select>
+                    <select id="priorityFilter" class="filter-select">
+                        <option value="">All Priorities</option>
+                        <option value="high">High</option>
+                        <option value="medium">Medium</option>
+                        <option value="low">Low</option>
+                    </select>
+                    <input type="date" id="dateFilter" class="filter-select">
+                </div>
+            </div>
+            <div class="action-buttons">
+                <button id="createOrderBtn" class="btn-primary">
+                    <i class="fas fa-plus"></i> Create Order
+                </button>
+                <button id="bulkActionsBtn" class="btn-secondary">
+                    <i class="fas fa-tasks"></i> Bulk Actions
+                </button>
+                <button id="exportOrdersBtn" class="btn-secondary">
+                    <i class="fas fa-download"></i> Export
+                </button>
+            </div>
+        </div>
+
+        <!-- Orders Table -->
+        <div class="orders-table-container">
+            <table class="orders-table">
+                <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" id="selectAll" class="checkbox">
+                        </th>
+                        <th>Order ID</th>
+                        <th>Supplier</th>
+                        <th>Items</th>
+                        <th>Order Date</th>
+                        <th>Expected Delivery</th>
+                        <th>Total (KSh)</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="ordersTableBody">
+                    <!-- Orders will be loaded by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination-container">
+            <div class="pagination-info">
+                <span id="paginationInfo">Showing 1-20 of 156 orders</span>
+            </div>
+            <div class="pagination-controls">
+                <button id="prevPage" class="pagination-btn" disabled>
+                    <i class="fas fa-chevron-left"></i> Previous
+                </button>
+                <div class="page-numbers" id="pageNumbers">
+                    <!-- Page numbers will be generated by JavaScript -->
+                </div>
+                <button id="nextPage" class="pagination-btn">
+                    Next <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="inventory-footer">
+            <div class="footer-content">
+                <p class="footer-text">© 2025 InspireWear. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#" class="footer-link">Terms</a>
+                    <a href="#" class="footer-link">Privacy</a>
+                    <a href="#" class="footer-link">Contact</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Create Order Modal -->
+    <div class="modal-overlay" id="createOrderModal">
+        <div class="modal large-modal">
+            <div class="modal-header">
+                <h3>Create New Order</h3>
+                <button class="modal-close" id="modalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="createOrderForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="orderSupplier">Supplier</label>
+                            <select id="orderSupplier" required>
+                                <option value="">Select Supplier</option>
+                                <option value="Nairobi Textile Mills">Nairobi Textile Mills</option>
+                                <option value="Mombasa Leather Works">Mombasa Leather Works</option>
+                                <option value="Kisumu Beads & Crafts">Kisumu Beads & Crafts</option>
+                                <option value="Eldoret Packaging Solutions">Eldoret Packaging Solutions</option>
+                                <option value="Nakuru Equipment Suppliers">Nakuru Equipment Suppliers</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="orderPriority">Priority</label>
+                            <select id="orderPriority" required>
+                                <option value="">Select Priority</option>
+                                <option value="high">High</option>
+                                <option value="medium">Medium</option>
+                                <option value="low">Low</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="expectedDelivery">Expected Delivery Date</label>
+                            <input type="date" id="expectedDelivery" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="deliveryLocation">Delivery Location</label>
+                            <select id="deliveryLocation" required>
+                                <option value="">Select Location</option>
+                                <option value="Nairobi">Nairobi</option>
+                                <option value="Mombasa">Mombasa</option>
+                                <option value="Kisumu">Kisumu</option>
+                                <option value="Nakuru">Nakuru</option>
+                                <option value="Eldoret">Eldoret</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Order Items Section -->
+                    <div class="order-items-section">
+                        <h4>Order Items</h4>
+                        <div id="orderItemsList">
+                            <div class="order-item-row">
+                                <div class="form-group">
+                                    <label>Product</label>
+                                    <select class="item-product" required>
+                                        <option value="">Select Product</option>
+                                        <option value="Kitenge Print Dress">Kitenge Print Dress</option>
+                                        <option value="Safari Cargo Pants">Safari Cargo Pants</option>
+                                        <option value="Maasai Beaded Necklace">Maasai Beaded Necklace</option>
+                                        <option value="Kikoy Beach Wrap">Kikoy Beach Wrap</option>
+                                        <option value="Ankara Print Blazer">Ankara Print Blazer</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Quantity</label>
+                                    <input type="number" class="item-quantity" min="1" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Unit Price (KSh)</label>
+                                    <input type="number" class="item-price" step="0.01" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Total</label>
+                                    <input type="text" class="item-total" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label>&nbsp;</label>
+                                    <button type="button" class="btn-danger remove-item">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" id="addOrderItem" class="btn-secondary">
+                            <i class="fas fa-plus"></i> Add Item
+                        </button>
+                    </div>
+
+                    <div class="order-summary">
+                        <div class="summary-row">
+                            <span>Subtotal:</span>
+                            <span id="orderSubtotal">KSh 0.00</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Tax (16%):</span>
+                            <span id="orderTax">KSh 0.00</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Total:</span>
+                            <span id="orderTotal">KSh 0.00</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="orderNotes">Notes</label>
+                        <textarea id="orderNotes" rows="3" placeholder="Additional notes for this order..."></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="cancelCreateOrder">Cancel</button>
+                        <button type="submit" class="btn-primary">Create Order</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Details Modal -->
+    <div class="modal-overlay" id="orderDetailsModal">
+        <div class="modal large-modal">
+            <div class="modal-header">
+                <h3 id="orderDetailsTitle">Order Details</h3>
+                <button class="modal-close" id="detailsModalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="orderDetailsContent">
+                    <!-- Order details will be loaded by JavaScript -->
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="closeOrderDetails">Close</button>
+                    <button type="button" class="btn-primary" id="updateOrderStatus">Update Status</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update Status Modal -->
+    <div class="modal-overlay" id="updateStatusModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Update Order Status</h3>
+                <button class="modal-close" id="statusModalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="updateStatusForm">
+                    <input type="hidden" id="updateOrderId">
+                    <div class="form-group">
+                        <label for="newStatus">New Status</label>
+                        <select id="newStatus" required>
+                            <option value="">Select Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="confirmed">Confirmed</option>
+                            <option value="shipped">Shipped</option>
+                            <option value="delivered">Delivered</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="statusNotes">Notes</label>
+                        <textarea id="statusNotes" rows="3" placeholder="Add notes about this status update..."></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="cancelStatusUpdate">Cancel</button>
+                        <button type="submit" class="btn-primary">Update Status</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/orders.js"></script>
+</body>
+</html>
+

@@ -17,67 +17,33 @@ document.addEventListener('DOMContentLoaded', function() {
     const fullscreenChartTitle = document.getElementById('fullscreenChartTitle');
     const fullscreenChart = document.getElementById('fullscreenChart');
 
-    // Sample report data
-    const reportData = {
-        metrics: [
-            { metric: "New Customers", current: "245", previous: "210", change: "+16.7%", trend: "up" },
-            { metric: "Repeat Customers", current: "520", previous: "450", change: "+15.6%", trend: "up" },
-            { metric: "Loyalty Signups", current: "180", previous: "150", change: "+20.0%", trend: "up" },
-            { metric: "Avg. Order Value", current: "KES 3,450", previous: "KES 3,200", change: "+7.8%", trend: "up" },
-            { metric: "Customer Satisfaction", current: "4.2", previous: "4.5", change: "-6.7%", trend: "down" },
-            { metric: "Feedback Response Time", current: "4.2 hrs", previous: "3.8 hrs", change: "+10.5%", trend: "down" },
-            { metric: "Email Open Rate", current: "32.5%", previous: "30.1%", change: "+8.0%", trend: "up" },
-            { metric: "Email Click Rate", current: "8.7%", previous: "9.2%", change: "-5.4%", trend: "down" }
-        ],
-        customerGrowth: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-            newCustomers: [120, 150, 180, 210, 190, 280],
-            returningCustomers: [420, 450, 480, 520, 490, 620]
-        },
-        customerLocations: {
-            labels: ['Nairobi', 'Mombasa', 'Kisumu', 'Nakuru', 'Other'],
-            data: [1250, 450, 320, 210, 220],
-            colors: ['#3498db', '#2ecc71', '#f1c40f', '#e74c3c', '#9b59b6']
-        },
-        loyaltyTiers: {
-            labels: ['Silver', 'Gold', 'Platinum'],
-            data: [650, 350, 240],
-            colors: ['#C0C0C0', '#FFD700', '#3498db']
-        },
-        feedbackSentiment: {
-            labels: ['Positive', 'Negative', 'Neutral'],
-            data: [78, 12, 10],
-            colors: ['#2ecc71', '#e74c3c', '#95a5a6']
-        },
-        campaignPerformance: {
-            labels: ['Open Rate', 'Click Rate', 'Conversion Rate'],
-            data: [32.5, 8.7, 3.2],
-            colors: ['#3498db', '#f1c40f', '#2ecc71']
-        }
-    };
-
     // Chart instances
     let customerGrowthChart, customerLocationsChart, loyaltyTiersChart, feedbackSentimentChart, campaignPerformanceChart;
 
     // Initialize the page
-    function initPage() {
-        // Load metrics table
-        loadMetricsTable();
+    async function initPage() {
+        try {
+            const reportData = await fetch('/api/reports/customers/').then(res => res.json());
+            // Load metrics table
+            loadMetricsTable(reportData.metrics);
 
-        // Initialize charts
-        initCharts();
-
-        // Hide loading overlay after a short delay
-        setTimeout(() => {
-            morphOverlay.classList.remove('active');
-        }, 800);
+            // Initialize charts
+            initCharts(reportData);
+        } catch (error) {
+            console.error('Error initializing page:', error);
+        } finally {
+            // Hide loading overlay after a short delay
+            setTimeout(() => {
+                morphOverlay.classList.remove('active');
+            }, 800);
+        }
     }
 
     // Load metrics into the table
-    function loadMetricsTable() {
+    function loadMetricsTable(metrics) {
         let html = '';
 
-        reportData.metrics.forEach(item => {
+        metrics.forEach(item => {
             html += `
                 <tr>
                     <td>${item.metric}</td>
@@ -93,17 +59,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Initialize charts
-    function initCharts() {
+    function initCharts(reportData) {
         // Customer Growth Chart
         const growthCtx = document.getElementById('customerGrowthChart').getContext('2d');
         customerGrowthChart = new Chart(growthCtx, {
             type: 'line',
             data: {
-                labels: reportData.customerGrowth.labels,
+                labels: reportData.customer_growth.labels,
                 datasets: [
                     {
                         label: 'New Customers',
-                        data: reportData.customerGrowth.newCustomers,
+                        data: reportData.customer_growth.new_customers,
                         backgroundColor: 'rgba(52, 152, 219, 0.2)',
                         borderColor: 'rgba(52, 152, 219, 1)',
                         borderWidth: 2,
@@ -112,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     },
                     {
                         label: 'Returning Customers',
-                        data: reportData.customerGrowth.returningCustomers,
+                        data: reportData.customer_growth.returning_customers,
                         backgroundColor: 'rgba(46, 204, 113, 0.2)',
                         borderColor: 'rgba(46, 204, 113, 1)',
                         borderWidth: 2,
@@ -142,10 +108,10 @@ document.addEventListener('DOMContentLoaded', function() {
         customerLocationsChart = new Chart(locationsCtx, {
             type: 'doughnut',
             data: {
-                labels: reportData.customerLocations.labels,
+                labels: reportData.customer_locations.labels,
                 datasets: [{
-                    data: reportData.customerLocations.data,
-                    backgroundColor: reportData.customerLocations.colors,
+                    data: reportData.customer_locations.data,
+                    backgroundColor: reportData.customer_locations.colors,
                     borderWidth: 1
                 }]
             },
@@ -165,10 +131,10 @@ document.addEventListener('DOMContentLoaded', function() {
         loyaltyTiersChart = new Chart(tiersCtx, {
             type: 'pie',
             data: {
-                labels: reportData.loyaltyTiers.labels,
+                labels: reportData.loyalty_tiers.labels,
                 datasets: [{
-                    data: reportData.loyaltyTiers.data,
-                    backgroundColor: reportData.loyaltyTiers.colors,
+                    data: reportData.loyalty_tiers.data,
+                    backgroundColor: reportData.loyalty_tiers.colors,
                     borderWidth: 1
                 }]
             },
@@ -188,10 +154,10 @@ document.addEventListener('DOMContentLoaded', function() {
         feedbackSentimentChart = new Chart(sentimentCtx, {
             type: 'bar',
             data: {
-                labels: reportData.feedbackSentiment.labels,
+                labels: reportData.feedback_sentiment.labels,
                 datasets: [{
-                    data: reportData.feedbackSentiment.data,
-                    backgroundColor: reportData.feedbackSentiment.colors,
+                    data: reportData.feedback_sentiment.data,
+                    backgroundColor: reportData.feedback_sentiment.colors,
                     borderWidth: 1
                 }]
             },
@@ -217,9 +183,9 @@ document.addEventListener('DOMContentLoaded', function() {
         campaignPerformanceChart = new Chart(campaignCtx, {
             type: 'radar',
             data: {
-                labels: reportData.campaignPerformance.labels,
+                labels: reportData.campaign_performance.labels,
                 datasets: [{
-                    data: reportData.campaignPerformance.data,
+                    data: reportData.campaign_performance.data,
                     backgroundColor: 'rgba(52, 152, 219, 0.2)',
                     borderColor: 'rgba(52, 152, 219, 1)',
                     borderWidth: 2,
@@ -325,9 +291,24 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Generate report button
-    generateReportBtn.addEventListener('click', function() {
-        // In a real app, this would regenerate the report with new filters
-        alert('Generating report with selected filters...');
+    generateReportBtn.addEventListener('click', async function() {
+        const params = new URLSearchParams({
+            report_type: reportType.value,
+            time_period: timePeriod.value,
+            location: locationFilter.value,
+            date_from: document.getElementById('dateFrom').value,
+            date_to: document.getElementById('dateTo').value,
+        });
+
+        try {
+            const reportData = await fetch(`/api/reports/customers/?${params.toString()}`).then(res => res.json());
+            loadMetricsTable(reportData.metrics);
+            initCharts(reportData);
+            alert('Generating report with selected filters...');
+        } catch (error) {
+            console.error('Error generating report:', error);
+            alert('Failed to generate report.');
+        }
     });
 
     // Export buttons

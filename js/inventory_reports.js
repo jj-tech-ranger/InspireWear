@@ -21,130 +21,33 @@ document.addEventListener('DOMContentLoaded', function() {
     // Chart instances
     let charts = {};
 
-    // Sample data for reports
-    const reportsData = {
-        overview: {
-            totalProducts: 247,
-            totalStockValue: 4567890,
-            lowStockItems: 23,
-            turnoverRate: 2.4,
-            inventoryTrend: {
-                labels: ['Jan 1', 'Jan 8', 'Jan 15', 'Jan 22'],
-                data: [4200000, 4350000, 4450000, 4567890]
-            },
-            categoryDistribution: {
-                labels: ['Dresses', 'Pants', 'Accessories', 'Footwear', 'Tops'],
-                data: [35, 25, 20, 12, 8]
-            },
-            topProducts: [
-                { name: 'Kitenge Print Dress', category: 'Dresses', stock: 45, value: 225000, turnover: 3.2, status: 'active' },
-                { name: 'Safari Cargo Pants', category: 'Pants', stock: 32, value: 192000, turnover: 2.8, status: 'active' },
-                { name: 'Maasai Beaded Necklace', category: 'Accessories', stock: 78, value: 156000, turnover: 4.1, status: 'active' },
-                { name: 'Leather Sandals', category: 'Footwear', stock: 8, value: 112000, turnover: 1.9, status: 'low-stock' },
-                { name: 'Ankara Print Blazer', category: 'Tops', stock: 15, value: 135000, turnover: 2.3, status: 'reorder' }
-            ]
-        },
-        inventory: {
-            stockByLocation: {
-                labels: ['Nairobi', 'Mombasa', 'Kisumu', 'Nakuru', 'Eldoret'],
-                data: [1850000, 1200000, 850000, 450000, 217890]
-            },
-            abcAnalysis: {
-                labels: ['A Items (High Value)', 'B Items (Medium Value)', 'C Items (Low Value)'],
-                data: [20, 30, 50]
-            },
-            agingAnalysis: {
-                labels: ['0-30 days', '31-60 days', '61-90 days', '90+ days'],
-                data: [65, 20, 10, 5]
-            },
-            lowStockItems: [
-                { name: 'Kitenge Print Dress', current: 3, minimum: 10, recommended: 25, supplier: 'Nairobi Textile Mills' },
-                { name: 'Leather Sandals', current: 8, minimum: 15, recommended: 30, supplier: 'Mombasa Leather Works' },
-                { name: 'Maasai Beaded Necklace', current: 12, minimum: 20, recommended: 40, supplier: 'Kisumu Beads & Crafts' },
-                { name: 'Safari Cargo Pants', current: 5, minimum: 12, recommended: 25, supplier: 'Nairobi Textile Mills' },
-                { name: 'Kikoy Beach Wrap', current: 7, minimum: 15, recommended: 30, supplier: 'Coastal Accessories Ltd' }
-            ]
-        },
-        suppliers: {
-            performance: {
-                labels: ['Nairobi Textile Mills', 'Mombasa Leather Works', 'Kisumu Beads & Crafts', 'Eldoret Packaging', 'Nakuru Equipment'],
-                data: [4.8, 4.9, 4.6, 4.7, 4.5]
-            },
-            orderValue: {
-                labels: ['Nairobi Textile Mills', 'Mombasa Leather Works', 'Kisumu Beads & Crafts', 'Eldoret Packaging', 'Nakuru Equipment'],
-                data: [850000, 420000, 380000, 280000, 320000]
-            },
-            deliveryPerformance: {
-                labels: ['On Time', 'Late', 'Early'],
-                data: [85, 12, 3]
-            },
-            performanceTable: [
-                { name: 'Nairobi Textile Mills', orders: 45, value: 850000, onTime: 92, rating: 4.8, status: 'active' },
-                { name: 'Mombasa Leather Works', orders: 28, value: 420000, onTime: 89, rating: 4.9, status: 'active' },
-                { name: 'Kisumu Beads & Crafts', orders: 32, value: 380000, onTime: 85, rating: 4.6, status: 'active' },
-                { name: 'Eldoret Packaging Solutions', orders: 18, value: 280000, onTime: 94, rating: 4.7, status: 'active' },
-                { name: 'Nakuru Equipment Suppliers', orders: 12, value: 320000, onTime: 78, rating: 4.5, status: 'active' }
-            ]
-        },
-        orders: {
-            trends: {
-                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-                data: [12, 18, 15, 23]
-            },
-            statusDistribution: {
-                labels: ['Pending', 'Confirmed', 'Shipped', 'Delivered', 'Cancelled'],
-                data: [23, 45, 32, 118, 8]
-            },
-            avgOrderValue: {
-                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-                data: [185000, 220000, 195000, 245000]
-            }
-        },
-        financial: {
-            investmentTrend: {
-                labels: ['Oct', 'Nov', 'Dec', 'Jan'],
-                data: [3800000, 4100000, 4350000, 4567890]
-            },
-            costBreakdown: {
-                labels: ['Raw Materials', 'Labor', 'Overhead', 'Packaging', 'Shipping'],
-                data: [45, 25, 15, 10, 5]
-            },
-            roiByCategory: {
-                labels: ['Dresses', 'Pants', 'Accessories', 'Footwear', 'Tops'],
-                data: [18.5, 15.2, 22.8, 12.3, 16.7]
-            },
-            financialSummary: [
-                { category: 'Dresses', investment: 1800000, currentValue: 2133000, turnover: 3.2, roi: 18.5, trend: 'up' },
-                { category: 'Pants', investment: 1200000, investment: 1382400, turnover: 2.8, roi: 15.2, trend: 'up' },
-                { category: 'Accessories', investment: 800000, currentValue: 982400, turnover: 4.1, roi: 22.8, trend: 'up' },
-                { category: 'Footwear', investment: 500000, currentValue: 561500, turnover: 1.9, roi: 12.3, trend: 'down' },
-                { category: 'Tops', investment: 400000, currentValue: 466800, turnover: 2.3, roi: 16.7, trend: 'stable' }
-            ]
-        }
-    };
-
     let currentTab = 'overview';
 
     // Initialize the page
-    function initPage() {
-        // Set overview metrics
-        document.getElementById('totalProducts').textContent = formatNumber(reportsData.overview.totalProducts);
-        document.getElementById('totalStockValue').textContent = formatCurrency(reportsData.overview.totalStockValue);
-        document.getElementById('lowStockItems').textContent = formatNumber(reportsData.overview.lowStockItems);
-        document.getElementById('turnoverRate').textContent = reportsData.overview.turnoverRate + 'x';
+    async function initPage() {
+        try {
+            const overviewData = await fetch('/api/reports/inventory/overview/').then(res => res.json());
+            // Set overview metrics
+            document.getElementById('totalProducts').textContent = formatNumber(overviewData.total_products);
+            document.getElementById('totalStockValue').textContent = formatCurrency(overviewData.total_stock_value);
+            document.getElementById('lowStockItems').textContent = formatNumber(overviewData.low_stock_items);
+            document.getElementById('turnoverRate').textContent = overviewData.turnover_rate + 'x';
 
-        // Load initial tab content
-        loadTabContent('overview');
+            // Load initial tab content
+            await loadTabContent('overview');
 
-        // Set minimum date for schedule
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        document.getElementById('startSchedule').min = tomorrow.toISOString().split('T')[0];
-
-        // Hide loading overlay after a short delay
-        setTimeout(() => {
-            morphOverlay.classList.remove('active');
-        }, 1500);
+            // Set minimum date for schedule
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            document.getElementById('startSchedule').min = tomorrow.toISOString().split('T')[0];
+        } catch (error) {
+            console.error('Error initializing page:', error);
+        } finally {
+            // Hide loading overlay after a short delay
+            setTimeout(() => {
+                morphOverlay.classList.remove('active');
+            }, 1500);
+        }
     }
 
     // Format numbers
@@ -161,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Load tab content
-    function loadTabContent(tabName) {
+    async function loadTabContent(tabName) {
         currentTab = tabName;
         
         // Destroy existing charts
@@ -170,36 +73,48 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         charts = {};
 
-        switch (tabName) {
-            case 'overview':
-                loadOverviewTab();
-                break;
-            case 'inventory':
-                loadInventoryTab();
-                break;
-            case 'suppliers':
-                loadSuppliersTab();
-                break;
-            case 'orders':
-                loadOrdersTab();
-                break;
-            case 'financial':
-                loadFinancialTab();
-                break;
+        const params = new URLSearchParams({
+            period: periodFilter.value,
+            start_date: startDate.value,
+            end_date: endDate.value,
+            location: locationFilter.value,
+        });
+
+        try {
+            const data = await fetch(`/api/reports/inventory/${tabName}/?${params.toString()}`).then(res => res.json());
+            switch (tabName) {
+                case 'overview':
+                    loadOverviewTab(data);
+                    break;
+                case 'inventory':
+                    loadInventoryTab(data);
+                    break;
+                case 'suppliers':
+                    loadSuppliersTab(data);
+                    break;
+                case 'orders':
+                    loadOrdersTab(data);
+                    break;
+                case 'financial':
+                    loadFinancialTab(data);
+                    break;
+            }
+        } catch (error) {
+            console.error(`Error loading ${tabName} tab:`, error);
         }
     }
 
     // Load overview tab
-    function loadOverviewTab() {
+    function loadOverviewTab(data) {
         // Inventory Trend Chart
         const inventoryTrendCtx = document.getElementById('inventoryTrendChart').getContext('2d');
         charts.inventoryTrend = new Chart(inventoryTrendCtx, {
             type: 'line',
             data: {
-                labels: reportsData.overview.inventoryTrend.labels,
+                labels: data.inventory_trend.labels,
                 datasets: [{
                     label: 'Inventory Value (KSh)',
-                    data: reportsData.overview.inventoryTrend.data,
+                    data: data.inventory_trend.data,
                     borderColor: '#3498db',
                     backgroundColor: 'rgba(52, 152, 219, 0.1)',
                     borderWidth: 3,
@@ -233,9 +148,9 @@ document.addEventListener('DOMContentLoaded', function() {
         charts.categoryDistribution = new Chart(categoryDistributionCtx, {
             type: 'doughnut',
             data: {
-                labels: reportsData.overview.categoryDistribution.labels,
+                labels: data.category_distribution.labels,
                 datasets: [{
-                    data: reportsData.overview.categoryDistribution.data,
+                    data: data.category_distribution.data,
                     backgroundColor: [
                         '#3498db',
                         '#2ecc71',
@@ -258,20 +173,20 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // Load top products table
-        loadTopProductsTable();
+        loadTopProductsTable(data.top_products);
     }
 
     // Load inventory tab
-    function loadInventoryTab() {
+    function loadInventoryTab(data) {
         // Stock by Location Chart
         const stockLocationCtx = document.getElementById('stockLocationChart').getContext('2d');
         charts.stockLocation = new Chart(stockLocationCtx, {
             type: 'bar',
             data: {
-                labels: reportsData.inventory.stockByLocation.labels,
+                labels: data.stock_by_location.labels,
                 datasets: [{
                     label: 'Stock Value (KSh)',
-                    data: reportsData.inventory.stockByLocation.data,
+                    data: data.stock_by_location.data,
                     backgroundColor: '#3498db',
                     borderRadius: 8
                 }]
@@ -302,9 +217,9 @@ document.addEventListener('DOMContentLoaded', function() {
         charts.abcAnalysis = new Chart(abcAnalysisCtx, {
             type: 'pie',
             data: {
-                labels: reportsData.inventory.abcAnalysis.labels,
+                labels: data.abc_analysis.labels,
                 datasets: [{
-                    data: reportsData.inventory.abcAnalysis.data,
+                    data: data.abc_analysis.data,
                     backgroundColor: ['#e74c3c', '#f39c12', '#2ecc71'],
                     borderWidth: 0
                 }]
@@ -325,10 +240,10 @@ document.addEventListener('DOMContentLoaded', function() {
         charts.agingAnalysis = new Chart(agingAnalysisCtx, {
             type: 'bar',
             data: {
-                labels: reportsData.inventory.agingAnalysis.labels,
+                labels: data.aging_analysis.labels,
                 datasets: [{
                     label: 'Percentage',
-                    data: reportsData.inventory.agingAnalysis.data,
+                    data: data.aging_analysis.data,
                     backgroundColor: ['#2ecc71', '#f39c12', '#e67e22', '#e74c3c'],
                     borderRadius: 8
                 }]
@@ -355,20 +270,20 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // Load low stock table
-        loadLowStockTable();
+        loadLowStockTable(data.low_stock_items);
     }
 
     // Load suppliers tab
-    function loadSuppliersTab() {
+    function loadSuppliersTab(data) {
         // Supplier Performance Chart
         const supplierPerformanceCtx = document.getElementById('supplierPerformanceChart').getContext('2d');
         charts.supplierPerformance = new Chart(supplierPerformanceCtx, {
             type: 'radar',
             data: {
-                labels: reportsData.suppliers.performance.labels,
+                labels: data.performance.labels,
                 datasets: [{
                     label: 'Rating',
-                    data: reportsData.suppliers.performance.data,
+                    data: data.performance.data,
                     borderColor: '#3498db',
                     backgroundColor: 'rgba(52, 152, 219, 0.2)',
                     borderWidth: 2
@@ -394,10 +309,10 @@ document.addEventListener('DOMContentLoaded', function() {
         charts.supplierValue = new Chart(supplierValueCtx, {
             type: 'bar',
             data: {
-                labels: reportsData.suppliers.orderValue.labels,
+                labels: data.order_value.labels,
                 datasets: [{
                     label: 'Order Value (KSh)',
-                    data: reportsData.suppliers.orderValue.data,
+                    data: data.order_value.data,
                     backgroundColor: '#2ecc71',
                     borderRadius: 8
                 }]
@@ -428,9 +343,9 @@ document.addEventListener('DOMContentLoaded', function() {
         charts.deliveryPerformance = new Chart(deliveryPerformanceCtx, {
             type: 'doughnut',
             data: {
-                labels: reportsData.suppliers.deliveryPerformance.labels,
+                labels: data.delivery_performance.labels,
                 datasets: [{
-                    data: reportsData.suppliers.deliveryPerformance.data,
+                    data: data.delivery_performance.data,
                     backgroundColor: ['#2ecc71', '#e74c3c', '#3498db'],
                     borderWidth: 0
                 }]
@@ -447,20 +362,20 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // Load supplier performance table
-        loadSupplierPerformanceTable();
+        loadSupplierPerformanceTable(data.performance_table);
     }
 
     // Load orders tab
-    function loadOrdersTab() {
+    function loadOrdersTab(data) {
         // Order Trends Chart
         const orderTrendsCtx = document.getElementById('orderTrendsChart').getContext('2d');
         charts.orderTrends = new Chart(orderTrendsCtx, {
             type: 'line',
             data: {
-                labels: reportsData.orders.trends.labels,
+                labels: data.trends.labels,
                 datasets: [{
                     label: 'Number of Orders',
-                    data: reportsData.orders.trends.data,
+                    data: data.trends.data,
                     borderColor: '#9b59b6',
                     backgroundColor: 'rgba(155, 89, 182, 0.1)',
                     borderWidth: 3,
@@ -489,9 +404,9 @@ document.addEventListener('DOMContentLoaded', function() {
         charts.orderStatus = new Chart(orderStatusCtx, {
             type: 'pie',
             data: {
-                labels: reportsData.orders.statusDistribution.labels,
+                labels: data.status_distribution.labels,
                 datasets: [{
-                    data: reportsData.orders.statusDistribution.data,
+                    data: data.status_distribution.data,
                     backgroundColor: ['#f39c12', '#3498db', '#9b59b6', '#2ecc71', '#e74c3c'],
                     borderWidth: 0
                 }]
@@ -512,10 +427,10 @@ document.addEventListener('DOMContentLoaded', function() {
         charts.avgOrderValue = new Chart(avgOrderValueCtx, {
             type: 'bar',
             data: {
-                labels: reportsData.orders.avgOrderValue.labels,
+                labels: data.avg_order_value.labels,
                 datasets: [{
                     label: 'Average Order Value (KSh)',
-                    data: reportsData.orders.avgOrderValue.data,
+                    data: data.avg_order_value.data,
                     backgroundColor: '#e67e22',
                     borderRadius: 8
                 }]
@@ -543,16 +458,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Load financial tab
-    function loadFinancialTab() {
+    function loadFinancialTab(data) {
         // Investment Trend Chart
         const investmentTrendCtx = document.getElementById('investmentTrendChart').getContext('2d');
         charts.investmentTrend = new Chart(investmentTrendCtx, {
             type: 'line',
             data: {
-                labels: reportsData.financial.investmentTrend.labels,
+                labels: data.investment_trend.labels,
                 datasets: [{
                     label: 'Investment (KSh)',
-                    data: reportsData.financial.investmentTrend.data,
+                    data: data.investment_trend.data,
                     borderColor: '#27ae60',
                     backgroundColor: 'rgba(39, 174, 96, 0.1)',
                     borderWidth: 3,
@@ -586,9 +501,9 @@ document.addEventListener('DOMContentLoaded', function() {
         charts.costBreakdown = new Chart(costBreakdownCtx, {
             type: 'doughnut',
             data: {
-                labels: reportsData.financial.costBreakdown.labels,
+                labels: data.cost_breakdown.labels,
                 datasets: [{
-                    data: reportsData.financial.costBreakdown.data,
+                    data: data.cost_breakdown.data,
                     backgroundColor: ['#3498db', '#2ecc71', '#f39c12', '#e74c3c', '#9b59b6'],
                     borderWidth: 0
                 }]
@@ -609,10 +524,10 @@ document.addEventListener('DOMContentLoaded', function() {
         charts.roiCategory = new Chart(roiCategoryCtx, {
             type: 'bar',
             data: {
-                labels: reportsData.financial.roiByCategory.labels,
+                labels: data.roi_by_category.labels,
                 datasets: [{
                     label: 'ROI (%)',
-                    data: reportsData.financial.roiByCategory.data,
+                    data: data.roi_by_category.data,
                     backgroundColor: '#16a085',
                     borderRadius: 8
                 }]
@@ -639,15 +554,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // Load financial summary table
-        loadFinancialSummaryTable();
+        loadFinancialSummaryTable(data.financial_summary);
     }
 
     // Load top products table
-    function loadTopProductsTable() {
+    function loadTopProductsTable(topProducts) {
         const tbody = document.getElementById('topProductsTable');
         let html = '';
 
-        reportsData.overview.topProducts.forEach(product => {
+        topProducts.forEach(product => {
             const stockClass = product.stock < 10 ? 'low' : product.stock < 30 ? 'medium' : 'high';
             const turnoverClass = product.turnover > 3 ? 'high' : product.turnover > 2 ? 'medium' : 'low';
             
@@ -667,11 +582,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Load low stock table
-    function loadLowStockTable() {
+    function loadLowStockTable(lowStockItems) {
         const tbody = document.getElementById('lowStockTable');
         let html = '';
 
-        reportsData.inventory.lowStockItems.forEach(item => {
+        lowStockItems.forEach(item => {
             html += `
                 <tr>
                     <td class="product-name">${item.name}</td>
@@ -688,12 +603,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Load supplier performance table
-    function loadSupplierPerformanceTable() {
+    function loadSupplierPerformanceTable(performanceTable) {
         const tbody = document.getElementById('supplierPerformanceTable');
         let html = '';
 
-        reportsData.suppliers.performanceTable.forEach(supplier => {
-            const deliveryClass = supplier.onTime >= 90 ? 'excellent' : supplier.onTime >= 80 ? 'good' : 'poor';
+        performanceTable.forEach(supplier => {
+            const deliveryClass = supplier.on_time >= 90 ? 'excellent' : supplier.on_time >= 80 ? 'good' : 'poor';
             const stars = '★'.repeat(Math.floor(supplier.rating)) + '☆'.repeat(5 - Math.floor(supplier.rating));
             
             html += `
@@ -701,7 +616,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <td class="product-name">${supplier.name}</td>
                     <td>${supplier.orders}</td>
                     <td class="value-cell">KSh ${formatCurrency(supplier.value)}</td>
-                    <td class="delivery-percentage ${deliveryClass}">${supplier.onTime}%</td>
+                    <td class="delivery-percentage ${deliveryClass}">${supplier.on_time}%</td>
                     <td class="performance-rating">
                         <span class="rating-stars">${stars}</span>
                         <span class="rating-value">${supplier.rating}</span>
@@ -715,18 +630,18 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Load financial summary table
-    function loadFinancialSummaryTable() {
+    function loadFinancialSummaryTable(financialSummary) {
         const tbody = document.getElementById('financialSummaryTable');
         let html = '';
 
-        reportsData.financial.financialSummary.forEach(item => {
+        financialSummary.forEach(item => {
             const trendIcon = item.trend === 'up' ? 'fa-arrow-up' : item.trend === 'down' ? 'fa-arrow-down' : 'fa-minus';
             
             html += `
                 <tr>
                     <td class="product-name">${item.category}</td>
                     <td class="value-cell">KSh ${formatCurrency(item.investment)}</td>
-                    <td class="value-cell">KSh ${formatCurrency(item.currentValue)}</td>
+                    <td class="value-cell">KSh ${formatCurrency(item.current_value)}</td>
                     <td class="turnover-rate">${item.turnover}x</td>
                     <td class="value-cell">${item.roi}%</td>
                     <td class="trend-indicator ${item.trend}">
@@ -850,19 +765,33 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Schedule form submission
-    scheduleForm.addEventListener('submit', function(e) {
+    scheduleForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
         const formData = {
-            reportType: document.getElementById('reportType').value,
+            report_type: document.getElementById('reportType').value,
             frequency: document.getElementById('frequency').value,
             recipients: document.getElementById('recipients').value,
-            startDate: document.getElementById('startSchedule').value
+            start_date: document.getElementById('startSchedule').value
         };
         
-        scheduleModal.classList.remove('active');
-        this.reset();
-        alert('Report scheduled successfully! You will receive email notifications as configured.');
+        try {
+            const response = await fetch('/api/reports/schedule/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData),
+            });
+            if (response.ok) {
+                scheduleModal.classList.remove('active');
+                this.reset();
+                alert('Report scheduled successfully! You will receive email notifications as configured.');
+            } else {
+                alert('Failed to schedule report.');
+            }
+        } catch (error) {
+            console.error('Error scheduling report:', error);
+            alert('An error occurred while scheduling the report.');
+        }
     });
 
     // Close modal when clicking outside
@@ -908,4 +837,3 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize the page
     initPage();
 });
-
