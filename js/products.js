@@ -25,26 +25,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const itemsPerPage = 10;
     let totalProducts = 0;
     let currentFilters = {};
-    let productsCache = new Map();
-
-    // --- API Communication ---
-    async function fetchFromAPI(endpoint, options = {}) {
-        morphOverlay.classList.add('active');
-        try {
-            const response = await fetch(endpoint, options);
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({ message: 'An unknown error occurred' }));
-                throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-            }
-            return await response.json();
-        } catch (error) {
-            console.error(`API Error (${endpoint}):`, error);
-            showNotification(error.message, 'error');
-            throw error;
-        } finally {
-            setTimeout(() => morphOverlay.classList.remove('active'), 300);
-        }
-    }
 
     // --- Initialization ---
     async function initPage() {
@@ -88,11 +68,11 @@ document.addEventListener('DOMContentLoaded', function () {
     // --- Data Loading and Rendering ---
     async function updateOverviewMetrics() {
         try {
-            const summary = await fetchFromAPI('/api/products/summary');
-            document.getElementById('totalProducts').textContent = formatNumber(summary.totalProducts || 0);
-            document.getElementById('activeProducts').textContent = formatNumber(summary.activeProducts || 0);
-            document.getElementById('outOfStock').textContent = formatNumber(summary.outOfStock || 0);
-            document.getElementById('totalValue').textContent = formatCurrency(summary.totalValue || 0);
+            const summary = await fetch('/api/products/summary/').then(res => res.json());
+            document.getElementById('totalProducts').textContent = formatNumber(summary.total_products || 0);
+            document.getElementById('activeProducts').textContent = formatNumber(summary.active_products || 0);
+            document.getElementById('outOfStock').textContent = formatNumber(summary.out_of_stock || 0);
+            document.getElementById('totalValue').textContent = formatCurrency(summary.total_value || 0);
         } catch (error) {
             console.error("Failed to update overview metrics:", error);
         }
@@ -106,12 +86,9 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         try {
-            const data = await fetchFromAPI(`/api/products?${params.toString()}`);
-            productsCache.clear();
-            data.products.forEach(p => productsCache.set(p.id, p));
-
-            totalProducts = data.totalProducts || 0;
-            renderTable(data.products);
+            const data = await fetch(`/api/products/?${params.toString()}`).then(res => res.json());
+            totalProducts = data.count || 0;
+            renderTable(data.results);
             updatePagination();
         } catch (error) {
             productsTableBody.innerHTML = `<tr><td colspan="10" class="text-center error-message">Could not load products.</td></tr>`;
@@ -142,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <td class="stock-cell ${stockClass}">${product.stock}</td>
                     <td><span class="location-badge">${product.location}</span></td>
                     <td><span class="status ${statusClass}">${product.status}</span></td>
-                    <td>${formatDate(product.lastUpdated)}</td>
+                    <td>${formatDate(product.last_updated)}</td>
                     <td class="actions-cell">
                         <button class="action-btn edit-btn" title="Edit"><i class="fas fa-edit"></i></button>
                         <button class="action-btn delete-btn" title="Delete"><i class="fas fa-trash"></i></button>
@@ -151,6 +128,22 @@ document.addEventListener('DOMContentLoaded', function () {
             `;
         }).join('');
         productsTableBody.innerHTML = html;
+        attachTableEventListeners();
+    }
+
+    function attachTableEventListeners() {
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const productId = this.closest('tr').dataset.id;
+                openEditModal(productId);
+            });
+        });
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const productId = this.closest('tr').dataset.id;
+                handleDeleteProduct(productId);
+            });
+        });
     }
 
     // --- CRUD Operations ---
@@ -160,7 +153,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const newProduct = Object.fromEntries(formData.entries());
 
         try {
-            await fetchFromAPI('/api/products', {
+            await fetch('/api/products/', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newProduct)
@@ -168,9 +161,9 @@ document.addEventListener('DOMContentLoaded', function () {
             showNotification('Product added successfully!');
             addProductModal.classList.remove('active');
             addProductForm.reset();
-            await Promise.all([updateOverviewMetrics(), loadProductsTable()]);
+            await initPage();
         } catch (error) {
-            // Error already shown by fetchFromAPI
+            showNotification('Failed to add product.', 'error');
         }
     }
 
@@ -178,19 +171,19 @@ document.addEventListener('DOMContentLoaded', function () {
         e.preventDefault();
         const formData = new FormData(editProductForm);
         const updatedProduct = Object.fromEntries(formData.entries());
-        const productId = updatedProduct.id;
+        const productId = document.getElementById('editProductId').value;
 
         try {
-            await fetchFromAPI(`/api/products/${productId}`, {
+            await fetch(`/api/products/${productId}/`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(updatedProduct)
             });
             showNotification('Product updated successfully!');
             editProductModal.classList.remove('active');
-            await Promise.all([updateOverviewMetrics(), loadProductsTable()]);
+            await initPage();
         } catch (error) {
-            // Error already shown by fetchFromAPI
+            showNotification('Failed to update product.', 'error');
         }
     }
 
@@ -198,11 +191,11 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!confirm('Are you sure you want to delete this product?')) return;
 
         try {
-            await fetchFromAPI(`/api/products/${productId}`, { method: 'DELETE' });
+            await fetch(`/api/products/${productId}/`, { method: 'DELETE' });
             showNotification('Product deleted successfully!');
-            await Promise.all([updateOverviewMetrics(), loadProductsTable()]);
+            await initPage();
         } catch (error) {
-            // Error already shown by fetchFromAPI
+            showNotification('Failed to delete product.', 'error');
         }
     }
 
@@ -218,16 +211,21 @@ document.addEventListener('DOMContentLoaded', function () {
         loadProductsTable();
     }
 
-    function openEditModal(productId) {
-        const product = productsCache.get(productId);
-        if (!product) {
+    async function openEditModal(productId) {
+        try {
+            const product = await fetch(`/api/products/${productId}/`).then(res => res.json());
+            document.getElementById('editProductId').value = product.id;
+            document.getElementById('editProductName').value = product.name;
+            document.getElementById('editProductSKU').value = product.sku;
+            document.getElementById('editProductCategory').value = product.category;
+            document.getElementById('editProductPrice').value = product.price;
+            document.getElementById('editProductStock').value = product.stock;
+            document.getElementById('editProductLocation').value = product.location;
+            document.getElementById('editProductDescription').value = product.description;
+            editProductModal.classList.add('active');
+        } catch (error) {
             showNotification('Could not find product details.', 'error');
-            return;
         }
-        editProductForm.querySelector('#editProductId').value = product.id;
-        editProductForm.querySelector('#editProductName').value = product.name;
-        // ... populate other fields ...
-        editProductModal.classList.add('active');
     }
 
     // --- Pagination ---
@@ -236,7 +234,6 @@ document.addEventListener('DOMContentLoaded', function () {
         paginationInfo.textContent = `Showing ${(currentPage - 1) * itemsPerPage + 1}-${Math.min(currentPage * itemsPerPage, totalProducts)} of ${totalProducts}`;
         prevPage.disabled = currentPage === 1;
         nextPage.disabled = currentPage >= totalPages;
-        // Simplified page number generation
         pageNumbers.innerHTML = `<button class="page-number active">${currentPage}</button>`;
     }
 
@@ -246,27 +243,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // --- Event Listeners ---
-    // Modal listeners
     addProductBtn.addEventListener('click', () => addProductModal.classList.add('active'));
     modalClose.addEventListener('click', () => addProductModal.classList.remove('active'));
     editModalClose.addEventListener('click', () => editProductModal.classList.remove('active'));
-    addProductModal.addEventListener('click', (e) => e.target === addProductModal && addProductModal.classList.remove('active'));
-    editProductModal.addEventListener('click', (e) => e.target === editProductModal && editProductModal.classList.remove('active'));
-
-    // Form submissions
     addProductForm.addEventListener('submit', handleAddProduct);
     editProductForm.addEventListener('submit', handleEditProduct);
-
-    // Table actions
-    productsTableBody.addEventListener('click', (e) => {
-        const target = e.target.closest('button');
-        if (!target) return;
-        const productId = parseInt(target.closest('tr').dataset.id);
-        if (target.classList.contains('edit-btn')) openEditModal(productId);
-        if (target.classList.contains('delete-btn')) handleDeleteProduct(productId);
-    });
-
-    // Filtering and pagination
     [productSearch, categoryFilter, statusFilter, locationFilter].forEach(el => el.addEventListener('input', handleFilterChange));
     prevPage.addEventListener('click', () => changePage(-1));
     nextPage.addEventListener('click', () => changePage(1));
@@ -280,9 +261,5 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // --- Initial Load ---
-    const savedTheme = localStorage.getItem('inventoryTheme') || 'light';
-    document.documentElement.setAttribute('data-theme', savedTheme);
-    themeToggle.querySelector('.theme-icon').className = `theme-icon fas ${savedTheme === 'light' ? 'fa-moon' : 'fa-sun'}`;
-
     initPage();
 });

@@ -1,16 +1,17 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>InspireWear | CRM Reports</title>
-    <link rel="stylesheet" href="../css/customer_reports.css">
-    <link rel="stylesheet" href="../css/finance.css">
+    <link rel="stylesheet" href="{% static 'customer_reports.css' %}">
+    <link rel="stylesheet" href="{% static 'finance.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
-    <link rel="icon" href="../img/favicon.png" type="image/x-icon">
+    <link rel="icon" href="{% static 'favicon.png' %}" type="image/x-icon">
 </head>
 <body>
     <!-- Loading Overlay -->
@@ -24,11 +25,11 @@
     <!-- Sidebar Navigation -->
     <div class="sidebar">
         <div class="logo-container">
-            <img src="../img/logo.png" alt="InspireWear Logo" class="logo">
+            <img src="{% static 'logo.png' %}" alt="InspireWear Logo" class="logo">
             <h1 class="logo-text">InspireWear</h1>
         </div>
 
-        <a href="../templates/index.html" class="home-button">
+        <a href="{% url 'index' %}" class="home-button">
             <i class="fas fa-arrow-left"></i> Back to Home
         </a>
 
@@ -40,12 +41,12 @@
 
         <nav class="finance-nav">
             <ul>
-                <li><a href="../templates/customer_dasboard.html"><i class="fas fa-chart-line"></i> Dashboard</a></li>
-                <li><a href="../templates/customers.html"><i class="fas fa-users"></i> Customers</a></li>
-                <li><a href="../templates/loyalty.html"><i class="fas fa-star"></i> Loyalty Program</a></li>
-                <li><a href="../templates/campaigns.html"><i class="fas fa-envelope"></i> Email Campaigns</a></li>
-                <li><a href="../templates/feedback.html"><i class="fas fa-comment-alt"></i> Feedback</a></li>
-                <li class="active"><a href="../templates/customer_reports.html"><i class="fas fa-chart-pie"></i> Reports</a></li>
+                <li><a href="{% url 'customer_dashboard' %}"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                <li><a href="{% url 'customers' %}"><i class="fas fa-users"></i> Customers</a></li>
+                <li><a href="{% url 'loyalty' %}"><i class="fas fa-star"></i> Loyalty Program</a></li>
+                <li><a href="{% url 'campaigns' %}"><i class="fas fa-envelope"></i> Email Campaigns</a></li>
+                <li><a href="{% url 'feedback' %}"><i class="fas fa-comment-alt"></i> Feedback</a></li>
+                <li class="active"><a href="{% url 'customer_reports' %}"><i class="fas fa-chart-pie"></i> Reports</a></li>
             </ul>
         </nav>
     </div>
@@ -60,14 +61,14 @@
                 </button>
                 <div class="profile-container">
                     <button class="profile-btn" id="profileBtn" aria-label="User profile" aria-expanded="false">
-                        <img src="../img/user.png" alt="Profile" class="profile-img">
+                        <img src="{% static 'user.png' %}" alt="Profile" class="profile-img">
                         <span>Reports Analyst</span>
                     </button>
                     <div class="profile-dropdown" id="profileDropdown">
-                        <a href="../templates/index.html" class="dropdown-item">
+                        <a href="{% url 'index' %}" class="dropdown-item">
                             <i class="fas fa-home"></i> Back to Home
                         </a>
-                        <a href="../templates/login.html" class="dropdown-item">
+                        <a href="{% url 'login' %}" class="dropdown-item">
                             <i class="fas fa-sign-out-alt"></i> Logout
                         </a>
                     </div>
@@ -247,6 +248,6 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="../js/customer_reports.js"></script>
+    <script src="{% static 'customer_reports.js' %}"></script>
 </body>
 </html>

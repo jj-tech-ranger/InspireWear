@@ -1,15 +1,16 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>InspireWear | Shop Dashboard</title>
-    <link rel="stylesheet" href="../css/shop.css">
+    <link rel="stylesheet" href="{% static 'shop.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
-    <link rel="icon" href="../img/favicon.png" type="image/x-icon">
+    <link rel="icon" href="{% static 'favicon.png' %}" type="image/x-icon">
 </head>
 <body>
     <!-- Loading Overlay -->
@@ -23,7 +24,7 @@
     <!-- Top Navigation -->
     <nav class="shop-navbar">
         <div class="navbar-brand">
-            <img src="../img/logo.png" alt="InspireWear Logo" class="logo">
+            <img src="{% static 'logo.png' %}" alt="InspireWear Logo" class="logo">
             <h1 class="logo-text">InspireWear</h1>
         </div>
 
@@ -237,7 +238,7 @@
             <div class="modal-body">
                 <div class="account-info">
                     <div class="account-avatar">
-                        <img src="../img/user.png" alt="User Avatar">
+                        <img src="{% static 'user.png' %}" alt="User Avatar">
                         <button class="btn-secondary">Change Photo</button>
                     </div>
                     <div class="account-details">
@@ -327,6 +328,6 @@
         </div>
     </div>
 
-    <script src="../js/shop.js"></script>
+    <script src="{% static 'shop.js' %}"></script>
 </body>
 </html>

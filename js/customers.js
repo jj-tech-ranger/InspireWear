@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             paginatedCustomers.forEach(customer => {
                 html += `
-                    <tr>
+                    <tr data-id="${customer.id}">
                         <td>${customer.id}</td>
                         <td>${customer.first_name} ${customer.last_name}</td>
                         <td>
@@ -76,9 +76,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         <td>${formatDate(customer.last_purchase)}</td>
                         <td><span class="status ${customer.status}">${customer.status}</span></td>
                         <td>
-                            <button class="action-btn view-btn" data-id="${customer.id}" title="View Profile"><i class="fas fa-eye"></i></button>
-                            <button class="action-btn edit-btn" data-id="${customer.id}" title="Edit"><i class="fas fa-edit"></i></button>
-                            <button class="action-btn delete-btn" data-id="${customer.id}" title="Delete"><i class="fas fa-trash"></i></button>
+                            <button class="action-btn view-btn" title="View Profile"><i class="fas fa-eye"></i></button>
+                            <button class="action-btn edit-btn" title="Edit"><i class="fas fa-edit"></i></button>
+                            <button class="action-btn delete-btn" title="Delete"><i class="fas fa-trash"></i></button>
                         </td>
                     </tr>
                 `;
@@ -87,21 +87,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
         customersTable.innerHTML = html;
         updatePaginationInfo();
+        attachTableEventListeners();
+    }
 
-        // Add event listeners to action buttons
+    function attachTableEventListeners() {
         document.querySelectorAll('.edit-btn').forEach(btn => {
             btn.addEventListener('click', function() {
-                const customerId = parseInt(this.getAttribute('data-id'));
+                const customerId = this.closest('tr').dataset.id;
                 openEditModal(customerId);
             });
         });
 
         document.querySelectorAll('.delete-btn').forEach(btn => {
             btn.addEventListener('click', function() {
-                const customerId = parseInt(this.getAttribute('data-id'));
-                if (confirm('Are you sure you want to delete this customer?')) {
-                    deleteCustomer(customerId);
-                }
+                const customerId = this.closest('tr').dataset.id;
+                deleteCustomer(customerId);
             });
         });
     }
@@ -121,7 +121,6 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             const customers = await fetch(`/api/customers/?${params.toString()}`).then(res => res.json());
             filteredCustomers = customers;
-            // Reset to first page when filters change
             currentPage = 1;
         } catch (error) {
             console.error('Error applying filters:', error);
@@ -139,85 +138,55 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Open edit modal with customer data
     async function openEditModal(customerId) {
-        const customer = await fetch(`/api/customers/${customerId}/`).then(res => res.json());
-        if (!customer) return;
+        try {
+            const response = await fetch(`/api/customers/${customerId}/`);
+            if (!response.ok) throw new Error('Failed to fetch customer details.');
+            const customer = await response.json();
 
-        document.getElementById('editCustomerId').value = customer.id;
-        document.getElementById('editFirstName').value = customer.first_name;
-        document.getElementById('editLastName').value = customer.last_name;
-        document.getElementById('editEmail').value = customer.email;
-        document.getElementById('editPhone').value = customer.phone;
-        document.getElementById('editLocation').value = customer.location;
-        document.getElementById('editStatus').value = customer.status;
+            document.getElementById('editCustomerId').value = customer.id;
+            document.getElementById('editFirstName').value = customer.first_name;
+            document.getElementById('editLastName').value = customer.last_name;
+            document.getElementById('editEmail').value = customer.email;
+            document.getElementById('editPhone').value = customer.phone;
+            document.getElementById('editLocation').value = customer.location;
+            document.getElementById('editStatus').value = customer.status;
 
-        editCustomerModal.classList.add('active');
+            editCustomerModal.classList.add('active');
+        } catch (error) {
+            console.error('Error fetching customer for edit:', error);
+            alert('Could not load customer details for editing.');
+        }
     }
 
     // Delete customer
     async function deleteCustomer(customerId) {
-        try {
-            const response = await fetch(`/api/customers/${customerId}/`, { method: 'DELETE' });
-            if (response.ok) {
+        if (confirm('Are you sure you want to delete this customer?')) {
+            try {
+                const response = await fetch(`/api/customers/${customerId}/`, { method: 'DELETE' });
+                if (!response.ok) throw new Error('Failed to delete customer.');
+                
                 await loadCustomers();
                 alert('Customer deleted successfully!');
-            } else {
-                alert('Failed to delete customer.');
+            } catch (error) {
+                console.error('Error deleting customer:', error);
+                alert('Could not delete customer.');
             }
-        } catch (error) {
-            console.error('Error deleting customer:', error);
-            alert('An error occurred while deleting the customer.');
         }
     }
 
-    // Theme Toggle
-    themeToggle.addEventListener('click', function() {
-        const currentTheme = document.documentElement.getAttribute('data-theme');
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-
-        document.documentElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('crmTheme', newTheme);
-
-        // Update icon
-        const icon = this.querySelector('.theme-icon');
-        if (newTheme === 'light') {
-            icon.classList.remove('fa-sun');
-            icon.classList.add('fa-moon');
-        } else {
-            icon.classList.remove('fa-moon');
-            icon.classList.add('fa-sun');
-        }
-    });
-
-    // Profile Dropdown
-    profileBtn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        const isExpanded = this.getAttribute('aria-expanded') === 'true';
-        this.setAttribute('aria-expanded', !isExpanded);
-        profileDropdown.classList.toggle('show', !isExpanded);
-    });
-
-    // Close dropdown when clicking outside
-    document.addEventListener('click', function() {
-        profileBtn.setAttribute('aria-expanded', 'false');
-        profileDropdown.classList.remove('show');
-    });
-
     // Modal Functions
     addCustomerBtn.addEventListener('click', function() {
+        addCustomerForm.reset();
         addCustomerModal.classList.add('active');
     });
 
-    modalClose.addEventListener('click', function() {
-        addCustomerModal.classList.remove('active');
-    });
-
-    cancelAddCustomer.addEventListener('click', function() {
-        addCustomerModal.classList.remove('active');
-    });
+    modalClose.addEventListener('click', () => addCustomerModal.classList.remove('active'));
+    cancelAddCustomer.addEventListener('click', () => addCustomerModal.classList.remove('active'));
+    editModalClose.addEventListener('click', () => editCustomerModal.classList.remove('active'));
+    cancelEditCustomer.addEventListener('click', () => editCustomerModal.classList.remove('active'));
 
     addCustomerForm.addEventListener('submit', async function(e) {
         e.preventDefault();
-
         const formData = new FormData(addCustomerForm);
         const newCustomer = Object.fromEntries(formData.entries());
 
@@ -227,27 +196,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newCustomer),
             });
-            if (response.ok) {
-                await loadCustomers();
-                alert('Customer added successfully!');
-                addCustomerModal.classList.remove('active');
-                this.reset();
-            } else {
-                alert('Failed to add customer.');
-            }
+            if (!response.ok) throw new Error('Failed to add customer.');
+            
+            await loadCustomers();
+            addCustomerModal.classList.remove('active');
+            alert('Customer added successfully!');
         } catch (error) {
             console.error('Error adding customer:', error);
             alert('An error occurred while adding the customer.');
         }
     });
 
-    // Edit customer form
     editCustomerForm.addEventListener('submit', async function(e) {
         e.preventDefault();
-
         const formData = new FormData(editCustomerForm);
         const updatedCustomer = Object.fromEntries(formData.entries());
-        const customerId = updatedCustomer.id;
+        const customerId = document.getElementById('editCustomerId').value;
 
         try {
             const response = await fetch(`/api/customers/${customerId}/`, {
@@ -255,38 +219,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(updatedCustomer),
             });
-            if (response.ok) {
-                await loadCustomers();
-                alert('Customer updated successfully!');
-                editCustomerModal.classList.remove('active');
-            } else {
-                alert('Failed to update customer.');
-            }
+            if (!response.ok) throw new Error('Failed to update customer.');
+
+            await loadCustomers();
+            editCustomerModal.classList.remove('active');
+            alert('Customer updated successfully!');
         } catch (error) {
             console.error('Error updating customer:', error);
             alert('An error occurred while updating the customer.');
-        }
-    });
-
-    // Close edit modal
-    editModalClose.addEventListener('click', function() {
-        editCustomerModal.classList.remove('active');
-    });
-
-    cancelEditCustomer.addEventListener('click', function() {
-        editCustomerModal.classList.remove('active');
-    });
-
-    // Close modals when clicking outside
-    addCustomerModal.addEventListener('click', function(e) {
-        if (e.target === this) {
-            addCustomerModal.classList.remove('active');
-        }
-    });
-
-    editCustomerModal.addEventListener('click', function(e) {
-        if (e.target === this) {
-            editCustomerModal.classList.remove('active');
         }
     });
 
@@ -310,26 +250,17 @@ document.addEventListener('DOMContentLoaded', function() {
             loadCustomers();
         }
     });
+    
+    // Theme Toggle
+    themeToggle.addEventListener('click', function() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('crmTheme', newTheme);
+        const icon = this.querySelector('.theme-icon');
+        icon.className = `theme-icon fas ${newTheme === 'light' ? 'fa-moon' : 'fa-sun'}`;
+    });
 
-    // Check for saved theme preference
-    const savedTheme = localStorage.getItem('crmTheme');
-    if (savedTheme) {
-        document.documentElement.setAttribute('data-theme', savedTheme);
-
-        // Update icon
-        const icon = themeToggle.querySelector('.theme-icon');
-        if (savedTheme === 'light') {
-            icon.classList.remove('fa-sun');
-            icon.classList.add('fa-moon');
-        } else {
-            icon.classList.remove('fa-moon');
-            icon.classList.add('fa-sun');
-        }
-    }
-
-    // Show loading overlay initially
-    morphOverlay.classList.add('active');
-
-    // Initialize the page
+    // Initial page load
     initPage();
 });
