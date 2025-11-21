@@ -39,7 +39,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 const errorData = await response.json().catch(() => ({ message: 'An unknown error occurred' }));
                 throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
             }
-            // For DELETE requests, there might not be a JSON body
             if (options.method === 'DELETE' || response.status === 204) {
                 return;
             }
@@ -86,11 +85,11 @@ document.addEventListener('DOMContentLoaded', function () {
     // --- Data Loading and Rendering ---
     async function updateOverviewMetrics() {
         try {
-            const summary = await fetchFromAPI('/api/orders/summary');
-            document.getElementById('totalOrders').textContent = formatNumber(summary.totalOrders || 0);
-            document.getElementById('pendingOrders').textContent = formatNumber(summary.pendingOrders || 0);
-            document.getElementById('deliveredOrders').textContent = formatNumber(summary.deliveredOrders || 0);
-            document.getElementById('ordersValue').textContent = formatCurrency(summary.ordersValue || 0);
+            const summary = await fetchFromAPI('/api/orders/summary/');
+            document.getElementById('totalOrders').textContent = formatNumber(summary.total_orders || 0);
+            document.getElementById('pendingOrders').textContent = formatNumber(summary.pending_orders || 0);
+            document.getElementById('deliveredOrders').textContent = formatNumber(summary.delivered_orders || 0);
+            document.getElementById('ordersValue').textContent = formatCurrency(summary.orders_value || 0);
         } catch (error) {
             console.error("Failed to update overview metrics:", error);
         }
@@ -99,9 +98,9 @@ document.addEventListener('DOMContentLoaded', function () {
     async function loadOrdersTable() {
         const params = new URLSearchParams({ page: currentPage, limit: itemsPerPage, ...currentFilters });
         try {
-            const data = await fetchFromAPI(`/api/orders?${params.toString()}`);
-            totalOrders = data.totalOrders || 0;
-            renderTable(data.orders);
+            const data = await fetchFromAPI(`/api/orders/?${params.toString()}`);
+            totalOrders = data.count || 0;
+            renderTable(data.results);
             updatePagination();
         } catch (error) {
             ordersTableBody.innerHTML = `<tr><td colspan="10" class="text-center error-message">Could not load orders.</td></tr>`;
@@ -117,10 +116,10 @@ document.addEventListener('DOMContentLoaded', function () {
             <tr data-id="${order.id}">
                 <td><input type="checkbox" class="checkbox order-checkbox" data-id="${order.id}"></td>
                 <td><span class="order-id" data-id="${order.id}">${order.id}</span></td>
-                <td>${order.supplier}</td>
+                <td>${order.customer_name}</td>
                 <td>${order.items.length} items</td>
-                <td>${formatDate(order.orderDate)}</td>
-                <td>${formatDate(order.expectedDelivery)}</td>
+                <td>${formatDate(order.order_date)}</td>
+                <td>${formatDate(order.expected_delivery)}</td>
                 <td class="order-total">${formatCurrency(order.total)}</td>
                 <td><span class="priority ${order.priority}">${order.priority}</span></td>
                 <td><span class="status ${order.status}">${order.status}</span></td>
@@ -131,14 +130,39 @@ document.addEventListener('DOMContentLoaded', function () {
                 </td>
             </tr>`).join('');
         ordersTableBody.innerHTML = html;
+        attachTableEventListeners();
+    }
+    
+    function attachTableEventListeners() {
+        document.querySelectorAll('.view-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const orderId = this.closest('tr').dataset.id;
+                viewOrderDetails(orderId);
+            });
+        });
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const orderId = this.closest('tr').dataset.id;
+                openUpdateStatusModal(orderId);
+            });
+        });
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const orderId = this.closest('tr').dataset.id;
+                cancelOrder(orderId);
+            });
+        });
     }
 
     async function viewOrderDetails(orderId) {
         try {
-            const order = await fetchFromAPI(`/api/orders/${orderId}`);
+            const order = await fetchFromAPI(`/api/orders/${orderId}/`);
             document.getElementById('orderDetailsTitle').textContent = `Order ${order.id}`;
+            let itemsHtml = order.items.map(item => `<li>${item.quantity} x ${item.product_name}</li>`).join('');
             document.getElementById('orderDetailsContent').innerHTML = `
-                <!-- Order details content -->
+                <p><strong>Customer:</strong> ${order.customer_name}</p>
+                <p><strong>Status:</strong> ${order.status}</p>
+                <ul>${itemsHtml}</ul>
             `;
             orderDetailsModal.classList.add('active');
         } catch (error) {
@@ -150,10 +174,24 @@ document.addEventListener('DOMContentLoaded', function () {
     async function handleCreateOrder(e) {
         e.preventDefault();
         const formData = new FormData(createOrderForm);
-        const orderData = Object.fromEntries(formData.entries());
-        orderData.items = []; // Populate this from the dynamic item rows
+        const orderData = {
+            customer: formData.get('customer'),
+            order_date: new Date().toISOString().split('T')[0],
+            expected_delivery: formData.get('expectedDelivery'),
+            priority: formData.get('orderPriority'),
+            status: 'pending',
+            items: []
+        };
+        
+        document.querySelectorAll('.order-item-row').forEach(row => {
+            orderData.items.push({
+                product: row.querySelector('.item-product').value,
+                quantity: row.querySelector('.item-quantity').value
+            });
+        });
+
         try {
-            await fetchFromAPI('/api/orders', {
+            await fetchFromAPI('/api/orders/', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(orderData)
@@ -161,7 +199,7 @@ document.addEventListener('DOMContentLoaded', function () {
             showNotification('Order created successfully!');
             createOrderModal.classList.remove('active');
             createOrderForm.reset();
-            await Promise.all([updateOverviewMetrics(), loadOrdersTable()]);
+            await initPage();
         } catch (error) {
             // Error already handled by fetchFromAPI
         }
@@ -173,14 +211,14 @@ document.addEventListener('DOMContentLoaded', function () {
         const newStatus = document.getElementById('newStatus').value;
         const notes = document.getElementById('statusNotes').value;
         try {
-            await fetchFromAPI(`/api/orders/${orderId}/status`, {
-                method: 'PUT',
+            await fetchFromAPI(`/api/orders/${orderId}/`, {
+                method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ status: newStatus, notes })
             });
             showNotification('Order status updated!');
             updateStatusModal.classList.remove('active');
-            await Promise.all([updateOverviewMetrics(), loadOrdersTable()]);
+            await initPage();
         } catch (error) {
             // Error handled
         }
@@ -189,9 +227,9 @@ document.addEventListener('DOMContentLoaded', function () {
     async function cancelOrder(orderId) {
         if (!confirm('Are you sure you want to cancel this order?')) return;
         try {
-            await fetchFromAPI(`/api/orders/${orderId}`, { method: 'DELETE' });
+            await fetchFromAPI(`/api/orders/${orderId}/`, { method: 'DELETE' });
             showNotification('Order cancelled successfully!');
-            await Promise.all([updateOverviewMetrics(), loadOrdersTable()]);
+            await initPage();
         } catch (error) {
             // Error handled
         }
@@ -234,14 +272,7 @@ document.addEventListener('DOMContentLoaded', function () {
     [modalClose, detailsModalClose, statusModalClose].forEach(btn => btn.addEventListener('click', () => btn.closest('.modal').classList.remove('active')));
     createOrderForm.addEventListener('submit', handleCreateOrder);
     updateStatusForm.addEventListener('submit', handleUpdateStatus);
-    ordersTableBody.addEventListener('click', (e) => {
-        const button = e.target.closest('button');
-        if (!button) return;
-        const orderId = button.closest('tr').dataset.id;
-        if (button.classList.contains('view-btn')) viewOrderDetails(orderId);
-        if (button.classList.contains('edit-btn')) openUpdateStatusModal(orderId);
-        if (button.classList.contains('delete-btn')) cancelOrder(orderId);
-    });
+    
     [orderSearch, statusFilter, supplierFilter, priorityFilter, dateFilter].forEach(el => el.addEventListener('input', handleFilterChange));
     prevPage.addEventListener('click', () => changePage(-1));
     nextPage.addEventListener('click', () => changePage(1));

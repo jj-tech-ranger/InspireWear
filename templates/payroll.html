@@ -1,16 +1,17 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>InspireWear | Payroll</title>
-    <link rel="stylesheet" href="../css/finance.css">
-    <link rel="stylesheet" href="../css/payroll.css">
+    <link rel="stylesheet" href="{% static 'finance.css' %}">
+    <link rel="stylesheet" href="{% static 'payroll.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
-    <link rel="icon" href="../img/favicon.png" type="image/x-icon">
+    <link rel="icon" href="{% static 'favicon.png' %}" type="image/x-icon">
 </head>
 <body>
     <!-- Loading Overlay -->
@@ -24,11 +25,11 @@
     <!-- Sidebar Navigation -->
     <div class="sidebar">
         <div class="logo-container">
-            <img src="../img/logo.png" alt="InspireWear Logo" class="logo">
+            <img src="{% static 'logo.png' %}" alt="InspireWear Logo" class="logo">
             <h1 class="logo-text">InspireWear</h1>
         </div>
 
-        <a href="../templates/index.html" class="home-button">
+        <a href="{% url 'index' %}" class="home-button">
             <i class="fas fa-arrow-left"></i> Back to Home
         </a>
 
@@ -40,13 +41,13 @@
 
         <nav class="finance-nav">
             <ul>
-                <li><a href="../templates/finance_dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a></li>
-                <li><a href="../templates/transactions.html"><i class="fas fa-exchange-alt"></i> Transactions</a></li>
-                <li><a href="../templates/invoices.html"><i class="fas fa-file-invoice"></i> Invoices</a></li>
-                <li><a href="../templates/expenses.html"><i class="fas fa-receipt"></i> Expenses</a></li>
-                <li class="active"><a href="../templates/payroll.html"><i class="fas fa-money-bill-wave"></i> Payroll</a></li>
-                <li><a href="../templates/finance_notifications.html"><i class="fas fa-bell"></i> Notifications</a></li>
-                <li><a href="../templates/financial_reports.html"><i class="fas fa-chart-pie"></i> Reports</a></li>
+                <li><a href="{% url 'finance_dashboard' %}"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                <li><a href="{% url 'transactions' %}"><i class="fas fa-exchange-alt"></i> Transactions</a></li>
+                <li><a href="{% url 'invoices' %}"><i class="fas fa-file-invoice"></i> Invoices</a></li>
+                <li><a href="{% url 'expenses' %}"><i class="fas fa-receipt"></i> Expenses</a></li>
+                <li class="active"><a href="{% url 'payroll' %}"><i class="fas fa-money-bill-wave"></i> Payroll</a></li>
+                <li><a href="{% url 'finance_notifications' %}"><i class="fas fa-bell"></i> Notifications</a></li>
+                <li><a href="{% url 'financial_reports' %}"><i class="fas fa-chart-pie"></i> Reports</a></li>
             </ul>
         </nav>
     </div>
@@ -61,14 +62,14 @@
                 </button>
                 <div class="profile-container">
                     <button class="profile-btn" id="profileBtn" aria-label="User profile" aria-expanded="false">
-                        <img src="../img/user.png" alt="Profile" class="profile-img">
+                        <img src="{% static 'user.png' %}" alt="Profile" class="profile-img">
                         <span>Finance Manager</span>
                     </button>
                     <div class="profile-dropdown" id="profileDropdown">
-                        <a href="../templates/index.html" class="dropdown-item">
+                        <a href="{% url 'index' %}" class="dropdown-item">
                             <i class="fas fa-home"></i> Back to Home
                         </a>
-                        <a href="../templates/login.html" class="dropdown-item">
+                        <a href="{% url 'login' %}" class="dropdown-item">
                             <i class="fas fa-sign-out-alt"></i> Logout
                         </a>
                     </div>
@@ -84,8 +85,8 @@
                 </div>
                 <div class="card-content">
                     <h3>Total Payroll</h3>
-                    <p class="amount">KSh <span id="totalPayroll">850,000</span></p>
-                    <p class="period">This Month</p>
+                    <p class="amount">KSh <span id="totalPayroll"></span></p>
+                    <p class="period"></p>
                 </div>
             </div>
 
@@ -95,8 +96,8 @@
                 </div>
                 <div class="card-content">
                     <h3>Active Employees</h3>
-                    <p class="count"><span id="activeEmployees">25</span></p>
-                    <p class="period">Current Staff</p>
+                    <p class="count"><span id="activeEmployees"></span></p>
+                    <p class="period"></p>
                 </div>
             </div>
 
@@ -106,8 +107,8 @@
                 </div>
                 <div class="card-content">
                     <h3>Processed</h3>
-                    <p class="amount">KSh <span id="processedPayroll">680,000</span></p>
-                    <p class="period">This Month</p>
+                    <p class="amount">KSh <span id="processedPayroll"></span></p>
+                    <p class="period"></p>
                 </div>
             </div>
 
@@ -117,8 +118,8 @@
                 </div>
                 <div class="card-content">
                     <h3>Pending</h3>
-                    <p class="amount">KSh <span id="pendingPayroll">170,000</span></p>
-                    <p class="period">Awaiting Processing</p>
+                    <p class="amount">KSh <span id="pendingPayroll"></span></p>
+                    <p class="period"></p>
                 </div>
             </div>
         </div>
@@ -202,7 +203,7 @@
         <!-- Pagination -->
         <div class="pagination-container">
             <div class="pagination-info">
-                Showing <span id="showingStart">1</span> to <span id="showingEnd">10</span> of <span id="totalEmployeesCount">25</span> employees
+                Showing <span id="showingStart"></span> to <span id="showingEnd"></span> of <span id="totalEmployeesCount"></span> employees
             </div>
             <div class="pagination-controls">
                 <button id="prevPage" class="pagination-btn" disabled>
@@ -411,23 +412,23 @@
                         <h4>Payroll Summary</h4>
                         <div class="summary-item">
                             <span>Total Employees:</span>
-                            <span id="previewEmployeeCount">25</span>
+                            <span id="previewEmployeeCount"></span>
                         </div>
                         <div class="summary-item">
                             <span>Total Basic Salary:</span>
-                            <span>KSh <span id="previewBasicTotal">650,000</span></span>
+                            <span>KSh <span id="previewBasicTotal"></span></span>
                         </div>
                         <div class="summary-item">
                             <span>Total Allowances:</span>
-                            <span>KSh <span id="previewAllowancesTotal">120,000</span></span>
+                            <span>KSh <span id="previewAllowancesTotal"></span></span>
                         </div>
                         <div class="summary-item">
                             <span>Total Deductions:</span>
-                            <span>KSh <span id="previewDeductionsTotal">95,000</span></span>
+                            <span>KSh <span id="previewDeductionsTotal"></span></span>
                         </div>
                         <div class="summary-item total">
                             <span>Net Payroll:</span>
-                            <span>KSh <span id="previewNetTotal">675,000</span></span>
+                            <span>KSh <span id="previewNetTotal"></span></span>
                         </div>
                     </div>
 
@@ -440,8 +441,7 @@
         </div>
     </div>
 
-    <script src="../js/finance.js"></script>
-    <script src="../js/payroll.js"></script>
+    <script src="{% static 'finance.js' %}"></script>
+    <script src="{% static 'payroll.js' %}"></script>
 </body>
 </html>
-
